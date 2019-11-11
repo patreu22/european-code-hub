@@ -1,0 +1,102 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.0 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{apa/global//global/global}
+    \entry{FakePaper11}{article}{}
+      \name{author}{1}{}{%
+        {{uniquename=0,uniquepart=base,hash=7047e19d6897a2a4dcf7fb9107e3abd0}{%
+           family={Guttenberg},
+           familyi={G\bibinitperiod}}}%
+      }
+      \strng{namehash}{7047e19d6897a2a4dcf7fb9107e3abd0}
+      \strng{fullhash}{7047e19d6897a2a4dcf7fb9107e3abd0}
+      \strng{bibnamehash}{7047e19d6897a2a4dcf7fb9107e3abd0}
+      \strng{authorbibnamehash}{7047e19d6897a2a4dcf7fb9107e3abd0}
+      \strng{authornamehash}{7047e19d6897a2a4dcf7fb9107e3abd0}
+      \strng{authorfullhash}{7047e19d6897a2a4dcf7fb9107e3abd0}
+      \field{sortinit}{G}
+      \field{sortinithash}{5e8d2bf9d38de41b1528bd307546008f}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{journaltitle}{Guttenberg Press}
+      \field{title}{Chuck Norris is able to walk on water}
+      \field{year}{2011}
+      \verb{doi}
+      \verb 123.456.789
+      \endverb
+      \verb{urlraw}
+      \verb http://www.examplelink.de
+      \endverb
+      \verb{url}
+      \verb http://www.examplelink.de
+      \endverb
+    \endentry
+    \entry{book}{book}{}
+      \name{author}{4}{}{%
+        {{uniquename=0,uniquepart=base,hash=9355edd511e3f6fdd880ee98722a53fb}{%
+           family={Mittelbach},
+           familyi={M\bibinitperiod},
+           given={Frank},
+           giveni={F\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=0743efb276e9219ee664a9b3dbd60619}{%
+           family={Goossens},
+           familyi={G\bibinitperiod},
+           given={Michel},
+           giveni={M\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=d52f183a29af96d48695b8bea23e66e1}{%
+           family={Braams},
+           familyi={B\bibinitperiod},
+           given={Johannes},
+           giveni={J\bibinitperiod},
+           givenun=0}}%
+        {{uniquename=0,uniquepart=base,hash=0907be26d21af9e9c3820d51f421fe33}{%
+           family={Rowley},
+           familyi={R\bibinitperiod},
+           given={Chris},
+           giveni={C\bibinitperiod},
+           givenun=0}}%
+      }
+      \strng{namehash}{f6d3f5d3a9cc39507a7ff2f9963883dc}
+      \strng{fullhash}{6ed6675200fdb144746af57731da294d}
+      \strng{bibnamehash}{6ed6675200fdb144746af57731da294d}
+      \strng{authorbibnamehash}{6ed6675200fdb144746af57731da294d}
+      \strng{authornamehash}{f6d3f5d3a9cc39507a7ff2f9963883dc}
+      \strng{authorfullhash}{6ed6675200fdb144746af57731da294d}
+      \field{sortinit}{M}
+      \field{sortinithash}{cfd219b90152c06204fab207bc6c7cab}
+      \field{extradatescope}{labelyear}
+      \field{labeldatesource}{year}
+      \true{uniqueprimaryauthor}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{isbn}{0201362996 (pbk. alk. paper)}
+      \field{month}{01}
+      \field{title}{The LaTeX Companion 2nd ed}
+      \field{year}{2004}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

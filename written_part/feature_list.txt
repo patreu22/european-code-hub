@@ -1,0 +1,23 @@
+# Feature List
+
+- Add a new project
+- Browse existing projects
+- Search for specific projects
+	- Metadata to search:
+		- Project title
+		- Description (Could be parsed from project Readme)
+		- Tags
+		- Programming language? (Could be tag) --> Not useful imho
+	- Auto-Complete feature (feasible with Elasticsearch) 
+- Multi-Language Support
+- Subscribe feature/Alert for specific keywords
+	- Receive an email when a new project is added that contains a specific keyword the user subscribed for before 
+- Useful Start-Page
+	- Search feature
+	- Link to browsing catalogue
+	- Add a new project button
+- User Management
+	- Create a new user account
+	- Delete your account
+	- Transfer entries to another user
+	- Update the added entries
