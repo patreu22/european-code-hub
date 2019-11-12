@@ -52,5 +52,5 @@
 			6.3.4.2 Results
 			6.3.4.3 Discussion
 	7. Conclusion
-		7.1 Summary and key findings
+		7.1 Key findings
 		7.2 Outlook
