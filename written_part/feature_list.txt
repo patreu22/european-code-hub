@@ -20,4 +20,4 @@
 	- Create a new user account
 	- Delete your account
 	- Transfer entries to another user
-	- Update the added entries
+	- Update your entries
