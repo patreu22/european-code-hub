@@ -1,10 +1,15 @@
-import React, { Component } from 'react';
+import React, { Component, } from 'react';
+import Toolbar from '../components/Toolbar';
+import Placeholder from '../components/Placeholder';
 
 class Home extends Component {
 
     render() {
         return (
-            <h1>Home!</h1>
+            <div>
+                <Toolbar />
+                <Placeholder />
+            </div>
         );
     }
 
