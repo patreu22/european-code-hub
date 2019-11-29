@@ -1,7 +1,9 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Badge, AppBar, Toolbar, Menu, MenuItem, Typography, IconButton } from '@material-ui/core/';
-import { MailIcon, NotificationsIcon, AccountCircle } from '@material-ui/icons/';
+import { Home as HomeIcon, Mail as MailIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
+import { Link } from 'react-router-dom';
+
 import EuropeLogo from '../assets/europe_logo.png';
 
 
@@ -93,7 +95,9 @@ export default function PrimarySearchAppBar() {
                     <div className={classes.sectionDesktop}>
                         <IconButton color="inherit">
                             <Badge color="secondary">
-                                <MailIcon />
+                                <Link to="/">
+                                    <HomeIcon />
+                                </Link>
                             </Badge>
                         </IconButton>
                         <IconButton color="inherit">
