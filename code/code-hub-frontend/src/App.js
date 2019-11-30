@@ -8,22 +8,18 @@ import {
   Route
 } from "react-router-dom";
 import Home from './pages/Home';
-import { ThemeProvider } from '@material-ui/styles';
 
 
 class App extends React.Component {
-
   render() {
     return (
-      <ThemeProvider>
-        <Router>
-          <Switch>
-            <Route path="/"><Home /></Route>
-            {/* <Route path="/profile"><UserProfile /></Route>
+      <Router>
+        <Switch>
+          <Route path="/"><Home /></Route>
+          {/* <Route path="/profile"><UserProfile /></Route>
           <Route path="/browse"><ProjectBrowser /></Route> */}
-          </Switch>
-        </Router>
-      </ThemeProvider>
+        </Switch>
+      </Router>
     );
   }
 }

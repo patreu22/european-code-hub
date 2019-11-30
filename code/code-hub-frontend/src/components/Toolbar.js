@@ -72,7 +72,7 @@ export default function ECHToolbar() {
 
     return (
         <div className={classes.grow}>
-            <AppBar position="static" color={' '}>
+            <AppBar position="static" color={'white'}>
                 <Toolbar>
                     <img width={45} height={45} src={EuropeLogo} alt="logo" />
                     <Typography className={classes.title} variant="h6" noWrap>
@@ -85,11 +85,6 @@ export default function ECHToolbar() {
                                 <Link to="/">
                                     <HomeIcon />
                                 </Link>
-                            </Badge>
-                        </IconButton>
-                        <IconButton color="inherit">
-                            <Badge color="secondary">
-                                <MailIcon />
                             </Badge>
                         </IconButton>
                         <IconButton color="inherit">
