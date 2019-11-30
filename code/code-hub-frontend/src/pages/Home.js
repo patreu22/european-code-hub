@@ -1,10 +1,9 @@
 import React, { Component, } from 'react';
 import Toolbar from '../components/Toolbar';
-// import Placeholder from '../components/Placeholder';
-// import { makeStyles } from '@material-ui/core/styles';
-import { Search as SearchIcon } from '@material-ui/icons';
-import { Box, InputBase } from '@material-ui/core';
+import Searchbar from '../components/Searchbar';
+import Footer from '../components/Footer';
 import { Link } from 'react-router-dom';
+import '../css/Home.css';
 
 
 
@@ -13,19 +12,49 @@ class Home extends Component {
         return (
             <div>
                 <Toolbar />
-                <h1>Hey there!</h1>
-                <h2>Are you looking for a cool Open-Source project?</h2>
-                <div >
-                    <div>
-                        <SearchIcon />
-                        <InputBase
-                            placeholder="Search…"
-                        />
+                <div className="home">
+                    <h1>Hey there!</h1>
+                    <h2>Are you looking for a cool Open-Source project?</h2>
+                    <br />
+                    <div style={{ width: '50%' }} className="center">
+                        <Searchbar placeholderText />
                     </div>
+                    <br />
+                    <span>or do you want to add your <Link to="/add">own</Link> project?</span>
+                    <h3>Just want to have a look around?</h3>
+                    <p>Browse through the full <Link to="/catalogue">catalogue</Link></p>
+                    <h1>Hey there!</h1>
+                    <h2>Are you looking for a cool Open-Source project?</h2>
+                    <br />
+                    <div style={{ width: '50%' }} className="center">
+                        <Searchbar placeholderText />
+                    </div>
+                    <br />
+                    <span>or do you want to add your <Link to="/add">own</Link> project?</span>
+                    <h3>Just want to have a look around?</h3>
+                    <p>Browse through the full <Link to="/catalogue">catalogue</Link></p>
+                    <h1>Hey there!</h1>
+                    <h2>Are you looking for a cool Open-Source project?</h2>
+                    <br />
+                    <div style={{ width: '50%' }} className="center">
+                        <Searchbar placeholderText />
+                    </div>
+                    <br />
+                    <span>or do you want to add your <Link to="/add">own</Link> project?</span>
+                    <h3>Just want to have a look around?</h3>
+                    <p>Browse through the full <Link to="/catalogue">catalogue</Link></p>
+                    <h1>Hey there!</h1>
+                    <h2>Are you looking for a cool Open-Source project?</h2>
+                    <br />
+                    <div style={{ width: '50%' }} className="center">
+                        <Searchbar placeholderText />
+                    </div>
+                    <br />
+                    <span>or do you want to add your <Link to="/add">own</Link> project?</span>
+                    <h3>Just want to have a look around?</h3>
+                    <p>Browse through the full <Link to="/catalogue">catalogue</Link></p>
                 </div>
-                <span>or do you want to add your <Link to="/add">own</Link> project?</span>
-                <h3>Just want to have a look around?</h3>
-                <p>Browse through the full <Link to="/catalogue">catalogue</Link></p>
+                <Footer />
             </div>
         );
     }
