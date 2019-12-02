@@ -4,10 +4,17 @@ import Footer from './Footer';
 
 class App extends React.Component {
     render() {
+        const contentStyle = {
+            minHeight: '85vH',
+            paddingTop: '8vH',
+            marginLeft: '10px',
+            marginRight: '10px',
+        };
+
         return (
             <span>
                 <Header />
-                <div style={{ minHeight: '85vH', marginTop: '8vH' }}>
+                <div style={contentStyle}>
                     {this.props.children}
                 </div>
                 <Footer />
