@@ -7,8 +7,9 @@ class App extends React.Component {
         const contentStyle = {
             minHeight: '85vH',
             paddingTop: '8vH',
-            marginLeft: '10px',
-            marginRight: '10px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center'
         };
 
         return (

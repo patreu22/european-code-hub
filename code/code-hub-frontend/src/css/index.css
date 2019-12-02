@@ -15,6 +15,18 @@ body {
   flex-direction: column;
 }
 
+a {
+  text-decoration: none;
+  font-weight: bold;
+}
+a:hover {
+   color: #ffd617
+}
+
+a:hover {
+  color: '#DBDBDB'
+}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;

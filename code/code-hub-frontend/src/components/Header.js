@@ -4,7 +4,7 @@ import { Badge, AppBar, Toolbar, Menu, MenuItem, Typography, IconButton } from '
 import { Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
 import { Link } from 'react-router-dom';
 
-import EuropeLogo from '../assets/europe_logo.png';
+import EuropeanLogo from '../assets/europe_logo.png';
 
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +71,7 @@ export default function Header() {
         <div className={classes.header}>
             <AppBar position="static">
                 <Toolbar className={classes.headerToolbar}>
-                    <img width={45} height={45} src={EuropeLogo} alt="logo" />
+                    <img width={45} height={45} src={EuropeanLogo} alt="logo" />
                     <Typography className={classes.title} variant="h6" noWrap>
                         European Code Hub
                     </Typography>
