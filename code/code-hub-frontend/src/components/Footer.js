@@ -8,11 +8,10 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: "center",
         alignItems: "center",
-        clear: 'both',
-        position: 'relative',
         textAlign: 'center',
-        height: '60px',
-        backgroundColor: 'white'
+        backgroundColor: 'white',
+        flex: 'none',
+        minHeight: '7vH'
     },
     footerNote: {
         fontSize: 11
