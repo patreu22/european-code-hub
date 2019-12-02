@@ -5,22 +5,15 @@ import SearchIcon from '@material-ui/icons/Search';
 
 
 const useStyles = makeStyles(theme => ({
-    grow: {
-        flexGrow: 1,
-    },
     search: {
         position: 'relative',
         borderRadius: theme.shape.borderRadius,
-        // backgroundColor: "#f5f5f5",
+        backgroundColor: '#f5f5f5',
         '&:hover': {
-            backgroundColor: fade("#123456", 1.25),
+            backgroundColor: '#DBDBDB',
         },
         marginRight: theme.spacing(2),
         marginLeft: 0,
-        [theme.breakpoints.up('sm')]: {
-            marginLeft: theme.spacing(3),
-            width: 'auto',
-        },
     },
     searchIcon: {
         width: theme.spacing(7),
@@ -30,18 +23,14 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        color: 'black',
+        zIndex: 10
     },
 
-    inputRoot: {
-        color: 'inherit',
-    },
     inputInput: {
+        width: '100%',
         padding: theme.spacing(1, 1, 1, 7),
-        width: '10%',
-        backgroundColor: '#654321',
-        [theme.breakpoints.up('md')]: {
-            width: 200,
-        },
+        backgroundColor: 'inherit',
     },
 }));
 
@@ -49,19 +38,13 @@ export default function Searchbar() {
     const classes = useStyles();
     return (
         <div className={classes.search}>
-            <div style={{ width: '100%' }}>
-                <div className={classes.searchIcon}>
-                    <SearchIcon />
-                </div>
-                <InputBase
-                    placeholder="What are you looking for..?"
-                    classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                    }}
-                    inputProps={{ 'aria-label': 'search' }}
-                />
+            <div className={classes.searchIcon}>
+                <SearchIcon />
             </div>
+            <InputBase
+                placeholder="What are you looking for..?"
+                className={classes.inputInput}
+            />
         </div>
     );
 }
