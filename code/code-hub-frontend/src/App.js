@@ -7,7 +7,12 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+
 import Home from './pages/Home';
+import Search from './pages/Search';
+import Hello from './pages/Hello';
+import Add from './pages/Add';
+import Catalogue from './pages/Catalogue'
 
 
 class App extends React.Component {
@@ -15,9 +20,11 @@ class App extends React.Component {
     return (
       <Router>
         <Switch>
-          <Route path="/"><Home /></Route>
-          {/* <Route path="/profile"><UserProfile /></Route>
-          <Route path="/browse"><ProjectBrowser /></Route> */}
+          <Route exact path="/" component={Home} />
+          <Route path="/search" component={Search} />
+          <Route path="/hello" component={Hello} />
+          <Route path="/add" component={Add} />
+          <Route path="/catalogue" component={Catalogue} />
         </Switch>
       </Router>
     );
