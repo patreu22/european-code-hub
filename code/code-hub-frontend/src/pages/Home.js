@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
-import { Box, Divider } from '@material-ui/core';
+import { Button, Box } from '@material-ui/core';
 import Searchbar from '../components/Searchbar';
 import { Link } from 'react-router-dom';
 import '../css/Home.css';
 import PageWrapper from '../components/PageWrapper';
 import EuropeanStars from '../assets/europe_stars.svg';
+import * as axios from 'axios';
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
 class Home extends Component {
@@ -45,16 +46,49 @@ class Home extends Component {
                 </Box>
                 <Box style={subHeroStyling}>
                     <h3 style={subHeadlineStyling}>Open Source projects for governmental purposes</h3>
-
                     <div style={{ width: '50%' }} className="center">
                         <Searchbar />
                     </div>
                     <div style={{ paddingTop: '10px', color: 'white' }}>or do you want to  <Link to="/add" style={{ color: 'white' }}>add your own</Link> project?</div>
                 </Box>
                 <h3>Just want to have a look around?</h3>
-                <span>Browse through the full <Link to="/catalogue">catalogue</Link></span>
-            </PageWrapper >
+                <span>Browse through the full <Link to="/hello">catalogue</Link></span>
+                <Button onClick={this._onCreateUser}>Create User</Button>
+                <Button onClick={this._onCreateProject}>Create Project</Button>
+            </PageWrapper>
         );
+    }
+
+    _onCreateUser() {
+        console.log("Let's create a user!")
+        axios.post('/api/create/user', {
+            // gitUrl: 'https://github.com/torvalds/linux',
+            // projectName: 'Linux',
+            // responsibleInstitution: 'Linux Foundation',
+            // contactMail: 'info@linux.com'
+            username: 'Linus Torvalds',
+            password: '12345',
+            mail: 'hi@linux.sw',
+            position: 'Linux Guru'
+        }).then(function (response) {
+            console.log(response);
+        }).catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    _onCreateProject() {
+        console.log("Let's create a project!")
+        axios.post('/api/create/project', {
+            gitUrl: 'https://github.com/torvalds/linux',
+            projectName: 'Linux',
+            responsibleInstitution: 'Linux Foundation',
+            contactMail: 'info@linux.com'
+        }).then(function (response) {
+            console.log(response);
+        }).catch(function (error) {
+            console.log(error);
+        });
     }
 
     starsLogo() {
