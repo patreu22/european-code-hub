@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import '../css/Home.css';
 import PageWrapper from '../components/PageWrapper';
 import EuropeanStars from '../assets/europe_stars.svg';
-import * as axios from 'axios';
+
+import { registerUser, registerProject } from '../helper/httpHelper';
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
 class Home extends Component {
@@ -61,34 +62,12 @@ class Home extends Component {
 
     _onCreateUser() {
         console.log("Let's create a user!")
-        axios.post('/api/create/user', {
-            // gitUrl: 'https://github.com/torvalds/linux',
-            // projectName: 'Linux',
-            // responsibleInstitution: 'Linux Foundation',
-            // contactMail: 'info@linux.com'
-            username: 'Linus Torvalds',
-            password: '12345',
-            mail: 'hi@linux.sw',
-            position: 'Linux Guru'
-        }).then(function (response) {
-            console.log(response);
-        }).catch(function (error) {
-            console.log(error);
-        });
+        const password = '12345678';
+        registerUser("Steve McStevenson", password, "mymail@mailmy.com", "Coding Ninja")
     }
 
     _onCreateProject() {
-        console.log("Let's create a project!")
-        axios.post('/api/create/project', {
-            gitUrl: 'https://github.com/torvalds/linux',
-            projectName: 'Linux',
-            responsibleInstitution: 'Linux Foundation',
-            contactMail: 'info@linux.com'
-        }).then(function (response) {
-            console.log(response);
-        }).catch(function (error) {
-            console.log(error);
-        });
+        registerProject("gitUrl", "Awesome Project", "Awesome Institution", "awesome@contact.com");
     }
 
     starsLogo() {
