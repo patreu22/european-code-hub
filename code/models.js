@@ -10,7 +10,7 @@ const USER_SCHEMA = new mongoose.Schema({
 const PROJECT_SCHEMA = new mongoose.Schema({
     gitUrl: String,
     projectName: String,
-    responsibleInstitution: String,
+    projectDescription: String,
     contactMail: String
 }, { collection: 'projects' });
 

@@ -75,11 +75,11 @@ function saveUserToDB({ username, password, mail, position, res }) {
 }
 
 //TODO: Handle duplicates "User already registered"
-function saveProjectToDB({ gitUrl, projectName, responsibleInstitution, contactMail, res }) {
+function saveProjectToDB({ gitUrl, projectName, projectDescription, responsibleInstitution, contactMail, res }) {
     const newProject = models.PROJECT_MODEL({
         gitUrl: gitUrl,
         projectName: projectName,
-        responsibleInstitution: responsibleInstitution,
+        projectDescription: projectDescription,
         contactMail: contactMail
     })
     newProject.save(function (err, newProject) {
