@@ -4,8 +4,6 @@ import { getPasswordHash } from './passwordHelper';
 export function registerUser(username, password, mail, position) {
     console.log("Let's create a user!")
     const hash = getPasswordHash(password);
-    console.log(`Password: ${password}`);
-    console.log(`Hash: ${hash}`);
 
     axios.post('/api/create/user', {
         username: username,

@@ -1,8 +1,10 @@
 const rp = require('request-promise');
+const $ = require('cheerio');
+const axios = require('axios')
+
 const BASE_URL = "https://opensourceprojects.eu";
 const PROJECT_OVERVIEW_PAGE = BASE_URL + '/p/?page=PLACEHOLDER';
-const $ = require('cheerio');
-
+const MONGOOSE_DB_URL = 'mongodb://localhost:27017/code-hub';
 const CHECKMARK_UNICODE = "\u2713";
 
 async function scrapeOpensourceProjectsEU() {
@@ -121,8 +123,17 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-function _saveProjectsToDatabase(projects) {
-
+function registerProject({ gitUrl, projectName, projectDescription, contactMail }) {
+    axios.post('http://localhost:5000/api/create/project', {
+        gitUrl: gitUrl,
+        projectName: projectName,
+        projectDescription: projectDescription,
+        contactMail: contactMail
+    }).then(function (response) {
+        console.log(response);
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
 
 function main() {
@@ -136,15 +147,25 @@ function main() {
             console.log("--- Failed Requests ---")
             result.failedRequests.forEach(failedRequest => console.log(failedRequest))
         }
-        _saveToDatabase(result.results)
+
         // if (result.noRepo.length > 0) {
         //     console.log("--- No repo found ---")
         //     result.noRepo.forEach(noRepo => console.log(noRepo))
         // }
-        // if (result.results.length > 0) {
-        //     console.log("--- Results ---")
-        //     result.results.forEach(result => console.log(result))
-        // }
+
+        if (result.results.length > 0) {
+            console.log("--- Results ---")
+            result.results.forEach(result => console.log(result))
+        }
+
+        result.results.forEach(myResult => registerProject(
+            {
+                gitUrl: myResult.gitUrl,
+                projectDescription: myResult.projectDescription,
+                projectName: myResult.projectName,
+                contactMail: "placeholder@mail.com"
+            }
+        ))
     });
 }
 
