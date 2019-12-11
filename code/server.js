@@ -33,7 +33,7 @@ app.post('/api/create/project', function (req, res) {
     saveProjectToDB({
         gitUrl: project.gitUrl,
         projectName: project.projectName,
-        responsibleInstitution: project.responsibleInstitution,
+        projectDescription: project.projectDescription,
         contactMail: project.contactMail,
         res: res
     })
@@ -75,7 +75,7 @@ function saveUserToDB({ username, password, mail, position, res }) {
 }
 
 //TODO: Handle duplicates "User already registered"
-function saveProjectToDB({ gitUrl, projectName, projectDescription, responsibleInstitution, contactMail, res }) {
+function saveProjectToDB({ gitUrl, projectName, projectDescription, contactMail, res }) {
     const newProject = models.PROJECT_MODEL({
         gitUrl: gitUrl,
         projectName: projectName,
