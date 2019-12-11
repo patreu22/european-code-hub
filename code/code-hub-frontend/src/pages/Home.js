@@ -67,7 +67,7 @@ class Home extends Component {
     }
 
     _onCreateProject() {
-        registerProject("gitUrl", "Awesome Project", "Awesome description", "Awesome Institution", "awesome@contact.com");
+        registerProject({ gitUrl: "gitUrl", projectName: "Awesome Project", projectDescription: "Awesome description", contactMail: "awesome@contact.com" });
     }
 
     starsLogo() {

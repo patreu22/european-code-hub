@@ -19,13 +19,11 @@ export function registerUser(username, password, mail, position) {
     });
 }
 
-export function registerProject(gitUrl, projectName, projectDescription, responsibleInstitution, contactMail) {
-    console.log("Let's create a project!")
+export function registerProject({ gitUrl, projectName, projectDescription, contactMail }) {
     axios.post('/api/create/project', {
         gitUrl: gitUrl,
         projectName: projectName,
         projectDescription: projectDescription,
-        responsibleInstitution: responsibleInstitution,
         contactMail: contactMail
     }).then(function (response) {
         console.log(response);
