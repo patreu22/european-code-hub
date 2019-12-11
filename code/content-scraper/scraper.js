@@ -36,7 +36,6 @@ async function scrapeOpensourceProjectsEU() {
             for (let i = 0; i < maxProjectsPerPage; i++) {
                 currentProject = projects[i]
                 if (typeof currentProject === 'undefined') {
-                    //console.log("Project undefined");
                     break;
                 } else {
                     let midBar = $('.middlebar', currentProject);
@@ -44,62 +43,49 @@ async function scrapeOpensourceProjectsEU() {
                     let projectName = project.text();
                     let projectDescription = $('.projdesc', midBar).text().trim().capitalize();
                     let projectLink = $('a', project).attr('href');
+                    console.log(`Link: ${projectLink}`)
                     total.push(projectLink)
-                    console.log("Link: " + projectLink)
                     try {
                         const projectPage = await rp(BASE_URL + projectLink)
                         const repoCommand = $('.clone_command', projectPage).text().trim()
-                        console.log(`Link: ${projectLink} | Repo-Command: ${repoCommand}`);
                         if (repoCommand === '') {
-                            console.log(`No clone command found for ${projectLink}. Scraping another page.`)
                             try {
                                 codeLink = $(".ui-icon-tool-git", projectPage).attr('href')
-                                console.log(codeLink)
-                                console.log(typeof codeLink)
                                 if (typeof codeLink === 'undefined') {
                                     noRepo.push(BASE_URL + projectLink)
-                                    console.log("No repo available.")
                                 } else {
-                                    console.log("Scrape one more time...")
                                     try {
                                         const codePage = await rp(BASE_URL + codeLink)
                                         const formattedUrl = getFormattedGitRepoUrl($('.clone_command', codePage).text())
-                                        console.log("############################")
-                                        console.log(formattedUrl)
                                         const result = { projectName: projectName, projectDescription: projectDescription, gitUrl: formattedUrl }
                                         results.push(result)
                                     } catch (e) {
-                                        console.log("Inner - Caught error - probably 502 server response.")
+                                        console.log("EX0 Caught error - probably 502 server response.")
                                         failedRequests.push({ errorCode: e.response.statusCode, link: BASE_URL + codeLink })
                                     }
                                 }
 
                             } catch (e) {
-                                console.log(e)
+                                console.log("EX1 Caught error - probably 502 server response.")
+                                failedRequests.push({ errorCode: e.response.statusCode, link: BASE_URL + codeLink })
                             }
                         } else {
-                            // TODO: Delete trailing part of the git command
-                            // //console.log(cloneCommand)
                             if (repoCommand.startsWith('git')) {
                                 const formattedUrl = getFormattedGitRepoUrl(repoCommand);
                                 const result = { projectName: projectName, projectDescription: projectDescription, gitUrl: formattedUrl }
                                 if (result.projectName !== '') {
                                     results.push(result)
                                 } else {
-                                    //console.log("Result empty. Won't push it to results stack")
                                 }
-
                             } else if (repoCommand.startsWith('svn')) {
-                                //console.log(`Only SVN repo found for ${projectLink}. Ignored.`)
                                 svnIgnored.push(projectLink)
                             } else {
-                                //console.log(`No git repo found for ${projectLink}. Ignored.`)
                                 noRepo.push(BASE_URL + projectLink)
                             }
                         }
                     } catch (e) {
                         console.log(e)
-                        console.log("Outer - Caught error - probably 502 server response.")
+                        console.log("EX2 Caught error - probably 502 server response.")
                         failedRequests.push({ errorCode: e.response.statusCode, link: BASE_URL + projectLink })
                     }
                 }
@@ -131,6 +117,13 @@ function getFormattedGitRepoUrl(url) {
     return blankUrl;
 }
 
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function _saveProjectsToDatabase(projects) {
+
+}
 
 function main() {
     scrapeOpensourceProjectsEU().then(function (result) {
@@ -139,10 +132,11 @@ function main() {
         console.log("Ignored " + result.svnIgnored.length + " SVN project(s) in total.")
         console.log("No repo found for " + result.noRepo.length + " project(s) in total.")
         console.log(`${result.failedRequests.length} request(s) failed.`);
-        // if (result.failedRequests.length > 0) {
-        //     console.log("--- Failed Requests ---")
-        //     result.failedRequests.forEach(failedRequest => console.log(failedRequest))
-        // }
+        if (result.failedRequests.length > 0) {
+            console.log("--- Failed Requests ---")
+            result.failedRequests.forEach(failedRequest => console.log(failedRequest))
+        }
+        _saveToDatabase(result.results)
         // if (result.noRepo.length > 0) {
         //     console.log("--- No repo found ---")
         //     result.noRepo.forEach(noRepo => console.log(noRepo))
