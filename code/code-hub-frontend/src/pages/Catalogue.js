@@ -1,42 +1,77 @@
-import React, { Component } from 'react';
 import '../css/Home.css';
+import React, { Component } from 'react';
 import PageWrapper from '../components/PageWrapper';
-import { Link } from 'react-router-dom';
-import Searchbar from '../components/Searchbar';
-import { Box } from '@material-ui/core';
+import { Box, CircularProgress, List, ListItem } from '@material-ui/core';
+import { getAllProjects } from '../helper/httpHelper';
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
 class Catalogue extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            projects: [],
+            isLoading: false
+        };
+        this.getAllProjects = getAllProjects.bind(this)
+    }
+
+    componentDidMount() {
+        this.setState({
+            isLoading: true
+        })
+        const contextThis = this;
+        this.getAllProjects()
+            .then(function (data) {
+                contextThis.setState({
+                    projects: data.projects,
+                    isLoading: false
+                })
+            })
+            .catch(function (error) {
+                console.log(error)
+                contextThis.setState({
+                    isLoading: false
+                })
+            });
+    }
+
+    renderProjectList() {
+        console.log(this.state.projects)
+        return <List>
+            {this.state.projects.map((project, index) => (
+                <ListItem key={index}>{project.projectName} | {project.projectDescription}</ListItem>
+            ))}
+        </List>
+    }
+
+
     render() {
-        const subHeadlineStyling = {
+        const headlineStyling = {
             margin: 0,
-            padding: 0,
+            padding: 10,
             paddingTop: '20px',
-            paddingBottom: '20px',
             color: 'white'
         }
 
-        const subHeroStyling = {
-            backgroundColor: '#0069E0',
+        const heroStyling = {
+            backgroundColor: '#004494',
             width: '100vw',
-            textAlign: 'center',
-            paddingBottom: '30px'
+            textAlign: 'center'
         }
-
-        return (
-            < PageWrapper >
-                <Box style={subHeroStyling}>
-                    <h3 style={subHeadlineStyling}>Full catalogue</h3>
-                    <div style={{ width: '50%' }} className="center">
-                        <Searchbar />
-                    </div>
-                    <div style={{ paddingTop: '10px', color: 'white' }}>or do you want to  <Link to="/add" style={{ color: 'white' }}>add your own</Link> project?</div>
-                </Box>
-                <h3>Just want to have a look around?</h3>
-                <span>Browse through the full <Link to="/catalogue">catalogue</Link></span>
-            </PageWrapper >
-        );
+        if (this.state.isLoading) {
+            return <PageWrapper><CircularProgress className="center" color="secondary" /></PageWrapper>
+        } else {
+            return (
+                < PageWrapper >
+                    <Box style={heroStyling}>
+                        <h1 style={headlineStyling}>Full catalogue</h1>
+                    </Box>
+                    {this.renderProjectList()}
+                </PageWrapper >
+            );
+        }
     }
 }
 

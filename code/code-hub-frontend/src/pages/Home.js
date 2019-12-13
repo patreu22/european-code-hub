@@ -53,7 +53,7 @@ class Home extends Component {
                     <div style={{ paddingTop: '10px', color: 'white' }}>or do you want to  <Link to="/add" style={{ color: 'white' }}>add your own</Link> project?</div>
                 </Box>
                 <h3>Just want to have a look around?</h3>
-                <span>Browse through the full <Link to="/hello">catalogue</Link></span>
+                <span>Browse through the full <Link to="/catalogue">catalogue</Link></span>
                 <Button onClick={this._onCreateUser}>Create User</Button>
                 <Button onClick={this._onCreateProject}>Create Project</Button>
             </PageWrapper>
