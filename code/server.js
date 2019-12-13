@@ -50,6 +50,18 @@ app.post('/api/create/user', function (req, res) {
     });
 });
 
+app.get('/api/get/projects', function (req, res) {
+    models.PROJECT_MODEL.find({}, function (err, docs) {
+        console.log("Request")
+        if (err) {
+            console.log(err)
+        } else {
+            return res.send(docs)
+        }
+    });
+});
+
+
 app.listen(process.env.PORT || 5000, function () {
     console.log(`Serving on port ${process.env.PORT || 5000}`);
 });
