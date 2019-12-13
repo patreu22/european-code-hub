@@ -1,8 +1,10 @@
 import '../css/Home.css';
 import React, { Component } from 'react';
 import PageWrapper from '../components/PageWrapper';
-import { Box, CircularProgress, List, ListItem } from '@material-ui/core';
+import { Box, CircularProgress, List } from '@material-ui/core';
 import { getAllProjects } from '../helper/httpHelper';
+import ProjectListItem from '../components/ProjectListItem'
+// import { FilterDrawer, filterSelectors, filterActions } from 'material-ui-filter'
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
@@ -37,16 +39,6 @@ class Catalogue extends Component {
             });
     }
 
-    renderProjectList() {
-        console.log(this.state.projects)
-        return <List>
-            {this.state.projects.map((project, index) => (
-                <ListItem key={index}>{project.projectName} | {project.projectDescription}</ListItem>
-            ))}
-        </List>
-    }
-
-
     render() {
         const headlineStyling = {
             margin: 0,
@@ -60,18 +52,43 @@ class Catalogue extends Component {
             width: '100vw',
             textAlign: 'center'
         }
+
+        // const filterFields = [
+        //     { name: 'name', label: 'Name' },
+        //     { name: 'email', label: 'Email' },
+        //     { name: 'registered', label: 'Registered', type: 'date' },
+        //     { name: 'isActive', label: 'Is Active', type: 'bool' },
+        // ];
+
         if (this.state.isLoading) {
             return <PageWrapper><CircularProgress className="center" color="secondary" /></PageWrapper>
         } else {
             return (
                 < PageWrapper >
                     <Box style={heroStyling}>
-                        <h1 style={headlineStyling}>Full catalogue</h1>
+                        <h1 style={headlineStyling}>Full project catalogue</h1>
                     </Box>
+                    {/* <FilterDrawer
+                        name={'demo'}
+                        fields={filterFields}
+                        locale={'de-DE'}
+                        DateTimeFormat={global.Intl.DateTimeFormat}
+                        okLabel="OK"
+                        cancelLabel="Abbrechen"
+                    /> */}
                     {this.renderProjectList()}
                 </PageWrapper >
             );
         }
+    }
+
+
+    renderProjectList() {
+        return <List>
+            {this.state.projects.map((project, index) => (
+                <ProjectListItem project={project} index={index}></ProjectListItem>
+            ))}
+        </List>
     }
 }
 
