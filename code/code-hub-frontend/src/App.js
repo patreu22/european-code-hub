@@ -7,26 +7,38 @@ import {
   Switch,
   Route
 } from "react-router-dom";
-
+import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Hello from './pages/Hello';
 import Add from './pages/Add';
 import Catalogue from './pages/Catalogue'
 
-
+const theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: '#004494'
+    },
+    secondary: {
+      main: '#ffd617'
+    }
+  }
+})
 class App extends React.Component {
+
   render() {
     return (
-      <Router>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route path="/search" component={Search} />
-          <Route path="/hello" component={Hello} />
-          <Route path="/add" component={Add} />
-          <Route path="/catalogue" component={Catalogue} />
-        </Switch>
-      </Router>
+      <MuiThemeProvider theme={theme}>
+        <Router>
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/search" component={Search} />
+            <Route path="/hello" component={Hello} />
+            <Route path="/add" component={Add} />
+            <Route path="/catalogue" component={Catalogue} />
+          </Switch>
+        </Router>
+      </MuiThemeProvider>
     );
   }
 }
