@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import InputBase from '@material-ui/core/InputBase';
+import { Divider, InputBase } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search';
 
 
@@ -26,7 +26,9 @@ const useStyles = makeStyles(theme => ({
         color: 'black',
         zIndex: 10
     },
-
+    divider: {
+        marginLeft: 10
+    },
     inputInput: {
         width: '100%',
         padding: theme.spacing(1, 1, 1, 7),
@@ -34,17 +36,43 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-export default function Searchbar() {
-    const classes = useStyles();
-    return (
-        <div className={classes.search}>
-            <div className={classes.searchIcon}>
-                <SearchIcon />
+class Searchbar extends React.Component {
+    // function Searchbar() {
+    // constructor(props) {
+    //     super(props);
+    //     this.state = {
+    //         currentSearchText: '',
+    //     };
+    //     this._onTextChanged = this._onTextChanged.bind(this)
+    // }
+
+    render() {
+        const classes = useStyles();
+        return (
+            <div className={classes.search}>
+                <div className={classes.searchIcon}>
+                    {/* <Link to="/search/"> */}
+                    <SearchIcon />
+                    <Divider orientation="vertical" className={classes.divider} />
+                    {/* </Link> */}
+                </div >
+                <InputBase
+                    placeholder="What are you looking for..?"
+                    // onChange={this._onTextChanged}
+                    className={classes.inputInput}
+                />
             </div>
-            <InputBase
-                placeholder="What are you looking for..?"
-                className={classes.inputInput}
-            />
-        </div>
-    );
+        );
+    }
+
+
+    // _onTextChanged(event) {
+    //     console.log(event)
+    //     const text = event.target.value
+    //     this.setState({
+    //         currentSearchText: text
+    //     }, () => console.log(`CurrentText: ${this.state.currentSearchText}`))
+    // }
 }
+
+export default Searchbar;

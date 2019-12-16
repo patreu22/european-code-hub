@@ -33,11 +33,11 @@ class App extends React.Component {
         <Router>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/search" component={Search} />
             <Route path="/hello" component={Hello} />
             <Route path="/add" component={Add} />
             <Route path="/catalogue" component={Catalogue} />
             <Route path="/projects/:projectname" component={Project} />
+            <Route path="/search/:searchterm" component={Search} />
           </Switch>
         </Router>
       </MuiThemeProvider>

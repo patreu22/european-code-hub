@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Button, Box } from '@material-ui/core';
-import Searchbar from '../components/Searchbar';
+import SearchHero from '../components/SearchHero';
 import { Link } from 'react-router-dom';
 import '../css/Home.css';
 import PageWrapper from '../components/PageWrapper';
@@ -18,26 +18,12 @@ class Home extends Component {
             color: 'white'
         }
 
-        const subHeadlineStyling = {
-            margin: 0,
-            padding: 0,
-            paddingTop: '20px',
-            paddingBottom: '20px',
-            color: 'white'
-        }
-
         const heroStyling = {
             backgroundColor: '#004494',
             width: '100vw',
             textAlign: 'center'
         }
 
-        const subHeroStyling = {
-            backgroundColor: '#0069E0',
-            width: '100vw',
-            textAlign: 'center',
-            paddingBottom: '30px'
-        }
 
         return (
             < PageWrapper >
@@ -45,13 +31,7 @@ class Home extends Component {
                     <h1 style={headlineStyling}>One Europe, One Codebase</h1>
                     {this.starsLogo()}
                 </Box>
-                <Box style={subHeroStyling}>
-                    <h3 style={subHeadlineStyling}>Open Source projects for governmental purposes</h3>
-                    <div style={{ width: '50%' }} className="center">
-                        <Searchbar />
-                    </div>
-                    <div style={{ paddingTop: '10px', color: 'white' }}>or do you want to  <Link to="/add" style={{ color: 'white' }}>add your own</Link> project?</div>
-                </Box>
+                <SearchHero type="home" />
                 <h3>Just want to look around?</h3>
                 <span>Browse through the full <Link to="/catalogue">catalogue</Link></span>
                 <Button onClick={this._onCreateUser}>Create User</Button>

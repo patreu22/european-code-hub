@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import PageWrapper from '../components/PageWrapper';
 import { Box, CircularProgress, List } from '@material-ui/core';
 import { getAllProjects } from '../helper/httpHelper';
-import ProjectListItem from '../components/ProjectListItem'
+import ProjectListItem from '../components/ProjectListItem';
+import SearchHero from '../components/SearchHero';
 // import { FilterDrawer, filterSelectors, filterActions } from 'material-ui-filter'
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
@@ -64,7 +65,7 @@ class Catalogue extends Component {
             return <PageWrapper><CircularProgress className="center" color="secondary" /></PageWrapper>
         } else {
             return (
-                < PageWrapper >
+                < PageWrapper>
                     <Box style={heroStyling}>
                         <h1 style={headlineStyling}>Full project catalogue</h1>
                     </Box>
@@ -76,6 +77,7 @@ class Catalogue extends Component {
                         okLabel="OK"
                         cancelLabel="Abbrechen"
                     /> */}
+                    <SearchHero type="catalogue" />
                     {this.renderProjectList()}
                 </PageWrapper >
             );
@@ -86,7 +88,7 @@ class Catalogue extends Component {
     renderProjectList() {
         return <List>
             {this.state.projects.map((project, index) => (
-                <ProjectListItem project={project} index={index}></ProjectListItem>
+                <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
             ))}
         </List>
     }

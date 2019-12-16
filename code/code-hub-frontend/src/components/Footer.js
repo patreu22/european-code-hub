@@ -26,7 +26,6 @@ const useStyles = makeStyles(theme => ({
 
 export default function Footer() {
     const classes = useStyles();
-
     return (
         <Box boxShadow={4} className={classes.footer}>
             <span className={classes.footerNote}>EU ♡ FLOSS</span>
