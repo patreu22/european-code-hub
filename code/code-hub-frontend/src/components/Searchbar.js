@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Divider, InputBase } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search';
-
+import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
 
 const useStyles = makeStyles(theme => ({
     search: {
@@ -19,12 +20,17 @@ const useStyles = makeStyles(theme => ({
         width: theme.spacing(7),
         height: '100%',
         position: 'absolute',
-        pointerEvents: 'none',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         color: 'black',
         zIndex: 10
+    },
+    linkActivated: {
+        pointerEvents: 'auto'
+    },
+    linkDeactivated: {
+        pointerEvents: 'none'
     },
     divider: {
         marginLeft: 10
@@ -36,43 +42,40 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
-class Searchbar extends React.Component {
-    // function Searchbar() {
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         currentSearchText: '',
-    //     };
-    //     this._onTextChanged = this._onTextChanged.bind(this)
-    // }
+// class Searchbar extends React.Component {
+function Searchbar(props) {
+    const classes = useStyles();
+    const [searchInput, setSearchInput] = useState('');
 
-    render() {
-        const classes = useStyles();
-        return (
+
+    return (
+        <div>
             <div className={classes.search}>
-                <div className={classes.searchIcon}>
-                    {/* <Link to="/search/"> */}
-                    <SearchIcon />
-                    <Divider orientation="vertical" className={classes.divider} />
-                    {/* </Link> */}
-                </div >
+                <Link to={`/search/${searchInput}`} className={_getClassName(searchInput, classes)}>
+                    <div className={classes.searchIcon}>
+                        <SearchIcon />
+                        <Divider orientation="vertical" className={classes.divider} />
+                    </div >
+                </Link>
                 <InputBase
                     placeholder="What are you looking for..?"
-                    // onChange={this._onTextChanged}
+                    onKeyDown={(e) => _handleKeyDown(e, props, searchInput)}
+                    onChange={(e) => setSearchInput(e.target.value)}
                     className={classes.inputInput}
                 />
             </div>
-        );
-    }
-
-
-    // _onTextChanged(event) {
-    //     console.log(event)
-    //     const text = event.target.value
-    //     this.setState({
-    //         currentSearchText: text
-    //     }, () => console.log(`CurrentText: ${this.state.currentSearchText}`))
-    // }
+        </div >
+    );
 }
 
-export default Searchbar;
+function _getClassName(searchInput, classes) {
+    return searchInput ? classes.linkActivated : classes.linkDeactivated;
+}
+
+function _handleKeyDown(event, props, searchInput) {
+    if (event.key === 'Enter') {
+        props.history.push(`/search/${searchInput}`);
+    }
+}
+
+export default withRouter(Searchbar);
