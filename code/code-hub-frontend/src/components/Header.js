@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
         zIndex: 100,
     },
     headerToolbar: {
-        minHeight: '8vh',
+        minHeight: '5vh',
         color: 'black',
         backgroundColor: 'white'
     },

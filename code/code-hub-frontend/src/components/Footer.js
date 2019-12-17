@@ -13,7 +13,7 @@ const useStyles = makeStyles(theme => ({
         textAlign: 'center',
         backgroundColor: 'white',
         flex: 'none',
-        minHeight: '7vH'
+        minHeight: '5vH'
     },
     footerNote: {
         fontSize: 11

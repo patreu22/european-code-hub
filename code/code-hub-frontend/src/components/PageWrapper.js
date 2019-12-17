@@ -5,8 +5,8 @@ import Footer from './Footer';
 class App extends React.Component {
     render() {
         const contentStyle = {
-            minHeight: '85vH',
-            paddingTop: '8vH',
+            minHeight: '90vH',
+            paddingTop: '5vH',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
