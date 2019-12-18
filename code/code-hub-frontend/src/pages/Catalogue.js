@@ -51,7 +51,8 @@ class Catalogue extends Component {
         const heroStyling = {
             backgroundColor: '#004494',
             width: '100vw',
-            textAlign: 'center'
+            textAlign: 'center',
+            paddingBottom: '1vh'
         }
 
         // const filterFields = [
@@ -77,7 +78,7 @@ class Catalogue extends Component {
                         okLabel="OK"
                         cancelLabel="Abbrechen"
                     /> */}
-                    <SearchHero type="catalogue" />
+                    {/* <SearchHero type="catalogue" /> */}
                     {this.renderProjectList()}
                 </PageWrapper >
             );
@@ -86,10 +87,21 @@ class Catalogue extends Component {
 
 
     renderProjectList() {
-        return <List>
-            {this.state.projects.map((project, index) => (
-                <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
-            ))}
+        const flexContainer = {
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            padding: 0,
+            width: '85vw',
+            marginTop: '1vh',
+            justifyContent: 'flex-start'
+        };
+
+        const projects = this.state.projects.map((project, index) => (
+            <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
+        ))
+        return <List style={flexContainer}>
+            {projects}
         </List>
     }
 }
