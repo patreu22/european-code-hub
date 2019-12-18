@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Button, Box } from '@material-ui/core';
+import { Button, Box, Paper, Divider } from '@material-ui/core';
 import SearchHero from '../components/SearchHero';
-import { Link } from 'react-router-dom';
 import '../css/Home.css';
 import PageWrapper from '../components/PageWrapper';
 import EuropeanStars from '../assets/europe_stars.svg';
@@ -14,28 +13,62 @@ class Home extends Component {
         const headlineStyling = {
             margin: 0,
             padding: 10,
-            paddingTop: '20px',
+            paddingTop: '2vh',
             color: 'white'
         }
 
         const heroStyling = {
             backgroundColor: '#004494',
             width: '100vw',
-            textAlign: 'center'
+            textAlign: 'center',
+            paddingTop: '1vh'
+        }
+
+        const catalogueBoxStyle = {
+            alignContent: 'center',
+            textAlign: 'center',
+            color: 'black',
+            marginTop: '4vh',
+            marginLeft: '0.5vw',
+            marginRight: '0.5vw',
+            paddingTop: '1vh',
+            backgroundColor: 'F5F5F5',
+            width: '29vw',
+            maxHeight: '25vH'
+        }
+
+        const browseButtonStyle = {
+            backgroundColor: '#0069E0',
+            color: 'white',
+            margin: '3vh 0px 1vh 0px'
         }
 
 
         return (
             < PageWrapper >
                 <Box style={heroStyling}>
-                    <h1 style={headlineStyling}>One Europe, One Codebase</h1>
+                    <h1 style={headlineStyling}>The place for European Code</h1>
                     {this.starsLogo()}
                 </Box>
                 <SearchHero type="home" />
-                <h3>Just want to look around?</h3>
-                <span>Browse through the full <Link to="/catalogue">catalogue</Link></span>
-                <Button onClick={this._onCreateUser}>Create User</Button>
-                <Button onClick={this._onCreateProject}>Create Project</Button>
+                <Box flexDirection="row" flex="1" display="flex">
+                    <Paper style={catalogueBoxStyle} border={1}>
+                        <h3>Explore!</h3>
+                        <Divider />
+                        <p style={{ textAlign: 'left', padding: '1vH 1vw 1vH 1vw' }}>See all the different projects listed on this page. They are all programmed, funded and/or maintained by the administrations of the European Countries.</p>
+                        <Button style={browseButtonStyle} variant="contained" href="/catalogue">Browse  the catalogue</Button>
+                        {/* <Button onClick={this._onCreateUser}>Create User</Button>
+                    <Button onClick={this._onCreateProject}>Create Project</Button> */}
+                    </Paper>
+                    <Paper style={catalogueBoxStyle} border={1}>
+                        <h3>Contribute?</h3>
+                        <Divider />
+                        <p style={{ textAlign: 'left', padding: '1vh 1vw 1vh 1vw' }}>Find out how to contribute to this great website. You can make this page more popular by sharing, developing or listing your own projects here</p>
+                        <Button style={browseButtonStyle} variant="contained" href="/catalogue">Contribution page</Button>
+                        {/* <Button onClick={this._onCreateUser}>Create User</Button>
+                    <Button onClick={this._onCreateProject}>Create Project</Button> */}
+                    </Paper>
+                </Box>
             </PageWrapper>
         );
     }
