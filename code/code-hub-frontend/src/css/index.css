@@ -18,9 +18,10 @@ body {
 a {
   text-decoration: none;
   font-weight: bold;
+  color: black;
 }
 a:hover {
-   color: #ffd617
+  color: #ffd617
 }
 
 a:visited {
@@ -28,6 +29,11 @@ a:visited {
   font-weight: bold;
   color: black;
 }
+
+a:visited:hover {
+  color: #ffd617
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
