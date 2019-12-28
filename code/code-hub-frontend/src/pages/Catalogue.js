@@ -52,7 +52,7 @@ class Catalogue extends Component {
             backgroundColor: '#004494',
             width: '100vw',
             textAlign: 'center',
-            paddingBottom: '1vh'
+            padding: '2vh 0 2vh 0'
         }
 
         // const filterFields = [
@@ -62,15 +62,13 @@ class Catalogue extends Component {
         //     { name: 'isActive', label: 'Is Active', type: 'bool' },
         // ];
 
-        if (this.state.isLoading) {
-            return <PageWrapper><CircularProgress className="center" color="secondary" /></PageWrapper>
-        } else {
-            return (
-                < PageWrapper>
-                    <Box style={heroStyling}>
-                        <h1 style={headlineStyling}>Full project catalogue</h1>
-                    </Box>
-                    {/* <FilterDrawer
+        var contentBox = this.state.isLoading ? <CircularProgress className="center" color="secondary" /> : this.renderProjectList()
+        return (
+            < PageWrapper>
+                <Box style={heroStyling}>
+                    <h1 style={headlineStyling}>Complete project catalogue</h1>
+                </Box>
+                {/* <FilterDrawer
                         name={'demo'}
                         fields={filterFields}
                         locale={'de-DE'}
@@ -78,11 +76,10 @@ class Catalogue extends Component {
                         okLabel="OK"
                         cancelLabel="Abbrechen"
                     /> */}
-                    {/* <SearchHero type="catalogue" /> */}
-                    {this.renderProjectList()}
-                </PageWrapper >
-            );
-        }
+                {/* <SearchHero type="catalogue" /> */}
+                {contentBox}
+            </PageWrapper >
+        );
     }
 
 
