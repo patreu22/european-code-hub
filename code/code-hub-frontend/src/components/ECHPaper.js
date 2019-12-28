@@ -14,6 +14,7 @@ class ECHPaper extends Component {
             paddingTop: '1vh',
             backgroundColor: 'F5F5F5',
             width: '29vw',
+            alignSelf: 'baseline'
         }
         const browseButtonStyle = {
             backgroundColor: '#0069E0',

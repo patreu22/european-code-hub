@@ -1,6 +1,6 @@
 import '../css/Home.css';
 import React, { Component } from 'react';
-import { Button, Box, Paper, Divider } from '@material-ui/core';
+import { Box } from '@material-ui/core';
 import PageWrapper from '../components/PageWrapper';
 import SearchHero from '../components/SearchHero';
 import ECHPaper from '../components/ECHPaper';
@@ -45,15 +45,15 @@ class Home extends Component {
         );
     }
 
-    _onCreateUser() {
-        console.log("Let's create a user!")
-        const password = '12345678';
-        registerUser("Steve McStevenson", password, "mymail@mailmy.com", "Coding Ninja")
-    }
+    // _onCreateUser() {
+    //     console.log("Let's create a user!")
+    //     const password = '12345678';
+    //     registerUser("Steve McStevenson", password, "mymail@mailmy.com", "Coding Ninja")
+    // }
 
-    _onCreateProject() {
-        registerProject({ gitUrl: "gitUrl", projectName: "Awesome Project", projectDescription: "Awesome description", contactMail: "awesome@contact.com" });
-    }
+    // _onCreateProject() {
+    //     registerProject({ gitUrl: "gitUrl", projectName: "Awesome Project", projectDescription: "Awesome description", contactMail: "awesome@contact.com" });
+    // }
 
     starsLogo() {
         return <img width={'100px'} height={'100px'} src={EuropeanStars} alt="logo" style={{ paddingTop: '10px', paddingBottom: '20px' }} />
