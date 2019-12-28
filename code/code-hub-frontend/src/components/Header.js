@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Badge, AppBar, Toolbar, Menu, MenuItem, Typography, IconButton } from '@material-ui/core/';
-import { Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
+import { Build as BuildIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
 import { Link } from 'react-router-dom';
 
 import EuropeanLogo from '../assets/europe_logo.png';
@@ -95,6 +95,13 @@ export default function Header() {
                             <Badge color="secondary">
                                 <Link to="/search">
                                     <SearchIcon />
+                                </Link>
+                            </Badge>
+                        </IconButton>
+                        <IconButton color="inherit">
+                            <Badge color="secondary">
+                                <Link to="/contribute">
+                                    <BuildIcon />
                                 </Link>
                             </Badge>
                         </IconButton>
