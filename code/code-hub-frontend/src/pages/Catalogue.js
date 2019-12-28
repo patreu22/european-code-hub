@@ -41,20 +41,6 @@ class Catalogue extends Component {
     }
 
     render() {
-        const headlineStyling = {
-            margin: 0,
-            padding: 10,
-            paddingTop: '20px',
-            color: 'white'
-        }
-
-        const heroStyling = {
-            backgroundColor: '#004494',
-            width: '100vw',
-            textAlign: 'center',
-            padding: '2vh 0 2vh 0'
-        }
-
         // const filterFields = [
         //     { name: 'name', label: 'Name' },
         //     { name: 'email', label: 'Email' },
@@ -64,10 +50,7 @@ class Catalogue extends Component {
 
         var contentBox = this.state.isLoading ? <CircularProgress className="center" color="secondary" /> : this.renderProjectList()
         return (
-            < PageWrapper>
-                <Box style={heroStyling}>
-                    <h1 style={headlineStyling}>Complete project catalogue</h1>
-                </Box>
+            < PageWrapper headlineTitle="Complete project catalogue">
                 {/* <FilterDrawer
                         name={'demo'}
                         fields={filterFields}

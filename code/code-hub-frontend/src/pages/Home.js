@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Button, Box, Paper, Divider } from '@material-ui/core';
 import PageWrapper from '../components/PageWrapper';
 import SearchHero from '../components/SearchHero';
+import ECHPaper from '../components/ECHPaper';
 import EuropeanStars from '../assets/europe_stars.svg';
 
 import { registerUser, registerProject } from '../helper/httpHelper';
@@ -52,20 +53,12 @@ class Home extends Component {
                 </Box>
                 <SearchHero type="home" />
                 <Box flexDirection="row" flex="1" display="flex">
-                    <Paper style={catalogueBoxStyle} border={1}>
-                        <h3>Explore!</h3>
-                        <Divider />
-                        <p style={{ textAlign: 'left', padding: '1vH 1vw 1vH 1vw' }}>See all the different projects listed on this page. They are all programmed, funded and/or maintained by the administrations of the European Countries.</p>
-                        <Button style={browseButtonStyle} variant="contained" href="/catalogue">Browse the catalogue</Button>
-                    </Paper>
-                    <Paper style={catalogueBoxStyle} border={1}>
-                        <h3>Contribute?</h3>
-                        <Divider />
-                        <p style={{ textAlign: 'left', padding: '1vh 1vw 1vh 1vw' }}>Find out how to contribute to this great website. You can make this page more popular by sharing, developing or listing your own projects here</p>
-                        <Button style={browseButtonStyle} variant="contained" href="/contribute">Contribution page</Button>
-                        {/* <Button onClick={this._onCreateUser}>Create User</Button>
-                    <Button onClick={this._onCreateProject}>Create Project</Button> */}
-                    </Paper>
+                    <ECHPaper title="Explore!" buttonTitle="Browse the catalogue" buttonLink="/catalogue">
+                        See all the different projects listed on this page. They are all programmed, funded and/or maintained by the administrations of the European Countries.
+                    </ECHPaper>
+                    <ECHPaper title="Contribute?" buttonTitle="Contribution page" buttonLink="/contribute">
+                        Find out how to contribute to this great website. You can make this page more popular by sharing, developing or listing your own projects here.
+                    </ECHPaper>
                 </Box>
             </PageWrapper>
         );

@@ -40,7 +40,7 @@ class SearchHero extends Component {
             <Paper style={subHeroStyling}>
                 <h3 style={subHeadlineStyling}>Find Open Source projects funded by the public</h3>
                 <Divider style={dividerStyling} />
-                <div style={{ width: '50%' }} className="center">
+                <div style={{ width: '80%' }} className="center">
                     <Searchbar />
                 </div>
                 <div style={{ paddingTop: '1vh', color: 'black' }}>or do you want to  <Link to="/add" style={{ color: 'black' }}>add your own</Link> project?</div>
