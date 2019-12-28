@@ -25,25 +25,6 @@ class Home extends Component {
             paddingTop: '1vh'
         }
 
-        const catalogueBoxStyle = {
-            alignContent: 'center',
-            textAlign: 'center',
-            color: 'black',
-            marginTop: '4vh',
-            marginLeft: '0.5vw',
-            marginRight: '0.5vw',
-            marginBottom: '4vH',
-            paddingTop: '1vh',
-            backgroundColor: 'F5F5F5',
-            width: '29vw',
-        }
-
-        const browseButtonStyle = {
-            backgroundColor: '#0069E0',
-            color: 'white',
-            margin: '1vh 0px 2vh 0px'
-        }
-
 
         return (
             < PageWrapper >
