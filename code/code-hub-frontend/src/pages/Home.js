@@ -1,8 +1,8 @@
+import '../css/Home.css';
 import React, { Component } from 'react';
 import { Button, Box, Paper, Divider } from '@material-ui/core';
-import SearchHero from '../components/SearchHero';
-import '../css/Home.css';
 import PageWrapper from '../components/PageWrapper';
+import SearchHero from '../components/SearchHero';
 import EuropeanStars from '../assets/europe_stars.svg';
 
 import { registerUser, registerProject } from '../helper/httpHelper';
@@ -31,16 +31,16 @@ class Home extends Component {
             marginTop: '4vh',
             marginLeft: '0.5vw',
             marginRight: '0.5vw',
+            marginBottom: '4vH',
             paddingTop: '1vh',
             backgroundColor: 'F5F5F5',
             width: '29vw',
-            maxHeight: '25vH'
         }
 
         const browseButtonStyle = {
             backgroundColor: '#0069E0',
             color: 'white',
-            margin: '3vh 0px 1vh 0px'
+            margin: '1vh 0px 2vh 0px'
         }
 
 
@@ -56,15 +56,13 @@ class Home extends Component {
                         <h3>Explore!</h3>
                         <Divider />
                         <p style={{ textAlign: 'left', padding: '1vH 1vw 1vH 1vw' }}>See all the different projects listed on this page. They are all programmed, funded and/or maintained by the administrations of the European Countries.</p>
-                        <Button style={browseButtonStyle} variant="contained" href="/catalogue">Browse  the catalogue</Button>
-                        {/* <Button onClick={this._onCreateUser}>Create User</Button>
-                    <Button onClick={this._onCreateProject}>Create Project</Button> */}
+                        <Button style={browseButtonStyle} variant="contained" href="/catalogue">Browse the catalogue</Button>
                     </Paper>
                     <Paper style={catalogueBoxStyle} border={1}>
                         <h3>Contribute?</h3>
                         <Divider />
                         <p style={{ textAlign: 'left', padding: '1vh 1vw 1vh 1vw' }}>Find out how to contribute to this great website. You can make this page more popular by sharing, developing or listing your own projects here</p>
-                        <Button style={browseButtonStyle} variant="contained" href="/catalogue">Contribution page</Button>
+                        <Button style={browseButtonStyle} variant="contained" href="/contribute">Contribution page</Button>
                         {/* <Button onClick={this._onCreateUser}>Create User</Button>
                     <Button onClick={this._onCreateProject}>Create Project</Button> */}
                     </Paper>

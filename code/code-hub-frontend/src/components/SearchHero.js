@@ -1,8 +1,7 @@
 import React, { Component, } from 'react';
-import { Box, Paper } from '@material-ui/core';
+import { Divider, Paper } from '@material-ui/core';
 import Searchbar from './Searchbar';
 import { Link } from 'react-router-dom'
-import blue from '@material-ui/core/colors/blue';
 
 const subHeadlineStyling = {
     margin: 0,
@@ -18,6 +17,10 @@ const subHeroStyling = {
     textAlign: 'center',
     paddingBottom: '3vh',
     margin: '5vh 2vh 2vh 2vh'
+}
+
+const dividerStyling = {
+    margin: '1vh 0 3vh 0'
 }
 
 class SearchHero extends Component {
@@ -36,6 +39,7 @@ class SearchHero extends Component {
         return (
             <Paper style={subHeroStyling}>
                 <h3 style={subHeadlineStyling}>Find Open Source projects funded by the public</h3>
+                <Divider style={dividerStyling} />
                 <div style={{ width: '50%' }} className="center">
                     <Searchbar />
                 </div>
