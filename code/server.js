@@ -3,6 +3,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const models = require('./models');
+const authentication = require('./authentication')
 
 const MONGOOSE_DB_URL = 'mongodb://localhost:27017/code-hub';
 
@@ -41,9 +42,10 @@ app.post('/api/create/project', function (req, res) {
 
 app.post('/api/create/user', function (req, res) {
     const user = req.body;
+    const hash = authentication.getPasswordHash(user.password)
     saveUserToDB({
         username: user.username,
-        password: user.password,
+        password: hash,
         mail: user.mail,
         position: user.position,
         res: res
@@ -61,10 +63,32 @@ app.get('/api/get/projects', function (req, res) {
     });
 });
 
+app.post('/api/create/token', async function (req, res) {
+    const authValues = req.body;
+    const pairExists = await userAndHashExistInDB({ mail: authValues.mail, password: authValues.password })
+    if (pairExists) {
+        const token = authentication.generateWebtoken(authValues.mail, authValues.password)
+        return res.status(200).send(token)
+    } else {
+        return res.status(500).json({ error: "Not Authorized" });
+    }
+});
 
 app.listen(process.env.PORT || 5000, function () {
     console.log(`Serving on port ${process.env.PORT || 5000}`);
 });
+
+async function userAndHashExistInDB({ mail, password }) {
+    const User = models.USER_MODEL;
+    const user = await User.findOne({ 'mail': mail })
+
+    const hash = user ? user.password : "-1"
+    const isCorrect = await authentication.checkPassword(password, hash)
+
+    return new Promise(resolve => {
+        resolve(isCorrect)
+    });
+}
 
 
 function saveUserToDB({ username, password, mail, position, res }) {
@@ -105,4 +129,3 @@ function saveProjectToDB({ gitUrl, projectName, projectDescription, contactMail,
         }
     });
 }
-

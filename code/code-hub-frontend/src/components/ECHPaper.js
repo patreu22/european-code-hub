@@ -1,8 +1,24 @@
 import React, { Component, } from 'react';
 import { Button, Divider, Paper, TextField } from '@material-ui/core';
 import { Link } from 'react-router-dom'
+import { registerUser } from '../helper/httpHelper'
+import { isValidEmail, isValidPassword } from '../helper/validationHelper'
+import { requestLoginToken } from '../helper/httpHelper'
+import { setVerificationToken, getVerificationToken } from '../helper/cookieHelper'
 
 class ECHPaper extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            mail: '',
+            password: ''
+        };
+
+        this._performLogin = this._performLogin.bind(this)
+        this._performRegistration = this._performRegistration.bind(this)
+    }
+
     render() {
         const catalogueBoxStyle = {
             alignContent: 'center',
@@ -61,20 +77,20 @@ class ECHPaper extends Component {
         if (this.props.type === "login") {
             return <div>
                 {this.props.title ? <Divider /> : null}
-                <p style={formParagraphStyle}>
+                <form style={formParagraphStyle}>
                     {this._renderEmailField(inputFieldStyle)}
                     {this._renderPasswordField(inputFieldStyle)}
                     {this._renderSubmitButton()}
-                </p>
+                </form>
             </div>
         } else if (this.props.type === "register") {
             return <div>
                 {this.props.title ? <Divider /> : null}
-                <p style={formParagraphStyle}>
+                <form style={formParagraphStyle}>
                     {this._renderEmailField(inputFieldStyle)}
                     {this._renderPasswordField(inputFieldStyle)}
                     {this._renderSubmitButton()}
-                </p>
+                </form>
             </div>
         } else {
             return <span>
@@ -86,7 +102,7 @@ class ECHPaper extends Component {
     }
 
     _renderEmailField(inputFieldStyle) {
-        return <TextField style={inputFieldStyle} label="Email" type="email" />
+        return <TextField style={inputFieldStyle} label="Email" type="email" onChange={(event) => this.onMailChanged(event)} />
     }
 
     _renderPasswordField(inputFieldStyle) {
@@ -95,6 +111,7 @@ class ECHPaper extends Component {
             type="password"
             autoComplete="current-password"
             style={inputFieldStyle}
+            onChange={(event) => this.onPasswordChanged(event)}
         />
     }
 
@@ -114,16 +131,49 @@ class ECHPaper extends Component {
 
         if (this.props.type === 'login') {
             return <div style={{ width: '100%' }}>
-                <Button style={formButtonStyle} variant="contained">Login</Button>
+                <Button style={formButtonStyle} variant="contained" onClick={this._performLogin}>Login</Button>
                 <div style={registerTextStyle}>or do you need to  <Link to="/register" style={{ color: 'black' }}>register</Link> first?</div>
             </div>
         } else {
             return <div style={{ width: '100%' }}>
-                <Button style={formButtonStyle} variant="contained">Register</Button>
+                <Button style={formButtonStyle} variant="contained" onClick={this._performRegistration}>Register</Button>
                 <div style={registerTextStyle}>You already have an account?  <Link to="/login" style={{ color: 'black' }}>Login</Link> directly.</div>
             </div>
         }
+    }
 
+    onMailChanged(event) {
+        this.setState({
+            mail: event.target.value
+        })
+    }
+
+    onPasswordChanged(event) {
+        this.setState({
+            password: event.target.value
+        })
+    }
+
+    _performLogin() {
+        //TODO: Loading indicator
+        requestLoginToken(this.state.mail, this.state.password).then((response) => {
+            setVerificationToken(response)
+
+        }).catch((error) => {
+            console.log(error)
+        })
+    }
+
+    _performRegistration() {
+        //TODO: Data validation, Email check and long password check
+        if (isValidEmail(this.state.mail) && isValidPassword(this.state.password)) {
+            console.log(`${this.state.mail} is a valid mail.`)
+            registerUser(`user-${this.state.mail}`, this.state.password, this.state.mail, "novice")
+            //Submit...
+        } else {
+            console.log(`${this.state.mail} is not a valid mail or ${this.state.password} is not a valid password.`)
+            //Error message...
+        }
     }
 }
 

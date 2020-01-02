@@ -1,12 +1,10 @@
 import * as axios from 'axios';
-import { getPasswordHash } from './passwordHelper';
 
 export function registerUser(username, password, mail, position) {
     console.log("Let's create a user!")
-    const hash = getPasswordHash(password);
     axios.post('/api/create/user', {
         username: username,
-        hash: hash,
+        password: password,
         mail: mail,
         position: position
     }).then(function (response) {
@@ -26,6 +24,17 @@ export function registerProject({ gitUrl, projectName, projectDescription, conta
         console.log(response);
     }).catch(function (error) {
         console.log(error);
+    });
+}
+
+export async function requestLoginToken(mail, password) {
+    const response = await axios.post('/api/create/token', {
+        mail: mail,
+        password: password,
+    })
+
+    return new Promise(resolve => {
+        resolve(response.data)
     });
 }
 
