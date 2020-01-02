@@ -1,5 +1,6 @@
 import React, { Component, } from 'react';
-import { Button, Paper, Divider } from '@material-ui/core';
+import { Button, Divider, Paper, TextField } from '@material-ui/core';
+import { Link } from 'react-router-dom'
 
 class ECHPaper extends Component {
     render() {
@@ -16,11 +17,16 @@ class ECHPaper extends Component {
             width: '29vw',
             alignSelf: 'baseline'
         }
-        const browseButtonStyle = {
-            backgroundColor: '#0069E0',
-            color: 'white',
-            margin: '1vh 0px 2vh 0px'
-        }
+
+        return (
+            <Paper style={catalogueBoxStyle} border={1}>
+                {this.props.title ? <h3>{this.props.title}</h3> : null}
+                {this._renderContentField()}
+            </Paper>
+        );
+    }
+
+    _renderContentField() {
         const textWhenButtonVisible = {
             textAlign: 'left',
             padding: '1vH 1vw 1vH 1vw'
@@ -30,15 +36,94 @@ class ECHPaper extends Component {
             padding: '2vH 1vw 2vH 1vw'
         }
 
+        const formParagraphStyle = {
+            textAlign: 'center',
+            padding: '2vH 1vw 2vH 1vw',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+        }
+
+        const inputFieldStyle = {
+            width: '80%',
+            paddingBottom: '1vw'
+        }
+
         const paragraphStyle = this.props.buttonTitle ? textWhenButtonVisible : textWhenButtonInvisible
-        return (
-            <Paper style={catalogueBoxStyle} border={1}>
-                {this.props.title ? <h3>{this.props.title}</h3> : null}
+
+        const browseButtonStyle = {
+            backgroundColor: '#0069E0',
+            color: 'white',
+            margin: '1vh 0px 2vh 0px',
+        }
+
+
+        if (this.props.type === "login") {
+            return <div>
+                {this.props.title ? <Divider /> : null}
+                <p style={formParagraphStyle}>
+                    {this._renderEmailField(inputFieldStyle)}
+                    {this._renderPasswordField(inputFieldStyle)}
+                    {this._renderSubmitButton()}
+                </p>
+            </div>
+        } else if (this.props.type === "register") {
+            return <div>
+                {this.props.title ? <Divider /> : null}
+                <p style={formParagraphStyle}>
+                    {this._renderEmailField(inputFieldStyle)}
+                    {this._renderPasswordField(inputFieldStyle)}
+                    {this._renderSubmitButton()}
+                </p>
+            </div>
+        } else {
+            return <span>
                 {this.props.title ? <Divider /> : null}
                 <p style={paragraphStyle}>{this.props.children}</p>
                 {this.props.buttonTitle ? <Button style={browseButtonStyle} variant="contained" href={this.props.buttonLink}>{this.props.buttonTitle}</Button> : null}
-            </Paper>
-        );
+            </span>
+        }
+    }
+
+    _renderEmailField(inputFieldStyle) {
+        return <TextField style={inputFieldStyle} label="Email" type="email" />
+    }
+
+    _renderPasswordField(inputFieldStyle) {
+        return <TextField
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            style={inputFieldStyle}
+        />
+    }
+
+    _renderSubmitButton() {
+        const formButtonStyle = {
+            backgroundColor: '#0069E0',
+            color: 'white',
+            margin: '2vh 0px 0.5vh 0px',
+            width: '80%'
+        }
+
+        const registerTextStyle = {
+            marginBottom: '2vh',
+            paddingTop: '1vh',
+            color: 'black'
+        }
+
+        if (this.props.type === 'login') {
+            return <div style={{ width: '100%' }}>
+                <Button style={formButtonStyle} variant="contained">Login</Button>
+                <div style={registerTextStyle}>or do you need to  <Link to="/register" style={{ color: 'black' }}>register</Link> first?</div>
+            </div>
+        } else {
+            return <div style={{ width: '100%' }}>
+                <Button style={formButtonStyle} variant="contained">Register</Button>
+                <div style={registerTextStyle}>You already have an account?  <Link to="/login" style={{ color: 'black' }}>Login</Link> directly.</div>
+            </div>
+        }
+
     }
 }
 

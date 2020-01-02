@@ -14,6 +14,8 @@ import Hello from './pages/Hello';
 import Add from './pages/Add';
 import Catalogue from './pages/Catalogue'
 import Project from './pages/Project'
+import Login from './pages/Login'
+import Register from './pages/Register'
 import Contribute from './pages/Contribute'
 
 const theme = createMuiTheme({
@@ -40,6 +42,8 @@ class App extends React.Component {
             <Route path="/contribute" component={Contribute} />
             <Route path="/projects/:projectname" component={Project} />
             <Route path="/search/:searchterm" component={Search} />
+            <Route path="/login" component={Login} />
+            <Route path="/register" component={Register} />
           </Switch>
         </Router>
       </MuiThemeProvider>
