@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom'
 import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
-import { setVerificationToken, getVerificationToken } from '../helper/cookieHelper'
+import { setVerificationToken } from '../helper/cookieHelper'
+import ImageUploader from 'react-images-upload';
 
 class ECHPaper extends Component {
 
@@ -12,11 +13,13 @@ class ECHPaper extends Component {
         super(props);
         this.state = {
             mail: '',
-            password: ''
+            password: '',
+            profileImage: null
         };
 
         this._performLogin = this._performLogin.bind(this)
         this._performRegistration = this._performRegistration.bind(this)
+        this.onDrop = this.onDrop.bind(this);
     }
 
     render() {
@@ -65,6 +68,11 @@ class ECHPaper extends Component {
             paddingBottom: '1vw'
         }
 
+        const dropzoneWrapperStyle = {
+            maxWidth: '80%',
+            paddingBottom: '1vw',
+        }
+
         const paragraphStyle = this.props.buttonTitle ? textWhenButtonVisible : textWhenButtonInvisible
 
         const browseButtonStyle = {
@@ -89,6 +97,21 @@ class ECHPaper extends Component {
                 <form style={formParagraphStyle}>
                     {this._renderEmailField(inputFieldStyle)}
                     {this._renderPasswordField(inputFieldStyle)}
+                    {/* TODO: Padding hinzufügen */}
+                    <div style={dropzoneWrapperStyle}>
+                        <ImageUploader
+                            withIcon={true}
+                            buttonText='Choose a profile picture'
+                            withPreview
+                            label="optional"
+                            onChange={this.onDrop}
+                            accept="accept=image/*"
+                            singleImage={true}
+                            maxFileSize={5242880}
+                            disable={this.state.profileImage}
+                            buttonStyles={{ display: this.state.profileImage ? 'none' : 'block' }}
+                        />
+                    </div>
                     {this._renderSubmitButton()}
                 </form>
             </div>
@@ -99,6 +122,22 @@ class ECHPaper extends Component {
                 {this.props.buttonTitle ? <Button style={browseButtonStyle} variant="contained" href={this.props.buttonLink}>{this.props.buttonTitle}</Button> : null}
             </span>
         }
+    }
+
+    onDrop(pictureFiles) {
+        this.setState({
+            profileImage: pictureFiles[0],
+        });
+    }
+
+    _onDropzoneChanged(files) {
+        var image = null;
+        if (!files.isEmpty) {
+            image = files[0]
+        }
+        this.setState({
+            profileImage: image
+        });
     }
 
     _renderEmailField(inputFieldStyle) {
@@ -112,6 +151,7 @@ class ECHPaper extends Component {
             autoComplete="current-password"
             style={inputFieldStyle}
             onChange={(event) => this.onPasswordChanged(event)}
+            onKeyDown={(e) => this._handleKeyDown(e, this.props)}
         />
     }
 
@@ -156,23 +196,33 @@ class ECHPaper extends Component {
 
     _performLogin() {
         //TODO: Loading indicator
-        requestLoginToken(this.state.mail, this.state.password).then((response) => {
-            setVerificationToken(response)
-
+        requestLoginToken(this.state.mail, this.state.password).then((token) => {
+            setVerificationToken(token)
+            console.log(token)
         }).catch((error) => {
             console.log(error)
         })
     }
 
-    _performRegistration() {
+    async _performRegistration() {
         //TODO: Data validation, Email check and long password check
         if (isValidEmail(this.state.mail) && isValidPassword(this.state.password)) {
             console.log(`${this.state.mail} is a valid mail.`)
-            registerUser(`user-${this.state.mail}`, this.state.password, this.state.mail, "novice")
-            //Submit...
+            await registerUser(`user-${this.state.mail}`, this.state.password, this.state.mail, "novice", this.state.profileImage);
         } else {
             console.log(`${this.state.mail} is not a valid mail or ${this.state.password} is not a valid password.`)
             //Error message...
+        }
+    }
+
+    _handleKeyDown(event, props) {
+        if (event.key === 'Enter') {
+            if (this.props.type === "login") {
+                this._performLogin()
+            } else if (this.props.type === "register") {
+                this._performRegistration();
+            }
+
         }
     }
 }

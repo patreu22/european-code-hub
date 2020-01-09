@@ -8,21 +8,28 @@ import Modal from './Modal'
 const useStyles = makeStyles(theme => ({
     footer: {
         display: 'flex',
-        justifyContent: "center",
+        flex: 3,
         alignItems: "center",
         textAlign: 'center',
         backgroundColor: 'white',
-        flex: 'none',
         minHeight: '5vH'
     },
     footerNote: {
-        fontSize: 11
+        fontSize: 11,
+        flex: 1
     },
     footerLogo: {
-        position: 'fixed',
-        bottom: 10,
-        right: 10,
-        cursor: 'pointer'
+        width: "37px",
+        height: "27px",
+        cursor: 'pointer',
+        padding: "5px 8px 5px 0px"
+    },
+    logoWrapper: {
+        flex: 1,
+        textAlign: 'right',
+    },
+    columnPlaceholder: {
+        flex: 1
     }
 }));
 
@@ -31,9 +38,12 @@ export default function Footer() {
     const [openInfoModal, setOpenInfoModal] = React.useState(false);
     return (
         <Box boxShadow={4} className={classes.footer}>
-            <span className={classes.footerNote}>EU ♡ FLOSS</span>
-            <img className={classes.footerLogo} height="27" width="37" src={tub_logo} alt="logo" onClick={() => _handleTuLogoClick(setOpenInfoModal)} />
-            <Modal open={openInfoModal} handleClose={() => _handleModalClose(setOpenInfoModal)} />
+            <div className={classes.columnPlaceholder} />
+            <div className={classes.footerNote}>EU ♡ FLOSS</div>
+            <div className={classes.logoWrapper}>
+                <img className={classes.footerLogo} height="27" width="37" src={tub_logo} alt="logo" onClick={() => _handleTuLogoClick(setOpenInfoModal)} />
+                <Modal open={openInfoModal} handleClose={() => _handleModalClose(setOpenInfoModal)} />
+            </div>
         </Box >
     );
 }

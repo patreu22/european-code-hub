@@ -1,17 +1,26 @@
 import * as axios from 'axios';
 
-export function registerUser(username, password, mail, position) {
-    console.log("Let's create a user!")
-    axios.post('/api/create/user', {
-        username: username,
-        password: password,
-        mail: mail,
-        position: position
-    }).then(function (response) {
-        console.log(response);
-    }).catch(function (error) {
-        console.log(error);
-    });
+export async function registerUser(username, password, mail, position, profileImageFile) {
+    var formData = new FormData();
+    formData.append("profileImageFile", profileImageFile);
+    formData.append("username", username);
+    formData.append("password", password);
+    formData.append("mail", mail);
+    formData.append("position", position);
+
+    const options = {
+        method: 'POST',
+        headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        data: formData,
+        url: '/api/create/user'
+    }
+
+    axios(options)
+        .then(function (response) {
+            console.log(response);
+        }).catch(function (error) {
+            console.log(error);
+        });
 }
 
 export function registerProject({ gitUrl, projectName, projectDescription, contactMail }) {

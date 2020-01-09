@@ -6,7 +6,6 @@ import SearchHero from '../components/SearchHero';
 import ECHPaper from '../components/ECHPaper';
 import EuropeanStars from '../assets/europe_stars.svg';
 
-import { registerUser, registerProject } from '../helper/httpHelper';
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
 class Home extends Component {

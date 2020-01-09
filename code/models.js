@@ -4,7 +4,8 @@ const USER_SCHEMA = new mongoose.Schema({
     username: String,
     password: String,
     mail: String,
-    position: String
+    position: String,
+    profilePicture: { data: Buffer, contentType: String }
 }, { collection: 'users' });
 
 const PROJECT_SCHEMA = new mongoose.Schema({
