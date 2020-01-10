@@ -1,6 +1,8 @@
-import React, { Component, } from 'react';
-import { Button, Divider, Paper, TextField } from '@material-ui/core';
-import { Link } from 'react-router-dom'
+import React, { Component } from 'react';
+import { Button, Divider, Paper, TextField } from '@material-ui/core'
+import { CheckCircleOutline as CheckCircleOutlineIcon } from '@material-ui/icons';
+import PropTypes from 'prop-types'
+import { Link, Redirect } from 'react-router-dom'
 import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
@@ -14,12 +16,14 @@ class ECHPaper extends Component {
         this.state = {
             mail: '',
             password: '',
-            profileImage: null
+            profileImage: null,
+            secondsLeft: 10,
         };
-
+        this.timer = 0;
         this._performLogin = this._performLogin.bind(this)
         this._performRegistration = this._performRegistration.bind(this)
         this.onDrop = this.onDrop.bind(this);
+        this._countDown = this._countDown.bind(this);
     }
 
     render() {
@@ -37,12 +41,16 @@ class ECHPaper extends Component {
             alignSelf: 'baseline'
         }
 
-        return (
-            <Paper style={catalogueBoxStyle} border={1}>
-                {this.props.title ? <h3>{this.props.title}</h3> : null}
-                {this._renderContentField()}
-            </Paper>
-        );
+        if (this.state.type !== "registrationDone" || this.state.secondsLeft > 0) {
+            return (
+                <Paper style={catalogueBoxStyle} border={1}>
+                    {this.props.title ? <h3>{this.props.title}</h3> : null}
+                    {this._renderContentField()}
+                </Paper>
+            );
+        } else {
+            return <Redirect to='/' />
+        }
     }
 
     _renderContentField() {
@@ -52,6 +60,11 @@ class ECHPaper extends Component {
         }
         const textWhenButtonInvisible = {
             textAlign: 'left',
+            padding: '2vH 1vw 2vH 1vw'
+        }
+
+        const registrationDoneText = {
+            textAlign: 'center',
             padding: '2vH 1vw 2vH 1vw'
         }
 
@@ -65,12 +78,18 @@ class ECHPaper extends Component {
 
         const inputFieldStyle = {
             width: '80%',
-            paddingBottom: '1vw'
+            paddingBottom: '1.5vw'
         }
 
         const dropzoneWrapperStyle = {
             maxWidth: '80%',
             paddingBottom: '1vw',
+        }
+
+        const iconStyle = {
+            paddingTop: '2vH',
+            width: '60px',
+            height: '60px',
         }
 
         const paragraphStyle = this.props.buttonTitle ? textWhenButtonVisible : textWhenButtonInvisible
@@ -97,7 +116,6 @@ class ECHPaper extends Component {
                 <form style={formParagraphStyle}>
                     {this._renderEmailField(inputFieldStyle)}
                     {this._renderPasswordField(inputFieldStyle)}
-                    {/* TODO: Padding hinzufügen */}
                     <div style={dropzoneWrapperStyle}>
                         <ImageUploader
                             withIcon={true}
@@ -115,12 +133,19 @@ class ECHPaper extends Component {
                     {this._renderSubmitButton()}
                 </form>
             </div>
+        } else if (this.props.type === "registrationDone") {
+            return <div>{this.props.title ? <Divider /> : null}
+                <CheckCircleOutlineIcon style={iconStyle} color={'primary'} />
+                <div style={registrationDoneText}>You successfully created a new account.<br />
+                    Click <Link to="/" style={{ color: 'black' }}>here</Link> to be redirected instantly.<br /><br />
+                    Otherwise you will be sent back to the main page in {this.state.secondsLeft} second{this.state.secondsLeft === 1 ? "" : "s"} automatically.</div>
+            </div >
         } else {
-            return <span>
+            return <div>
                 {this.props.title ? <Divider /> : null}
                 <p style={paragraphStyle}>{this.props.children}</p>
                 {this.props.buttonTitle ? <Button style={browseButtonStyle} variant="contained" href={this.props.buttonLink}>{this.props.buttonTitle}</Button> : null}
-            </span>
+            </div>
         }
     }
 
@@ -174,7 +199,7 @@ class ECHPaper extends Component {
                 <Button style={formButtonStyle} variant="contained" onClick={this._performLogin}>Login</Button>
                 <div style={registerTextStyle}>or do you need to  <Link to="/register" style={{ color: 'black' }}>register</Link> first?</div>
             </div>
-        } else {
+        } else if (this.props.type === 'register') {
             return <div style={{ width: '100%' }}>
                 <Button style={formButtonStyle} variant="contained" onClick={this._performRegistration}>Register</Button>
                 <div style={registerTextStyle}>You already have an account?  <Link to="/login" style={{ color: 'black' }}>Login</Link> directly.</div>
@@ -208,10 +233,39 @@ class ECHPaper extends Component {
         //TODO: Data validation, Email check and long password check
         if (isValidEmail(this.state.mail) && isValidPassword(this.state.password)) {
             console.log(`${this.state.mail} is a valid mail.`)
-            await registerUser(`user-${this.state.mail}`, this.state.password, this.state.mail, "novice", this.state.profileImage);
+            registerUser(`user-${this.state.mail}`, this.state.password, this.state.mail, "novice", this.state.profileImage)
+                .then((response) => {
+                    console.log(response);
+                    this.props.onRegistrationDone();
+                    this._startCountdown();
+                })
+                .catch((error) => {
+                    //TODO: OnRegistrationFailed (e.g. Email already exists)
+                    console.log("Error!")
+                    console.log(error)
+                });
         } else {
             console.log(`${this.state.mail} is not a valid mail or ${this.state.password} is not a valid password.`)
             //Error message...
+        }
+    }
+
+    _startCountdown() {
+        console.log("Start Countdown!")
+        if (this.timer === 0 && this.state.secondsLeft > 0) {
+            console.log("Set interval")
+            this.timer = setInterval(this._countDown, 1000);
+        }
+    }
+
+    _countDown() {
+        let seconds = this.state.secondsLeft - 1;
+        this.setState({
+            secondsLeft: seconds,
+        });
+
+        if (seconds === 0) {
+            clearInterval(this.timer);
         }
     }
 
@@ -225,6 +279,19 @@ class ECHPaper extends Component {
 
         }
     }
+}
+
+ECHPaper.propTypes = {
+    title: PropTypes.string,
+    type: PropTypes.string,
+    buttonTitle: PropTypes.string,
+    onRegistrationDone: PropTypes.func,
+    onLoginDone: PropTypes.func,
+};
+
+ECHPaper.defaultProps = {
+    onRegistrationDone: () => { },
+    onLoginDone: () => { },
 }
 
 export default ECHPaper;

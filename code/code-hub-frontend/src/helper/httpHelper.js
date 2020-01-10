@@ -14,13 +14,15 @@ export async function registerUser(username, password, mail, position, profileIm
         data: formData,
         url: '/api/create/user'
     }
-
-    axios(options)
-        .then(function (response) {
-            console.log(response);
-        }).catch(function (error) {
-            console.log(error);
-        });
+    return new Promise((resolve, reject) => {
+        axios(options)
+            .then(function (response) {
+                resolve(response)
+            }).catch(function (error) {
+                console.log(error);
+                reject(error)
+            });
+    });
 }
 
 export function registerProject({ gitUrl, projectName, projectDescription, contactMail }) {

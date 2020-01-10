@@ -17,6 +17,7 @@ import Project from './pages/Project'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Contribute from './pages/Contribute'
+import Profile from './pages/Profile'
 
 const theme = createMuiTheme({
   palette: {
@@ -44,6 +45,7 @@ class App extends React.Component {
             <Route path="/search/:searchterm" component={Search} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
+            <Route path="/profile" component={Profile} />
           </Switch>
         </Router>
       </MuiThemeProvider>
