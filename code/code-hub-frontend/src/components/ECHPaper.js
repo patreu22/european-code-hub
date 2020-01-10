@@ -7,6 +7,7 @@ import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
 import { setVerificationToken } from '../helper/cookieHelper'
+import { withCookies } from 'react-cookie'
 import ImageUploader from 'react-images-upload';
 
 class ECHPaper extends Component {
@@ -23,7 +24,8 @@ class ECHPaper extends Component {
             passwordError: false,
             passwordErrorMessage: "",
             formError: false,
-            formErrorText: ""
+            formErrorText: "",
+            redirectToHome: false
         };
         this.timer = 0;
         this._performLogin = this._performLogin.bind(this)
@@ -52,7 +54,7 @@ class ECHPaper extends Component {
             alignSelf: 'baseline'
         }
 
-        if (this.props.type !== "registrationDone" || this.state.secondsLeft > 0) {
+        if (this.state.secondsLeft > 0 && !this.state.redirectToHome) {
             return (
                 <Paper style={catalogueBoxStyle} border={1}>
                     {this.props.title ? <h3>{this.props.title}</h3> : null}
@@ -278,9 +280,10 @@ class ECHPaper extends Component {
         if (validMail && validPassword) {
             requestLoginToken(this.state.mail, this.state.password)
                 .then((token) => {
-                    console.log("Receiving token")
-                    setVerificationToken(token)
-                    console.log(token)
+                    setVerificationToken(this.props.cookies, token);
+                    this.setState({
+                        redirectToHome: true
+                    })
                 }).catch((error) => {
                     console.log(error)
                     if (error.response.status === 400) {
@@ -345,7 +348,6 @@ class ECHPaper extends Component {
     }
 
     _startCountdown() {
-        console.log("Start Countdown!")
         if (this.timer === 0 && this.state.secondsLeft > 0) {
             this.timer = setInterval(this._countDown, 1000);
         }
@@ -387,4 +389,4 @@ ECHPaper.defaultProps = {
     onLoginDone: () => { },
 }
 
-export default ECHPaper;
+export default withCookies(ECHPaper);
