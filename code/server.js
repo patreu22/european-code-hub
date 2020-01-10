@@ -46,27 +46,53 @@ app.get('/', function (req, res) {
 
 app.post('/api/create/project', function (req, res) {
     const project = req.body;
-    saveProjectToDB({
+    _saveProjectToDB({
         gitUrl: project.gitUrl,
         projectName: project.projectName,
         projectDescription: project.projectDescription,
         contactMail: project.contactMail,
-        res: res
+    }).then(saved => {
+        if (saved) {
+            //200: Accepted
+            res.sendStatus(200);
+        } else {
+            //202: Accepted but could not be processed
+            res.sendStatus(202)
+        }
+    }).catch(error => {
+        //500: Internal Server error
+        res.sendStatus(500);
     })
 })
 
 app.post('/api/create/user', upload.single('profileImageFile'), (req, res) => {
     const user = req.body;
-    const profileImagePath = req.file ? req.file.path : null;
-    const hash = authentication.getPasswordHash(user.password)
-    saveUserToDB({
-        username: user.username,
-        password: hash,
-        mail: user.mail,
-        position: user.position,
-        profileImagePath: profileImagePath,
-        res: res
-    });
+    _userExists({ mail: user.mail })
+        .then(userExists => {
+            if (!userExists) {
+                const profileImagePath = req.file ? req.file.path : null;
+                const hash = authentication.getPasswordHash(user.password)
+                _saveUserToDB({
+                    username: user.username,
+                    password: hash,
+                    mail: user.mail,
+                    position: user.position,
+                    profileImagePath: profileImagePath,
+                }).then(savedUser => {
+                    if (savedUser) {
+                        res.sendStatus(200);
+                    } else {
+                        res.sendStatus(500);
+                    }
+                }).catch(err => {
+                    res.sendStatus(500)
+                });
+            } else {
+                //400: Bad Request
+                //TODO: Handle to show error message
+                return res.sendStatus(400);
+            }
+        });
 });
 
 app.get('/api/get/projects', function (req, res) {
@@ -118,6 +144,19 @@ async function userAndHashExistInDB({ mail, password }) {
     });
 }
 
+function _userExists({ mail }) {
+    return new Promise(function (resolve, reject) {
+        _getUserWithEmail({ mail: mail })
+            .then((user) => {
+                const userFound = user ? true : false;
+                resolve(userFound)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    });
+}
+
 function _getUserWithEmail({ mail }) {
     const User = models.USER_MODEL;
     var findUserRequest = User.findOne({ 'mail': mail });
@@ -151,7 +190,7 @@ async function _deleteProfileImageFromHardDrive(profileImagePath) {
 }
 
 //TODO: Handle duplicates "User already registered"
-function saveUserToDB({ username, password, mail, position, profileImagePath, res }) {
+function _saveUserToDB({ username, password, mail, position, profileImagePath }) {
     const newUser = models.USER_MODEL({
         username: username,
         password: password,
@@ -159,35 +198,40 @@ function saveUserToDB({ username, password, mail, position, profileImagePath, re
         position: position,
         profilePicture: { data: _getProfileImageOrDefaultData(profileImagePath), contentType: "image/png" }
     });
-    newUser.save(function (err, newUser) {
-        if (err) {
-            console.log(err);
-            res.sendStatus(500);
-        } else {
-            console.log(newUser);
-            console.log("Saved to DB");
-            res.sendStatus(200);
-        }
-        _deleteProfileImageFromHardDrive(profileImagePath)
+    return new Promise(function (resolve, reject) {
+        newUser.save(function (err, newUser) {
+            _deleteProfileImageFromHardDrive(profileImagePath)
+            if (err) {
+                console.log(err);
+                reject(error.toJson())
+
+            } else {
+                console.log(newUser);
+                console.log("Saved to DB");
+                resolve(true)
+            }
+        });
     });
 }
 
 //TODO: Handle duplicates "Project already registered"
-function saveProjectToDB({ gitUrl, projectName, projectDescription, contactMail, res }) {
+function _saveProjectToDB({ gitUrl, projectName, projectDescription, contactMail }) {
     const newProject = models.PROJECT_MODEL({
         gitUrl: gitUrl,
         projectName: projectName,
         projectDescription: projectDescription,
         contactMail: contactMail
     })
-    newProject.save(function (err, newProject) {
-        if (err) {
-            console.log(err);
-            res.sendStatus(500);
-        } else {
-            console.log(newProject);
-            console.log("Saved to DB");
-            res.sendStatus(200);
-        }
+    return new Promise(function (resolve, reject) {
+        newProject.save(function (err, newProject) {
+            if (err) {
+                console.log(err);
+                reject(err)
+            } else {
+                console.log(newProject);
+                console.log("Saved to DB");
+                resolve(true)
+            }
+        });
     });
 }

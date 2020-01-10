@@ -3,7 +3,7 @@ export function isValidEmail(mail) {
     return regEx.test(mail)
 }
 
-//TODO: Make more sophisticated
 export function isValidPassword(password) {
-    return password.length > 5
+    //TODO: Enhance password checker
+    return password.length > 0
 }

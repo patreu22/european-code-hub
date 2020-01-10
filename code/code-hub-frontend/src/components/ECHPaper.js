@@ -18,6 +18,10 @@ class ECHPaper extends Component {
             password: '',
             profileImage: null,
             secondsLeft: 10,
+            mailError: false,
+            mailErrorMessage: "",
+            passwordError: false,
+            passwordErrorMessage: ""
         };
         this.timer = 0;
         this._performLogin = this._performLogin.bind(this)
@@ -25,6 +29,11 @@ class ECHPaper extends Component {
         this.onDrop = this.onDrop.bind(this);
         this._countDown = this._countDown.bind(this);
     }
+
+    componentWillUnmount() {
+        clearInterval(this.timer);
+    }
+
 
     render() {
         const catalogueBoxStyle = {
@@ -166,16 +175,26 @@ class ECHPaper extends Component {
     }
 
     _renderEmailField(inputFieldStyle) {
-        return <TextField style={inputFieldStyle} label="Email" type="email" onChange={(event) => this.onMailChanged(event)} />
+        return <TextField
+            style={inputFieldStyle}
+            label="Email" type="email"
+            onChange={(event) => this.onMailChanged(event)}
+            onBlur={(event) => this.onMailFieldBlurred(event)}
+            error={this.state.mailError}
+            helperText={this.state.mailErrorMessage}
+        />
     }
 
     _renderPasswordField(inputFieldStyle) {
         return <TextField
             label="Password"
             type="password"
+            error={this.state.passwordError}
+            helperText={this.state.passwordErrorMessage}
             autoComplete="current-password"
             style={inputFieldStyle}
             onChange={(event) => this.onPasswordChanged(event)}
+            onBlur={(event) => this.onPasswordFieldBlurred(event)}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
         />
     }
@@ -209,13 +228,34 @@ class ECHPaper extends Component {
 
     onMailChanged(event) {
         this.setState({
-            mail: event.target.value
+            mail: event.target.value,
+            mailError: false,
+            mailErrorMessage: ""
+        })
+    }
+
+    onMailFieldBlurred(event) {
+        const isValid = isValidEmail(event.target.value)
+        console.log(`Is ${event.target.value} valid mail? - ${isValid}`);
+        this.setState({
+            mailError: !isValid,
+            mailErrorMessage: isValid ? "" : "Invalid Email address."
         })
     }
 
     onPasswordChanged(event) {
         this.setState({
-            password: event.target.value
+            password: event.target.value,
+            passwordError: false,
+            passwordErrorMessage: ""
+        })
+    }
+
+    onPasswordFieldBlurred(event) {
+        const isValid = isValidPassword(event.target.value)
+        this.setState({
+            passwordError: !isValid,
+            passwordErrorMessage: isValid ? "" : "Invalid Password."
         })
     }
 
@@ -229,31 +269,45 @@ class ECHPaper extends Component {
         })
     }
 
-    async _performRegistration() {
+    _performRegistration() {
         //TODO: Data validation, Email check and long password check
-        if (isValidEmail(this.state.mail) && isValidPassword(this.state.password)) {
-            console.log(`${this.state.mail} is a valid mail.`)
+        const validMail = isValidEmail(this.state.mail)
+        const validPassword = isValidPassword(this.state.password)
+        if (validMail && validPassword) {
             registerUser(`user-${this.state.mail}`, this.state.password, this.state.mail, "novice", this.state.profileImage)
                 .then((response) => {
-                    console.log(response);
                     this.props.onRegistrationDone();
                     this._startCountdown();
                 })
                 .catch((error) => {
-                    //TODO: OnRegistrationFailed (e.g. Email already exists)
-                    console.log("Error!")
-                    console.log(error)
+                    if (error.response.status === 400) {
+                        this.setState({
+                            mailError: true,
+                            mailErrorMessage: 'Mail already registered.'
+                        })
+                    } else {
+                        console.log("Unknown error.")
+                    }
                 });
         } else {
-            console.log(`${this.state.mail} is not a valid mail or ${this.state.password} is not a valid password.`)
-            //Error message...
+            if (!validMail) {
+                this.setState({
+                    mailError: true,
+                    mailErrorMessage: 'Not a valid mail.'
+                })
+            }
+            if (!validPassword) {
+                this.setState({
+                    passwordError: true,
+                    passwordErrorMessage: 'Not a valid password.'
+                })
+            }
         }
     }
 
     _startCountdown() {
         console.log("Start Countdown!")
         if (this.timer === 0 && this.state.secondsLeft > 0) {
-            console.log("Set interval")
             this.timer = setInterval(this._countDown, 1000);
         }
     }

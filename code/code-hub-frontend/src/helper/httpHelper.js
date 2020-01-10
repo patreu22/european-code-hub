@@ -1,6 +1,6 @@
 import * as axios from 'axios';
 
-export async function registerUser(username, password, mail, position, profileImageFile) {
+export function registerUser(username, password, mail, position, profileImageFile) {
     var formData = new FormData();
     formData.append("profileImageFile", profileImageFile);
     formData.append("username", username);
@@ -19,7 +19,6 @@ export async function registerUser(username, password, mail, position, profileIm
             .then(function (response) {
                 resolve(response)
             }).catch(function (error) {
-                console.log(error);
                 reject(error)
             });
     });
