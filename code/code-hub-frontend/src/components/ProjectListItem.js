@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { ListItem, Divider, Paper } from '@material-ui/core'
 import { Link } from 'react-router-dom';
-import PlaceholderImage from '../assets/placeholder_image.jpeg'
-import { lightGreen } from '@material-ui/core/colors';
 
 
 class ProjectListItem extends Component {

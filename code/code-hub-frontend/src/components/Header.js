@@ -46,9 +46,9 @@ function Header(props) {
 
     const isMenuOpen = Boolean(anchorEl);
 
-    const handleProfileMenuOpen = event => {
-        setAnchorEl(event.currentTarget);
-    };
+    // const handleProfileMenuOpen = event => {
+    //     setAnchorEl(event.currentTarget);
+    // };
 
     const handleLoginClick = event => {
         //TODO: Check if user is logged in 

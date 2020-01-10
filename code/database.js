@@ -1,0 +1,134 @@
+const mongoose = require('mongoose');
+
+const models = require('./models');
+const authentication = require('./authentication')
+const io = require('./io')
+
+function userExists({ mail }) {
+    return new Promise(function (resolve, reject) {
+        getUserWithEmail(mail)
+            .then((user) => {
+                const userFound = user ? true : false;
+                resolve(userFound)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    });
+}
+
+function connectToDb(db_url) {
+    mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true });
+
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', function () {
+        console.log("Welcome to the fabulous MongoDB world!")
+    });
+}
+
+function getUserWithEmail(mail) {
+    const User = models.USER_MODEL;
+    var findUserRequest = User.findOne({ 'mail': mail });
+
+    return new Promise(function (resolve, reject) {
+        findUserRequest.exec(function (err, user) {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(user)
+            }
+        })
+    });
+}
+
+function userAndHashExistInDB({ mail, password }) {
+    return new Promise(function (resolve, reject) {
+        getUserWithEmail(mail)
+            .then((user) => {
+                const hash = user ? user.password : "-1"
+                authentication.checkPassword(password, hash)
+                    .then(isValid => {
+                        resolve(isValid)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    });
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    });
+}
+
+function getAllProjects() {
+    return new Promise(function (resolve, reject) {
+        models.PROJECT_MODEL.find({}, function (err, docs) {
+            if (err) {
+                console.log(err)
+                reject(err)
+            } else {
+                resolve(docs)
+            }
+        });
+    })
+}
+
+
+function saveUserToDB({ username, password, mail, position, profileImagePath }) {
+    const newUser = models.USER_MODEL({
+        username: username,
+        password: password,
+        mail: mail,
+        position: position,
+        profilePicture: { data: io.getProfileImageOrDefaultData(profileImagePath), contentType: "image/png" }
+    });
+    return new Promise(function (resolve, reject) {
+        newUser.save(function (err, newUser) {
+            io.deleteProfileImageFromHardDrive(profileImagePath)
+            if (err) {
+                console.log(err);
+                reject(error)
+
+            } else {
+                console.log(newUser);
+                console.log("Saved to DB");
+                resolve(true)
+            }
+        });
+    });
+}
+
+//TODO: Handle duplicates "Project already registered"
+function saveProjectToDB({ gitUrl, projectName, projectDescription, contactMail }) {
+    const newProject = models.PROJECT_MODEL({
+        gitUrl: gitUrl,
+        projectName: projectName,
+        projectDescription: projectDescription,
+        contactMail: contactMail
+    })
+    return new Promise(function (resolve, reject) {
+        newProject.save(function (err, newProject) {
+            if (err) {
+                console.log(err);
+                reject(err)
+            } else {
+                console.log(newProject);
+                console.log("Saved to DB");
+                resolve(true)
+            }
+        });
+    });
+}
+
+
+
+module.exports = {
+    userExists: userExists,
+    getUserWithEmail: getUserWithEmail,
+    getAllProjects: getAllProjects,
+    userAndHashExistInDB: userAndHashExistInDB,
+    saveUserToDB: saveUserToDB,
+    saveProjectToDB: saveProjectToDB,
+    connectToDb: connectToDb
+}

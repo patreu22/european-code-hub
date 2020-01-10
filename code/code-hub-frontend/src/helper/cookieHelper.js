@@ -1,12 +1,12 @@
-import Cookie from "js-cookie"
+import { Cookies } from "react-cookie"
 
 export function setVerificationToken(token) {
     //TODO store cookie...
-    Cookie.set("token", token);
+    Cookies.set("token", token);
 }
 
 export function getVerificationToken() {
-    const token = Cookie.get("token") ? Cookie.get("token") : null;
+    const token = Cookies.get("token") ? Cookies.get("token") : null;
     return token
     //to set a cookie
 }

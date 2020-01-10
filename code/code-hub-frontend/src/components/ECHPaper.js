@@ -52,7 +52,7 @@ class ECHPaper extends Component {
             alignSelf: 'baseline'
         }
 
-        if (this.state.type !== "registrationDone" || this.state.secondsLeft > 0) {
+        if (this.props.type !== "registrationDone" || this.state.secondsLeft > 0) {
             return (
                 <Paper style={catalogueBoxStyle} border={1}>
                     {this.props.title ? <h3>{this.props.title}</h3> : null}

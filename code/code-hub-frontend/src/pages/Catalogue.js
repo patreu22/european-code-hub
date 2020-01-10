@@ -1,10 +1,9 @@
 import '../css/Home.css';
 import React, { Component } from 'react';
 import PageWrapper from '../components/PageWrapper';
-import { Box, CircularProgress, List } from '@material-ui/core';
+import { CircularProgress, List } from '@material-ui/core';
 import { getAllProjects } from '../helper/httpHelper';
 import ProjectListItem from '../components/ProjectListItem';
-import SearchHero from '../components/SearchHero';
 // import { FilterDrawer, filterSelectors, filterActions } from 'material-ui-filter'
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
