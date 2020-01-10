@@ -22,4 +22,5 @@
 	- Transfer entries to another user
 	- Update your entries
 - Open API to fetch data? (Open Exchange Canada)
+- Email Server to verify registrations (Bonus?)
 
