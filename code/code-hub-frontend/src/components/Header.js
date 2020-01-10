@@ -1,12 +1,13 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Badge, AppBar, Toolbar, Menu, MenuItem, Typography, IconButton } from '@material-ui/core/';
-import { Add as AddButton, Build as BuildIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
+import { Add as AddButton, Build as BuildIcon, DeleteForever as DeleteIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import { useCookies } from 'react-cookie';
+import { removeVerificationToken, getVerificationToken } from '../helper/cookieHelper'
 
 import EuropeanLogo from '../assets/europe_logo.png';
-
 
 const useStyles = makeStyles(theme => ({
     grow: {
@@ -40,9 +41,12 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+
 function Header(props) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [cookies, getCookie, removeCookie] = useCookies(['token']);
+
 
     const isMenuOpen = Boolean(anchorEl);
 
@@ -51,11 +55,10 @@ function Header(props) {
     // };
 
     const handleLoginClick = event => {
-        //TODO: Check if user is logged in 
-        if (true) {
+        if (typeof cookies.token === 'undefined' || cookies.token === 'undefined') {
             props.history.push(`/login`);
         } else {
-            //TODO: Show user menu...
+            props.history.push(`/profile`);
         }
 
     };
@@ -126,6 +129,13 @@ function Header(props) {
                         <IconButton color="inherit">
                             <Badge badgeContent={2} color="secondary">
                                 <NotificationsIcon />
+                            </Badge>
+                        </IconButton>
+                        <IconButton color="inherit" onClick={() => {
+                            removeCookie('token')
+                        }}>
+                            <Badge color="secondary">
+                                <DeleteIcon />
                             </Badge>
                         </IconButton>
                         <IconButton
