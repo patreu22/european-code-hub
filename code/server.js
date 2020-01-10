@@ -105,20 +105,23 @@ app.get('/api/get/projects', function (req, res) {
     });
 });
 
-app.post('/api/create/token', async function (req, res) {
-    const authValues = req.body;
-    const pairExists = await userAndHashExistInDB({ mail: authValues.mail, password: authValues.password })
-    if (pairExists) {
-        const token = authentication.generateWebtoken(authValues.mail, authValues.password)
-        return res.status(200).send(token)
-    } else {
-        return res.status(500).json({ error: "Not Authorized" });
-    }
+app.post('/api/create/token', function (req, res) {
+    return new Promise(function (resolve, reject) {
+        const authValues = req.body;
+        userAndHashExistInDB({ mail: authValues.mail, password: authValues.password }).then(pairExists => {
+            if (pairExists) {
+                const token = authentication.generateWebtoken(authValues.mail, authValues.password)
+                return res.status(200).send(token)
+            } else {
+                return res.sendStatus(400);
+            }
+        })
+    });
 });
 
 app.get('/api/get/user/profileImage/:mail', async function (req, res) {
     var mail = req.params.mail;
-    _getUserWithEmail({ mail: mail })
+    _getUserWithEmail(mail)
         .then((user) => {
             return res.status(200).contentType(user.profilePicture.contentType).send(user.profilePicture.data)
         })
@@ -132,21 +135,28 @@ app.listen(process.env.PORT || 5000, function () {
     console.log(`Serving on port ${process.env.PORT || 5000}`);
 });
 
-async function userAndHashExistInDB({ mail, password }) {
-    const User = models.USER_MODEL;
-    const user = await User.findOne({ 'mail': mail })
-
-    const hash = user ? user.password : "-1"
-    const isCorrect = await authentication.checkPassword(password, hash)
-
-    return new Promise(resolve => {
-        resolve(isCorrect)
+function userAndHashExistInDB({ mail, password }) {
+    return new Promise(function (resolve, reject) {
+        _getUserWithEmail(mail)
+            .then((user) => {
+                const hash = user ? user.password : "-1"
+                authentication.checkPassword(password, hash)
+                    .then(isValid => {
+                        resolve(isValid)
+                    })
+                    .catch((error) => {
+                        reject(error)
+                    });
+            })
+            .catch((error) => {
+                reject(error)
+            })
     });
 }
 
 function _userExists({ mail }) {
     return new Promise(function (resolve, reject) {
-        _getUserWithEmail({ mail: mail })
+        _getUserWithEmail(mail)
             .then((user) => {
                 const userFound = user ? true : false;
                 resolve(userFound)
@@ -157,7 +167,7 @@ function _userExists({ mail }) {
     });
 }
 
-function _getUserWithEmail({ mail }) {
+function _getUserWithEmail(mail) {
     const User = models.USER_MODEL;
     var findUserRequest = User.findOne({ 'mail': mail });
 

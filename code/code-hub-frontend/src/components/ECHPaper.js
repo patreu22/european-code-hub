@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Button, Divider, Paper, TextField } from '@material-ui/core'
+import { Button, Divider, FormHelperText, Paper, TextField } from '@material-ui/core'
 import { CheckCircleOutline as CheckCircleOutlineIcon } from '@material-ui/icons';
 import PropTypes from 'prop-types'
 import { Link, Redirect } from 'react-router-dom'
@@ -21,7 +21,9 @@ class ECHPaper extends Component {
             mailError: false,
             mailErrorMessage: "",
             passwordError: false,
-            passwordErrorMessage: ""
+            passwordErrorMessage: "",
+            formError: false,
+            formErrorText: ""
         };
         this.timer = 0;
         this._performLogin = this._performLogin.bind(this)
@@ -116,6 +118,7 @@ class ECHPaper extends Component {
                 <form style={formParagraphStyle}>
                     {this._renderEmailField(inputFieldStyle)}
                     {this._renderPasswordField(inputFieldStyle)}
+                    {this._renderFormHelperText()}
                     {this._renderSubmitButton()}
                 </form>
             </div>
@@ -174,6 +177,10 @@ class ECHPaper extends Component {
         });
     }
 
+    _renderFormHelperText() {
+        return <FormHelperText error={this.state.formError}>{this.state.formErrorText}</FormHelperText>
+    }
+
     _renderEmailField(inputFieldStyle) {
         return <TextField
             style={inputFieldStyle}
@@ -182,6 +189,7 @@ class ECHPaper extends Component {
             onBlur={(event) => this.onMailFieldBlurred(event)}
             error={this.state.mailError}
             helperText={this.state.mailErrorMessage}
+            onKeyDown={(e) => this._handleKeyDown(e, this.props)}
         />
     }
 
@@ -230,7 +238,9 @@ class ECHPaper extends Component {
         this.setState({
             mail: event.target.value,
             mailError: false,
-            mailErrorMessage: ""
+            mailErrorMessage: "",
+            formError: false,
+            formErrorText: ''
         })
     }
 
@@ -247,7 +257,9 @@ class ECHPaper extends Component {
         this.setState({
             password: event.target.value,
             passwordError: false,
-            passwordErrorMessage: ""
+            passwordErrorMessage: "",
+            formError: false,
+            formErrorText: ''
         })
     }
 
@@ -261,12 +273,39 @@ class ECHPaper extends Component {
 
     _performLogin() {
         //TODO: Loading indicator
-        requestLoginToken(this.state.mail, this.state.password).then((token) => {
-            setVerificationToken(token)
-            console.log(token)
-        }).catch((error) => {
-            console.log(error)
-        })
+        const validMail = isValidEmail(this.state.mail)
+        const validPassword = isValidPassword(this.state.password)
+        if (validMail && validPassword) {
+            requestLoginToken(this.state.mail, this.state.password)
+                .then((token) => {
+                    console.log("Receiving token")
+                    setVerificationToken(token)
+                    console.log(token)
+                }).catch((error) => {
+                    console.log(error)
+                    if (error.response.status === 400) {
+                        this.setState({
+                            formError: true,
+                            formErrorText: 'Credentials do not match.'
+                        })
+                    } else {
+                        console.log("Unknown error.")
+                    }
+                })
+        } else {
+            if (!validMail) {
+                this.setState({
+                    mailError: true,
+                    mailErrorMessage: 'Not a valid mail.',
+                })
+            }
+            if (!validPassword) {
+                this.setState({
+                    passwordError: true,
+                    passwordErrorMessage: 'Not a valid password.'
+                })
+            }
+        }
     }
 
     _performRegistration() {
@@ -323,7 +362,7 @@ class ECHPaper extends Component {
         }
     }
 
-    _handleKeyDown(event, props) {
+    _handleKeyDown(event) {
         if (event.key === 'Enter') {
             if (this.props.type === "login") {
                 this._performLogin()

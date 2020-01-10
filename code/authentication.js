@@ -11,10 +11,11 @@ const getPasswordHash = (password) => {
     return hash;
 }
 
-checkPassword = async (password, hash) => {
-    const isValid = await bcrypt.compare(password, hash)
+checkPassword = (password, hash) => {
     return new Promise(resolve => {
-        resolve(isValid)
+        bcrypt.compare(password, hash).then(isValid => {
+            resolve(isValid)
+        })
     });
 }
 

@@ -37,14 +37,16 @@ export function registerProject({ gitUrl, projectName, projectDescription, conta
     });
 }
 
-export async function requestLoginToken(mail, password) {
-    const response = await axios.post('/api/create/token', {
-        mail: mail,
-        password: password,
-    })
-
-    return new Promise(resolve => {
-        resolve(response.data)
+export function requestLoginToken(mail, password) {
+    return new Promise((resolve, reject) => {
+        axios.post('/api/create/token', {
+            mail: mail,
+            password: password,
+        }).then(response => {
+            resolve(response.data)
+        }).catch(err => {
+            reject(err)
+        })
     });
 }
 
