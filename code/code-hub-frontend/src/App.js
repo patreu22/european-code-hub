@@ -45,7 +45,7 @@ class App extends React.Component {
             <Route path="/search/:searchterm" component={Search} />
             <Route path="/login" component={Login} />
             <Route path="/register" component={Register} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/profile/:username?" component={Profile} />
           </Switch>
         </Router>
       </MuiThemeProvider>

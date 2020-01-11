@@ -85,7 +85,9 @@ app.get('/api/get/projects', function (req, res) {
 });
 
 //Returns own user data based on session token
-app.get('/api/get/user/', authentication.isAuthorized, function (req, res) {
+app.get('/api/get/user', authentication.isAuthorized, function (req, res) {
+    var username = req.query.username;
+    console.log(username)
     database.getUser({ token: req.headers.authorization, stripData: true })
         .then(user => {
             if (user) {
@@ -100,11 +102,12 @@ app.get('/api/get/user/', authentication.isAuthorized, function (req, res) {
         })
 });
 
-//Returns public data by username
-app.get('/api/get/user/:username', function (req, res) {
-    var username = req.params.username;
+//Returns public data by mail //TODO: by username
+app.get('/api/get/user', function (req, res) {
+    var username = req.query.username;
     console.log(username)
-    database.getUser({ username: username, stripData: true })
+    //TODO: use username instead of mail
+    database.getUser({ mail: username, stripData: true })
         .then(user => {
             return res.status(200).send(user)
         })
@@ -129,7 +132,7 @@ app.post('/api/create/token', function (req, res) {
     });
 });
 
-app.get('/api/get/user/profileImage/:mail', async function (req, res) {
+app.get('/api/get/user/profileImage/:mail', function (req, res) {
     const mail = req.params.mail;
     database.getUser({ mail: mail })
         .then((user) => {

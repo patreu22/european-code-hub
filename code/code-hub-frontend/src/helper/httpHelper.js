@@ -61,14 +61,11 @@ export function getOwnUserData() {
         headers: { Authorization: getVerificationToken() },
         url: '/api/get/user/'
     }
+
     return new Promise((resolve, reject) => {
         axios(options)
-            .then(response => {
-                resolve(response.data);
-            })
-            .catch(err => {
-                reject(err)
-            })
+            .then(response => resolve(response.data))
+            .catch(err => reject(err))
     })
 }
 
@@ -79,6 +76,24 @@ export async function getAllProjects() {
     return new Promise(resolve => {
         resolve({ projects: response.data })
     });
+}
+
+//TODO: Change to username
+export function getUserData({ mail }) {
+    const options = {
+        method: 'GET',
+        headers: { Authorization: getVerificationToken() },
+        url: '/api/get/user',
+        params: {
+            username: mail
+        }
+    }
+
+    return new Promise((resolve, reject) => {
+        axios(options)
+            .then(response => resolve(response.data))
+            .catch(err => reject(err))
+    })
 }
 
 //TODO: Remove sleep

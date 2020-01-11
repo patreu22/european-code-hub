@@ -5,7 +5,6 @@ import { withRouter } from "react-router";
 class Search extends Component {
 
     render() {
-        console.log(this.props)
         const searchTerm = this.props.match.params.searchterm;
         return (
             <PageWrapper>

@@ -23,6 +23,8 @@
 	- Update your entries
 - Open API to fetch data? (Open Exchange Canada)
 - Email Server to verify registrations (Bonus?)
+- Suchmaschinenoptimierung? (Wie viele % der Nutzer starten ihre suche bei Google?)
 
 --> Verweis auf NPM/Dart.dev
+
 

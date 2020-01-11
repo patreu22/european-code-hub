@@ -5,7 +5,6 @@ import { withRouter } from "react-router";
 class Project extends Component {
 
     render() {
-        console.log(this.props)
         const projectName = this.props.match.params.projectname;
         return (
             <PageWrapper>
