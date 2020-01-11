@@ -45,7 +45,7 @@ class Profile extends Component {
     render() {
         if (!this.state.redirectToLogin) {
             return (
-                <PageWrapper headlineTitle="Profile...">
+                <PageWrapper headlineTitle="Profile">
                     {this.state.profilePicture && <img src={this.state.profilePicture} alt="Profile" />}
                     <h2>Username: {this.state.username}</h2>
                     <h2>Mail: {this.state.mail}</h2>

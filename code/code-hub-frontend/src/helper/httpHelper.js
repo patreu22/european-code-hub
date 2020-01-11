@@ -55,7 +55,7 @@ export function requestLoginToken(mail, password) {
     });
 }
 
-export async function getOwnUserData() {
+export function getOwnUserData() {
     const options = {
         method: 'GET',
         headers: { Authorization: getVerificationToken() },

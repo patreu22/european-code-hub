@@ -88,7 +88,12 @@ app.get('/api/get/projects', function (req, res) {
 app.get('/api/get/user/', authentication.isAuthorized, function (req, res) {
     database.getUser({ token: req.headers.authorization, stripData: true })
         .then(user => {
-            return res.status(200).send(user)
+            if (user) {
+                return res.status(200).send(user)
+            } else {
+                //Probably session token expired
+                return res.sendStatus(404);
+            }
         })
         .catch(() => {
             return res.sendStatus(400);
