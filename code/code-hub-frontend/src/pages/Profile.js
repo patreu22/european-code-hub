@@ -46,10 +46,10 @@ class Profile extends Component {
         if (!this.state.redirectToLogin) {
             return (
                 <PageWrapper headlineTitle="Profile...">
+                    {this.state.profilePicture && <img src={this.state.profilePicture} alt="Profile" />}
                     <h2>Username: {this.state.username}</h2>
                     <h2>Mail: {this.state.mail}</h2>
                     <h2>Position: {this.state.position}</h2>
-                    {this.state.profilePicture && <img src={this.state.profilePicture} alt="Profile" />}
                 </PageWrapper>
             );
         } else {

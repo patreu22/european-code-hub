@@ -84,8 +84,22 @@ app.get('/api/get/projects', function (req, res) {
         })
 });
 
+//Returns own user data based on session token
 app.get('/api/get/user/', authentication.isAuthorized, function (req, res) {
-    database.getUserWithToken({ token: req.headers.authorization, stripData: true })
+    database.getUser({ token: req.headers.authorization, stripData: true })
+        .then(user => {
+            return res.status(200).send(user)
+        })
+        .catch(() => {
+            return res.sendStatus(400);
+        })
+});
+
+//Returns public data by username
+app.get('/api/get/user/:username', function (req, res) {
+    var username = req.params.username;
+    console.log(username)
+    database.getUser({ username: username, stripData: true })
         .then(user => {
             return res.status(200).send(user)
         })
@@ -111,8 +125,8 @@ app.post('/api/create/token', function (req, res) {
 });
 
 app.get('/api/get/user/profileImage/:mail', async function (req, res) {
-    var mail = req.params.mail;
-    database.getUserWithEmail(mail)
+    const mail = req.params.mail;
+    database.getUser({ mail: mail })
         .then((user) => {
             return res.status(200).contentType(user.profilePicture.contentType).send(user.profilePicture.data)
         })

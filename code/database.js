@@ -6,7 +6,7 @@ const io = require('./io')
 
 function userExists({ mail }) {
     return new Promise(function (resolve, reject) {
-        getUserWithEmail(mail)
+        getUser({ mail: mail })
             .then((user) => {
                 const userFound = user ? true : false;
                 resolve(userFound)
@@ -27,24 +27,10 @@ function connectToDb(db_url) {
     });
 }
 
-function getUserWithEmail(mail) {
-    const User = models.USER_MODEL;
-    var findUserRequest = User.findOne({ 'mail': mail });
-
-    return new Promise(function (resolve, reject) {
-        findUserRequest.exec(function (err, user) {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(user)
-            }
-        })
-    });
-}
 
 function userAndHashExistInDB({ mail, password }) {
     return new Promise(function (resolve, reject) {
-        getUserWithEmail(mail)
+        getUser({ mail: mail, stripData = false })
             .then((user) => {
                 const hash = user ? user.password : "-1"
                 authentication.checkPassword(password, hash)
@@ -76,7 +62,7 @@ function getAllProjects() {
 
 function updateSessionToken({ mail, token }) {
     return new Promise(function (resolve, reject) {
-        getUserWithEmail(mail)
+        getUser({ mail: mail, stripData = false })
             .then((user) => {
                 user.lastSessionToken = token;
                 user.save(function (err) {
@@ -94,9 +80,25 @@ function updateSessionToken({ mail, token }) {
     })
 }
 
-function getUserWithToken({ token, stripData = true }) {
+//Set one of the parameters and the stripData parameter
+function getUser({ token, mail, username, stripData = true }) {
     const User = models.USER_MODEL;
-    var findUserRequest = User.findOne({ 'lastSessionToken': token });
+    var key = ''
+    var value = ''
+    if (token) {
+        key = 'lastSessionToken'
+        value = token
+    } else if (email) {
+        key = 'mail'
+        value = mail
+    } else if (username) {
+        key = 'username'
+        value = username
+    }
+
+    console.log(`Key: ${key} | Value: ${value}`)
+
+    var findUserRequest = User.findOne({ key: value });
     if (stripData) {
         findUserRequest = findUserRequest.select("username mail position profilePicture");
     }
@@ -167,12 +169,11 @@ function saveProjectToDB({ gitUrl, projectName, projectDescription, contactMail 
 
 module.exports = {
     userExists: userExists,
-    getUserWithEmail: getUserWithEmail,
     getAllProjects: getAllProjects,
     userAndHashExistInDB: userAndHashExistInDB,
     saveUserToDB: saveUserToDB,
     saveProjectToDB: saveProjectToDB,
     connectToDb: connectToDb,
     updateSessionToken: updateSessionToken,
-    getUserWithToken: getUserWithToken
+    getUser: getUser
 }
