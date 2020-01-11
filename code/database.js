@@ -30,7 +30,7 @@ function connectToDb(db_url) {
 
 function userAndHashExistInDB({ mail, password }) {
     return new Promise(function (resolve, reject) {
-        getUser({ mail: mail, stripData = false })
+        getUser({ mail: mail, stripData: false })
             .then((user) => {
                 const hash = user ? user.password : "-1"
                 authentication.checkPassword(password, hash)
@@ -62,7 +62,7 @@ function getAllProjects() {
 
 function updateSessionToken({ mail, token }) {
     return new Promise(function (resolve, reject) {
-        getUser({ mail: mail, stripData = false })
+        getUser({ mail: mail, stripData: false })
             .then((user) => {
                 user.lastSessionToken = token;
                 user.save(function (err) {
@@ -88,7 +88,7 @@ function getUser({ token, mail, username, stripData = true }) {
     if (token) {
         key = 'lastSessionToken'
         value = token
-    } else if (email) {
+    } else if (mail) {
         key = 'mail'
         value = mail
     } else if (username) {
@@ -96,9 +96,7 @@ function getUser({ token, mail, username, stripData = true }) {
         value = username
     }
 
-    console.log(`Key: ${key} | Value: ${value}`)
-
-    var findUserRequest = User.findOne({ key: value });
+    var findUserRequest = User.findOne({ [key]: value });
     if (stripData) {
         findUserRequest = findUserRequest.select("username mail position profilePicture");
     }
