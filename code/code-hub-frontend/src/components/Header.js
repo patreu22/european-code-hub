@@ -4,8 +4,7 @@ import { Badge, AppBar, Toolbar, Menu, MenuItem, Typography, IconButton } from '
 import { Add as AddButton, Build as BuildIcon, DeleteForever as DeleteIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
-import { useCookies } from 'react-cookie';
-import { removeVerificationToken, getVerificationToken } from '../helper/cookieHelper'
+import { getVerificationToken, removeVerificationToken } from '../helper/cookieHelper'
 
 import EuropeanLogo from '../assets/europe_logo.png';
 
@@ -45,8 +44,6 @@ const useStyles = makeStyles(theme => ({
 function Header(props) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [cookies, getCookie, removeCookie] = useCookies(['token']);
-
 
     const isMenuOpen = Boolean(anchorEl);
 
@@ -55,7 +52,8 @@ function Header(props) {
     // };
 
     const handleLoginClick = event => {
-        if (typeof cookies.token === 'undefined' || cookies.token === 'undefined') {
+        const token = getVerificationToken();
+        if (typeof token === 'undefined' || token === '') {
             props.history.push(`/login`);
         } else {
             props.history.push(`/profile`);
@@ -132,7 +130,7 @@ function Header(props) {
                             </Badge>
                         </IconButton>
                         <IconButton color="inherit" onClick={() => {
-                            removeCookie('token')
+                            removeVerificationToken()
                         }}>
                             <Badge color="secondary">
                                 <DeleteIcon />

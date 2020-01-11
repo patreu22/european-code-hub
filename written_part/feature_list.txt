@@ -24,3 +24,5 @@
 - Open API to fetch data? (Open Exchange Canada)
 - Email Server to verify registrations (Bonus?)
 
+--> Verweis auf NPM/Dart.dev
+

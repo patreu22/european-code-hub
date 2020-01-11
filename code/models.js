@@ -5,7 +5,8 @@ const USER_SCHEMA = new mongoose.Schema({
     password: String,
     mail: String,
     position: String,
-    profilePicture: { data: Buffer, contentType: String }
+    profilePicture: { data: Buffer, contentType: String },
+    lastSessionToken: { type: String, default: '' },
 }, { collection: 'users' });
 
 const PROJECT_SCHEMA = new mongoose.Schema({

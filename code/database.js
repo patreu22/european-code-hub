@@ -74,14 +74,56 @@ function getAllProjects() {
     })
 }
 
+function updateSessionToken({ mail, token }) {
+    return new Promise(function (resolve, reject) {
+        getUserWithEmail(mail)
+            .then((user) => {
+                user.lastSessionToken = token;
+                user.save(function (err) {
+                    if (err) {
+                        console.log(err)
+                        reject(err)
+                    } else {
+                        resolve(true)
+                    }
+                });
+            })
+            .catch(() => {
+                reject(error)
+            })
+    })
+}
 
-function saveUserToDB({ username, password, mail, position, profileImagePath }) {
+function getUserWithToken({ token, stripData = true }) {
+    const User = models.USER_MODEL;
+    var findUserRequest = User.findOne({ 'lastSessionToken': token });
+    if (stripData) {
+        findUserRequest = findUserRequest.select("username mail position profilePicture");
+    }
+
+    return new Promise(function (resolve, reject) {
+        findUserRequest.exec(function (err, user) {
+            if (err) {
+                console.log(err)
+                reject(err);
+            } else {
+                if (user) {
+                    resolve(user)
+                } else (resolve(null))
+            }
+        })
+    });
+}
+
+
+function saveUserToDB({ username, password, mail, position, profileImagePath, lastSessionToken }) {
     const newUser = models.USER_MODEL({
         username: username,
         password: password,
         mail: mail,
         position: position,
-        profilePicture: { data: io.getProfileImageOrDefaultData(profileImagePath), contentType: "image/png" }
+        profilePicture: { data: io.getProfileImageOrDefaultData(profileImagePath), contentType: "image/png" },
+        lastSessionToken: lastSessionToken
     });
     return new Promise(function (resolve, reject) {
         newUser.save(function (err, newUser) {
@@ -130,5 +172,7 @@ module.exports = {
     userAndHashExistInDB: userAndHashExistInDB,
     saveUserToDB: saveUserToDB,
     saveProjectToDB: saveProjectToDB,
-    connectToDb: connectToDb
+    connectToDb: connectToDb,
+    updateSessionToken: updateSessionToken,
+    getUserWithToken: getUserWithToken
 }

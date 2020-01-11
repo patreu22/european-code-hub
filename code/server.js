@@ -84,12 +84,24 @@ app.get('/api/get/projects', function (req, res) {
         })
 });
 
+app.get('/api/get/user/', authentication.isAuthorized, function (req, res) {
+    database.getUserWithToken({ token: req.headers.authorization, stripData: true })
+        .then(user => {
+            return res.status(200).send(user)
+        })
+        .catch(() => {
+            return res.sendStatus(400);
+        })
+});
+
+
 app.post('/api/create/token', function (req, res) {
     return new Promise(function (resolve, reject) {
         const authValues = req.body;
         database.userAndHashExistInDB({ mail: authValues.mail, password: authValues.password }).then(pairExists => {
             if (pairExists) {
-                const token = authentication.generateWebtoken(authValues.mail, authValues.password)
+                const token = authentication.generateWebtoken()
+                database.updateSessionToken({ mail: authValues.mail, token: token })
                 return res.status(200).send(token)
             } else {
                 return res.sendStatus(400);

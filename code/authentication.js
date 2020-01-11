@@ -27,10 +27,10 @@ const login = () => {
     console.log("Login")
 }
 
-const generateWebtoken = (mail, password) => {
+const generateWebtoken = () => {
     console.log("Generate token")
     let privateKey = fs.readFileSync(privateKeyPath, 'utf8');
-    let token = jwt.sign({ "mail": mail, "password": password }, privateKey, { algorithm: 'HS256' });
+    let token = jwt.sign({}, privateKey, { algorithm: 'HS256' });
     console.log(token)
     return token
 }

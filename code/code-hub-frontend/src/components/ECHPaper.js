@@ -7,7 +7,6 @@ import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
 import { setVerificationToken } from '../helper/cookieHelper'
-import { withCookies } from 'react-cookie'
 import ImageUploader from 'react-images-upload';
 
 class ECHPaper extends Component {
@@ -280,7 +279,9 @@ class ECHPaper extends Component {
         if (validMail && validPassword) {
             requestLoginToken(this.state.mail, this.state.password)
                 .then((token) => {
-                    setVerificationToken(this.props.cookies, token);
+                    console.log("Fetched token:")
+                    console.log(token)
+                    setVerificationToken(token);
                     this.setState({
                         redirectToHome: true
                     })
@@ -389,4 +390,4 @@ ECHPaper.defaultProps = {
     onLoginDone: () => { },
 }
 
-export default withCookies(ECHPaper);
+export default ECHPaper;

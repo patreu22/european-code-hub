@@ -1,4 +1,5 @@
 import * as axios from 'axios';
+import { getVerificationToken } from '../helper/cookieHelper'
 
 export function registerUser(username, password, mail, position, profileImageFile) {
     var formData = new FormData();
@@ -25,16 +26,20 @@ export function registerUser(username, password, mail, position, profileImageFil
 }
 
 export function registerProject({ gitUrl, projectName, projectDescription, contactMail }) {
-    axios.post('/api/create/project', {
-        gitUrl: gitUrl,
-        projectName: projectName,
-        projectDescription: projectDescription,
-        contactMail: contactMail
-    }).then(function (response) {
-        console.log(response);
-    }).catch(function (error) {
-        console.log(error);
-    });
+    return new Promise((resolve, reject) => {
+        axios.post('/api/create/project', {
+            gitUrl: gitUrl,
+            projectName: projectName,
+            projectDescription: projectDescription,
+            contactMail: contactMail
+        }).then(function (response) {
+            resolve(true)
+            console.log(response);
+        }).catch(function (err) {
+            reject(err)
+            console.log(err);
+        });
+    })
 }
 
 export function requestLoginToken(mail, password) {
@@ -48,6 +53,23 @@ export function requestLoginToken(mail, password) {
             reject(err)
         })
     });
+}
+
+export async function getOwnUserData() {
+    const options = {
+        method: 'GET',
+        headers: { Authorization: getVerificationToken() },
+        url: '/api/get/user/'
+    }
+    return new Promise((resolve, reject) => {
+        axios(options)
+            .then(response => {
+                resolve(response.data);
+            })
+            .catch(err => {
+                reject(err)
+            })
+    })
 }
 
 export async function getAllProjects() {

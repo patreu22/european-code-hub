@@ -1,14 +1,16 @@
-export function setVerificationToken(cookies, token) {
-    cookies.set("token", token);
+import Cookies from 'js-cookie'
+
+export function setVerificationToken(token) {
+    Cookies.set("token", token);
     console.log("- Token set -")
 }
 
-export function removeVerificationToken(cookies) {
-    cookies.remove("token")
+export function removeVerificationToken() {
+    Cookies.remove("token")
     console.log("- Token removed -")
 }
 
-export function getVerificationToken(cookies) {
-    const token = cookies.get("token") ? cookies.get("token") : null;
+export function getVerificationToken() {
+    const token = Cookies.get("token") ? Cookies.get("token") : '';
     return token
 }
