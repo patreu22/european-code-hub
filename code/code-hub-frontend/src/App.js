@@ -7,6 +7,7 @@ import {
   Switch,
   Route
 } from "react-router-dom";
+import { LastLocationProvider } from 'react-router-last-location';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Home from './pages/Home';
 import Search from './pages/Search';
@@ -35,18 +36,20 @@ class App extends React.Component {
     return (
       <MuiThemeProvider theme={theme}>
         <Router>
-          <Switch>
-            <Route exact path="/" component={Home} />
-            <Route path="/hello" component={Hello} />
-            <Route path="/add" component={Add} />
-            <Route path="/catalogue" component={Catalogue} />
-            <Route path="/contribute" component={Contribute} />
-            <Route path="/projects/:projectname" component={Project} />
-            <Route path="/search/:searchterm" component={Search} />
-            <Route path="/login" component={Login} />
-            <Route path="/register" component={Register} />
-            <Route path="/profile/:username?" component={Profile} />
-          </Switch>
+          <LastLocationProvider>
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/hello" component={Hello} />
+              <Route path="/add" component={Add} />
+              <Route path="/catalogue" component={Catalogue} />
+              <Route path="/contribute" component={Contribute} />
+              <Route path="/projects/:projectname" component={Project} />
+              <Route path="/search/:searchterm" component={Search} />
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
+              <Route path="/user/:username?" component={Profile} />
+            </Switch>
+          </LastLocationProvider>
         </Router>
       </MuiThemeProvider>
     );

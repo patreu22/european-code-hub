@@ -24,6 +24,8 @@
 - Open API to fetch data? (Open Exchange Canada)
 - Email Server to verify registrations (Bonus?)
 - Suchmaschinenoptimierung? (Wie viele % der Nutzer starten ihre suche bei Google?)
+- Connect to Github / Register with Github?
+- Error 404 Page
 
 --> Verweis auf NPM/Dart.dev
 

@@ -84,36 +84,31 @@ app.get('/api/get/projects', function (req, res) {
         })
 });
 
-//Returns own user data based on session token
-app.get('/api/get/user', authentication.isAuthorized, function (req, res) {
-    var username = req.query.username;
-    console.log(username)
-    database.getUser({ token: req.headers.authorization, stripData: true })
-        .then(user => {
-            if (user) {
-                return res.status(200).send(user)
-            } else {
-                //Probably session token expired
-                return res.sendStatus(404);
-            }
-        })
-        .catch(() => {
-            return res.sendStatus(400);
-        })
-});
-
-//Returns public data by mail //TODO: by username
+//Returns either user by username query or own data by auth token
 app.get('/api/get/user', function (req, res) {
-    var username = req.query.username;
-    console.log(username)
-    //TODO: use username instead of mail
-    database.getUser({ mail: username, stripData: true })
-        .then(user => {
-            return res.status(200).send(user)
-        })
-        .catch(() => {
-            return res.sendStatus(400);
-        })
+    const username = req.query.username
+    const authHeader = req.headers.authorization
+
+    if (!username && !authHeader) {
+        return res.status(404).send({ msg: "Neither user nor auth token provided" });
+    } else {
+        //TODO: Change mail to username when username system is established
+        const request = username
+            ? database.getUser({ mail: username, stripData: true })
+            : database.getUser({ token: authHeader, stripData: true })
+
+        request
+            .then(user => {
+                if (user) {
+                    return res.status(200).send(user)
+                } else {
+                    return res.status(404).send({ msg: "No user found" });
+                }
+            })
+            .catch(() => {
+                return res.sendStatus(400);
+            })
+    }
 });
 
 

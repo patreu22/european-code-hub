@@ -56,7 +56,7 @@ function Header(props) {
         if (typeof token === 'undefined' || token === '') {
             props.history.push(`/login`);
         } else {
-            props.history.push(`/profile`);
+            props.history.push(`/user`);
         }
 
     };

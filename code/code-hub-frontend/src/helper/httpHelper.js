@@ -79,13 +79,13 @@ export async function getAllProjects() {
 }
 
 //TODO: Change to username
-export function getUserData({ mail }) {
+export function getUserData({ username }) {
     const options = {
         method: 'GET',
         headers: { Authorization: getVerificationToken() },
         url: '/api/get/user',
         params: {
-            username: mail
+            username: username
         }
     }
 

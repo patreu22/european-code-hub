@@ -24,7 +24,7 @@ class ECHPaper extends Component {
             passwordErrorMessage: "",
             formError: false,
             formErrorText: "",
-            redirectToHome: false
+            redirect: false
         };
         this.timer = 0;
         this._performLogin = this._performLogin.bind(this)
@@ -53,7 +53,7 @@ class ECHPaper extends Component {
             alignSelf: 'baseline'
         }
 
-        if (this.state.secondsLeft > 0 && !this.state.redirectToHome) {
+        if (this.state.secondsLeft > 0 && !this.state.redirect) {
             return (
                 <Paper style={catalogueBoxStyle} border={1}>
                     {this.props.title ? <h3>{this.props.title}</h3> : null}
@@ -61,7 +61,8 @@ class ECHPaper extends Component {
                 </Paper>
             );
         } else {
-            return <Redirect to='/' />
+            const path = this.props.routeToRedirect ? this.props.routeToRedirect : '/'
+            return <Redirect to={path} />
         }
     }
 
@@ -279,11 +280,9 @@ class ECHPaper extends Component {
         if (validMail && validPassword) {
             requestLoginToken(this.state.mail, this.state.password)
                 .then((token) => {
-                    console.log("Fetched token:")
-                    console.log(token)
                     setVerificationToken(token);
                     this.setState({
-                        redirectToHome: true
+                        redirect: true
                     })
                 }).catch((error) => {
                     console.log(error)
@@ -380,6 +379,7 @@ class ECHPaper extends Component {
 ECHPaper.propTypes = {
     title: PropTypes.string,
     type: PropTypes.string,
+    routeToRedirect: PropTypes.string,
     buttonTitle: PropTypes.string,
     onRegistrationDone: PropTypes.func,
     onLoginDone: PropTypes.func,

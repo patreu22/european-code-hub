@@ -12,7 +12,10 @@ class Profile extends Component {
         super(props)
         this.state = {
             redirectToLogin: false,
+            redirectToOwnProfile: false,
+            myusername: '',
             isLoading: false,
+            isOwnProfile: false,
             mail: '',
             position: '',
             profilePicture: null,
@@ -21,58 +24,53 @@ class Profile extends Component {
 
     componentDidMount() {
         const token = getVerificationToken()
-        if (typeof token === 'undefined' || token === '') {
+        if ((typeof token === 'undefined' || token === '') && !this.props.match.params.username) {
+            // TODO: Redirect to Error 404: Not found page
             this.setState({
                 redirectToLogin: true
             })
         } else {
-            this.setState({ isLoading: true })
-            this.fetchData()
+            if (this.props.match.params.username) {
+                this.setState({ isLoading: true })
+                this.fetchUserData();
+            } else {
+                this.setState({
+                    isLoading: true,
+                    isOwnProfile: true
+                })
+                this.fetchOwnUserData();
+            }
         }
     }
 
-    fetchData() {
-        const userToFetchData = this.props.match.params.user ? this.props.match.params.mail : ""
-        console.log(userToFetchData)
-        if (userToFetchData === "") {
-            console.log("User to fetch data: " + userToFetchData)
-            getOwnUserData().then(data => {
-                var imageBaseString = "data:image/png;base64," + btoa(new Uint8Array(data.profilePicture.data.data).reduce(function (data, byte) {
-                    return data + String.fromCharCode(byte);
-                }, ''));
-                this.setState({
-                    username: data.username,
-                    mail: data.mail,
-                    position: data.position,
-                    profilePicture: imageBaseString,
-                    isLoading: false
-                })
-            }).catch(err => {
-                const userNotFound = err.response.status === 404
-                this.setState({ isLoading: false, redirectToLogin: userNotFound })
-            })
-        } else {
-            //TODO: Change to user
-            getUserData({ mail: userToFetchData }).then(data => {
-                console.log(data)
-                var imageBaseString = "data:image/png;base64," + btoa(new Uint8Array(data.profilePicture.data.data).reduce(function (data, byte) {
-                    return data + String.fromCharCode(byte);
-                }, ''));
-                this.setState({
-                    username: data.username,
-                    mail: data.mail,
-                    position: data.position,
-                    profilePicture: imageBaseString,
-                    isLoading: false
-                })
-            }).catch(err => {
-                console.log(err)
-                const isUserNotFound = err.response.status === 404
-                this.setState({ isLoading: false, redirectToLogin: isUserNotFound })
-            })
-        }
+    fetchOwnUserData() {
+        this.handleReceivedData(getOwnUserData)
     }
 
+    fetchUserData() {
+        const userToFetchData = this.props.match.params.username
+        //TODO: Change to username instead of email
+        const fetchPromise = () => getUserData({ username: userToFetchData })
+        this.handleReceivedData(fetchPromise)
+    }
+
+    handleReceivedData(promise) {
+        promise().then(data => {
+            var imageBaseString = "data:image/png;base64," + btoa(new Uint8Array(data.profilePicture.data.data).reduce(function (data, byte) {
+                return data + String.fromCharCode(byte);
+            }, ''));
+            this.setState({
+                username: data.username,
+                mail: data.mail,
+                position: data.position,
+                profilePicture: imageBaseString,
+                isLoading: false
+            })
+        }).catch(err => {
+            const userNotFound = err.response.status === 404
+            this.setState({ isLoading: false, redirectToLogin: userNotFound })
+        })
+    }
 
     render() {
         if (!this.state.redirectToLogin) {
@@ -82,6 +80,8 @@ class Profile extends Component {
                     {content}
                 </PageWrapper>
             );
+        } else if (this.state.redirectToOwnProfile) {
+            return <Redirect to={`/user/${this.state.myusername}`} />
         } else {
             return <Redirect to='/login' />
         }

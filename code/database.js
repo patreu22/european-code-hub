@@ -85,15 +85,15 @@ function getUser({ token, mail, username, stripData = true }) {
     const User = models.USER_MODEL;
     var key = ''
     var value = ''
-    if (token) {
-        key = 'lastSessionToken'
-        value = token
+    if (username) {
+        key = 'username'
+        value = username
     } else if (mail) {
         key = 'mail'
         value = mail
-    } else if (username) {
-        key = 'username'
-        value = username
+    } else if (token) {
+        key = 'lastSessionToken'
+        value = token
     }
 
     var findUserRequest = User.findOne({ [key]: value });
