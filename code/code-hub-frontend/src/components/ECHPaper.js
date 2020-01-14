@@ -34,7 +34,9 @@ class ECHPaper extends Component {
         this._performLogin = this._performLogin.bind(this)
         this._performGitFetch = this._performGitFetch.bind(this)
         this._performRegistration = this._performRegistration.bind(this)
-        this.onDrop = this.onDrop.bind(this);
+        this._performJsonHandling = this._performJsonHandling.bind(this)
+        this.onImageDrop = this.onImageDrop.bind(this);
+        this.onJsonDrop = this.onJsonDrop.bind(this);
         this._countDown = this._countDown.bind(this);
     }
 
@@ -66,7 +68,6 @@ class ECHPaper extends Component {
                 </Paper>
             );
         } else {
-            console.log("Redirect!")
             const path = this.props.routeToRedirect ? this.props.routeToRedirect : '/'
             return <Redirect to={path} />
         }
@@ -135,7 +136,7 @@ class ECHPaper extends Component {
                             buttonText='Choose a profile picture'
                             withPreview
                             label="optional"
-                            onChange={this.onDrop}
+                            onChange={this.onImageDrop}
                             accept="accept=image/*"
                             singleImage={true}
                             maxFileSize={5242880}
@@ -157,8 +158,7 @@ class ECHPaper extends Component {
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
-                    {this._renderEmailField(inputFieldStyle)}
-                    {this._renderPasswordField(inputFieldStyle)}
+
                     {this._renderSubmitButton()}
                 </form>
             </div>
@@ -167,6 +167,28 @@ class ECHPaper extends Component {
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
                     {this._renderUrlField(inputFieldStyle)}
+                    {this._renderSubmitButton()}
+                </form>
+            </div>
+        } else if (this.props.type === "addProjectViaJson") {
+            return <div>
+                {this.props.title ? <Divider /> : null}
+                <form style={formParagraphStyle}>
+                    <div style={dropzoneWrapperStyle}>
+                        <ImageUploader
+                            withIcon={true}
+                            buttonText='Upload Code.json'
+                            withPreview={false}
+                            label=""
+                            imgExtension={[".json"]}
+                            onChange={this.onJsonDrop}
+                            accept="accept=json"
+                            singleImage={true}
+                            maxFileSize={5242880}
+                            disable={this.state.jsonUploaded}
+                            buttonStyles={{ display: /*this.state.profileImage ? 'none' :*/ 'block' }}
+                        />
+                    </div>
                     {this._renderSubmitButton()}
                 </form>
             </div>
@@ -179,19 +201,15 @@ class ECHPaper extends Component {
         }
     }
 
-    onDrop(pictureFiles) {
+    onImageDrop(pictureFiles) {
         this.setState({
             profileImage: pictureFiles[0],
         });
     }
 
-    _onDropzoneChanged(files) {
-        var image = null;
-        if (!files.isEmpty) {
-            image = files[0]
-        }
+    onJsonDrop(files) {
         this.setState({
-            profileImage: image
+            json: files[0],
         });
     }
 
@@ -256,6 +274,10 @@ class ECHPaper extends Component {
         } else if (this.props.type === 'addProjectViaGit') {
             return <div style={{ width: '100%' }}>
                 <ECHButton width="80%" onClick={this._performGitFetch}>Next step</ECHButton>
+            </div>
+        } else if (this.props.type === 'addProjectViaJson') {
+            return <div style={{ width: '100%' }}>
+                <ECHButton width="80%" onClick={this._performJsonHandling}>Next step</ECHButton>
             </div>
         }
     }
@@ -352,6 +374,10 @@ class ECHPaper extends Component {
                 })
             }
         }
+    }
+
+    _performJsonHandling() {
+        console.log("Todo: Handle submitted JSON")
     }
 
     _performGitFetch() {
