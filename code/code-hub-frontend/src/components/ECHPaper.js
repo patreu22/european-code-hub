@@ -99,11 +99,6 @@ class ECHPaper extends Component {
             alignItems: 'center',
         }
 
-        const inputFieldStyle = {
-            width: '80%',
-            paddingBottom: '1.5vw'
-        }
-
         const dropzoneWrapperStyle = {
             maxWidth: '80%',
             paddingBottom: '1vw',
@@ -121,8 +116,8 @@ class ECHPaper extends Component {
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
-                    {this._renderEmailField(inputFieldStyle)}
-                    {this._renderPasswordField(inputFieldStyle)}
+                    {this._renderEmailField()}
+                    {this._renderPasswordField()}
                     {this._renderFormHelperText()}
                     {this._renderSubmitButton()}
                 </form>
@@ -131,8 +126,8 @@ class ECHPaper extends Component {
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
-                    {this._renderEmailField(inputFieldStyle)}
-                    {this._renderPasswordField(inputFieldStyle)}
+                    {this._renderEmailField()}
+                    {this._renderPasswordField()}
                     <div style={dropzoneWrapperStyle}>
                         <ImageUploader
                             withIcon={true}
@@ -160,16 +155,13 @@ class ECHPaper extends Component {
         } else if (this.props.type === "addProjectManually") {
             return <div>
                 {this.props.title ? <Divider /> : null}
-                <form style={formParagraphStyle}>
-
-                    {this._renderSubmitButton()}
-                </form>
+                {this._renderAddProjectManuallyForm(formParagraphStyle)}
             </div>
         } else if (this.props.type === "addProjectViaGit") {
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
-                    {this._renderUrlField(inputFieldStyle)}
+                    {this._renderUrlField()}
                     {this._renderSubmitButton()}
                 </form>
             </div>
@@ -218,6 +210,12 @@ class ECHPaper extends Component {
             jsonError: false,
             jsonErrorMessage: ''
         });
+    }
+
+    _renderAddProjectManuallyForm(formParagraphStyle) {
+        return <form style={formParagraphStyle}>
+            {this._renderSubmitButton()}
+        </form>
     }
 
     _renderFormHelperText() {
@@ -293,6 +291,7 @@ class ECHPaper extends Component {
         }
     }
 
+    //value, error, errorMessage, formError, formErrorText
     onMailChanged(event) {
         this.setState({
             mail: event.target.value,
@@ -392,10 +391,11 @@ class ECHPaper extends Component {
         if (file) {
             parseToJsonObject(file)
                 .then(json => {
-                    console.log("Todo: Handle submitted JSON")
                     console.log(json)
+                    this.props.onJsonSubmitted(json)
                 })
                 .catch(err => {
+                    console.log(err)
                     this.setState({
                         jsonError: true,
                         jsonErrorMessage: 'No valid JSON'
@@ -494,6 +494,7 @@ ECHPaper.propTypes = {
     onButtonClickHandler: PropTypes.func,
     onRegistrationDone: PropTypes.func,
     onLoginDone: PropTypes.func,
+    onJsonSubmitted: PropTypes.func
 };
 
 ECHPaper.defaultProps = {
