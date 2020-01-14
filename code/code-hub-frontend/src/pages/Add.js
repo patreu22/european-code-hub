@@ -22,6 +22,7 @@ class Add extends Component {
         this._renderChooseDialogue = this._renderChooseDialogue.bind(this)
         this._renderEnterGitDialogue = this._renderEnterGitDialogue.bind(this)
         this._renderManuallyDialogue = this._renderManuallyDialogue.bind(this)
+        this._renderJsonDialogue = this._renderJsonDialogue.bind(this)
     }
 
     render() {
@@ -30,6 +31,9 @@ class Add extends Component {
         switch (this.state.contentType) {
             case "git":
                 contentToRender = this._renderEnterGitDialogue;
+                break
+            case "json":
+                contentToRender = this._renderJsonDialogue;
                 break
             case "manually":
                 contentToRender = this._renderManuallyDialogue;
@@ -60,6 +64,13 @@ class Add extends Component {
         </div>
     }
 
+    _renderJsonDialogue() {
+        return <div>
+            <ECHPaper type="addProjectViaJson" title="Upload file"></ECHPaper>
+            {this._renderBackButton()}
+        </div>
+    }
+
     _renderBackButton() {
         return <ECHButton onClick={() => this.setState({
             contentType: "choose",
@@ -74,9 +85,13 @@ class Add extends Component {
 
     _onGitClick = () => this.setState({
         contentType: "git",
-        pageTitle: "Add via Git rep"
+        pageTitle: "Add via Git repository"
     })
 
+    _onCodeJsonClick = () => this.setState({
+        contentType: "json",
+        pageTitle: "Add project via Code.json file"
+    })
 
     _renderChooseDialogue() {
         console.log(this)
@@ -84,6 +99,9 @@ class Add extends Component {
             <ECHPaper title="Do you use a Git repository?" buttonTitle="Add project via git link" onButtonClickHandler={this._onGitClick}>
                 Amazing, we can do all the work for you!
                 We just need the link and a couple of information and we are good to go.
+            </ECHPaper>
+            <ECHPaper title="Submit a Code.json file?" buttonTitle="Add by file upload" onButtonClickHandler={this._onCodeJsonClick}>
+                If your organization uses a Code.json file to store project metadata you can use it here to create a new entry automatically.
             </ECHPaper>
             <ECHPaper title="Add it manually?" buttonTitle="Add project manually" onButtonClickHandler={this._onManuallyClick}>
                 Also great, we it only takes a couple of minutes and will help other people tremendously finding your project.

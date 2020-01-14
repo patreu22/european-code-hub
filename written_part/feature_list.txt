@@ -26,6 +26,8 @@
 - Suchmaschinenoptimierung? (Wie viele % der Nutzer starten ihre suche bei Google?)
 - Connect to Github / Register with Github?
 - Error 404 Page
+- Fetch "Add new data" from Github link => e.g. https://raw.githubusercontent.com/patreu22/european-code-hub/master/README.md?token=ACWWANIR7OK622PG2EHKMZS6E3FM4
+- Fetch "Add new data" from uploaded code.json (compliant to code.gov file schema)
 
 --> Verweis auf NPM/Dart.dev
 
