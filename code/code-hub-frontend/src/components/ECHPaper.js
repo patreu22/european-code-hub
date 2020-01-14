@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import { Button, Divider, FormHelperText, Paper, TextField } from '@material-ui/core'
+import { Divider, FormHelperText, Paper, TextField } from '@material-ui/core'
 import { CheckCircleOutline as CheckCircleOutlineIcon } from '@material-ui/icons';
 import PropTypes from 'prop-types'
 import { Link, Redirect } from 'react-router-dom'
 import { registerUser } from '../helper/httpHelper'
-import { isValidEmail, isValidPassword } from '../helper/validationHelper'
+import { isValidEmail, isValidPassword, isValidUrl } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
 import { setVerificationToken } from '../helper/cookieHelper'
 import ImageUploader from 'react-images-upload';
+import ECHButton from './ECHButton'
 
 class ECHPaper extends Component {
 
@@ -24,10 +25,14 @@ class ECHPaper extends Component {
             passwordErrorMessage: "",
             formError: false,
             formErrorText: "",
-            redirect: false
+            redirect: false,
+            gitUrl: "",
+            gitUrlError: false,
+            gitUrlErrorMessage: "",
         };
         this.timer = 0;
         this._performLogin = this._performLogin.bind(this)
+        this._performGitFetch = this._performGitFetch.bind(this)
         this._performRegistration = this._performRegistration.bind(this)
         this.onDrop = this.onDrop.bind(this);
         this._countDown = this._countDown.bind(this);
@@ -61,6 +66,7 @@ class ECHPaper extends Component {
                 </Paper>
             );
         } else {
+            console.log("Redirect!")
             const path = this.props.routeToRedirect ? this.props.routeToRedirect : '/'
             return <Redirect to={path} />
         }
@@ -107,13 +113,6 @@ class ECHPaper extends Component {
 
         const paragraphStyle = this.props.buttonTitle ? textWhenButtonVisible : textWhenButtonInvisible
 
-        const browseButtonStyle = {
-            backgroundColor: '#0069E0',
-            color: 'white',
-            margin: '1vh 0px 2vh 0px',
-        }
-
-
         if (this.props.type === "login") {
             return <div>
                 {this.props.title ? <Divider /> : null}
@@ -154,11 +153,28 @@ class ECHPaper extends Component {
                     Click <Link to="/" style={{ color: 'black' }}>here</Link> to be redirected instantly.<br /><br />
                     Otherwise you will be sent back to the main page in {this.state.secondsLeft} second{this.state.secondsLeft === 1 ? "" : "s"} automatically.</div>
             </div >
+        } else if (this.props.type === "addProjectManually") {
+            return <div>
+                {this.props.title ? <Divider /> : null}
+                <form style={formParagraphStyle}>
+                    {this._renderEmailField(inputFieldStyle)}
+                    {this._renderPasswordField(inputFieldStyle)}
+                    {this._renderSubmitButton()}
+                </form>
+            </div>
+        } else if (this.props.type === "addProjectViaGit") {
+            return <div>
+                {this.props.title ? <Divider /> : null}
+                <form style={formParagraphStyle}>
+                    {this._renderUrlField(inputFieldStyle)}
+                    {this._renderSubmitButton()}
+                </form>
+            </div>
         } else {
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <p style={paragraphStyle}>{this.props.children}</p>
-                {this.props.buttonTitle ? <Button style={browseButtonStyle} variant="contained" href={this.props.buttonLink}>{this.props.buttonTitle}</Button> : null}
+                {this.props.buttonTitle ? <ECHButton href={this.props.buttonLink} onClick={this.props.onButtonClickHandler}>{this.props.buttonTitle}</ECHButton> : null}
             </div>
         }
     }
@@ -186,12 +202,23 @@ class ECHPaper extends Component {
     _renderEmailField(inputFieldStyle) {
         return <TextField
             style={inputFieldStyle}
-            label="Email" type="email"
+            label="Email"
             onChange={(event) => this.onMailChanged(event)}
             onBlur={(event) => this.onMailFieldBlurred(event)}
             error={this.state.mailError}
             helperText={this.state.mailErrorMessage}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
+        />
+    }
+
+    _renderUrlField(inputFieldStyle) {
+        return <TextField
+            style={inputFieldStyle}
+            label="URL"
+            onChange={(event) => this.onUrlChanged(event)}
+            onBlur={(event) => this.onUrlFieldBlurred(event)}
+            error={this.state.gitUrlError}
+            helperText={this.state.gitUrlErrorMessage}
         />
     }
 
@@ -210,13 +237,6 @@ class ECHPaper extends Component {
     }
 
     _renderSubmitButton() {
-        const formButtonStyle = {
-            backgroundColor: '#0069E0',
-            color: 'white',
-            margin: '2vh 0px 0.5vh 0px',
-            width: '80%'
-        }
-
         const registerTextStyle = {
             marginBottom: '2vh',
             paddingTop: '1vh',
@@ -225,13 +245,17 @@ class ECHPaper extends Component {
 
         if (this.props.type === 'login') {
             return <div style={{ width: '100%' }}>
-                <Button style={formButtonStyle} variant="contained" onClick={this._performLogin}>Login</Button>
+                <ECHButton width="80%" onClick={this._performLogin}>Login</ECHButton>
                 <div style={registerTextStyle}>or do you need to  <Link to="/register" style={{ color: 'black' }}>register</Link> first?</div>
             </div>
         } else if (this.props.type === 'register') {
             return <div style={{ width: '100%' }}>
-                <Button style={formButtonStyle} variant="contained" onClick={this._performRegistration}>Register</Button>
+                <ECHButton width="80%" onClick={this._performRegistration}>Register</ECHButton>
                 <div style={registerTextStyle}>You already have an account?  <Link to="/login" style={{ color: 'black' }}>Login</Link> directly.</div>
+            </div>
+        } else if (this.props.type === 'addProjectViaGit') {
+            return <div style={{ width: '100%' }}>
+                <ECHButton width="80%" onClick={this._performGitFetch}>Next step</ECHButton>
             </div>
         }
     }
@@ -246,12 +270,31 @@ class ECHPaper extends Component {
         })
     }
 
+    onUrlChanged(event) {
+        this.setState({
+            gitUrl: event.target.value,
+            gitUrlError: false,
+            gitUrlErrorMessage: "",
+            formError: false,
+            formErrorText: ''
+        })
+    }
+
     onMailFieldBlurred(event) {
         const isValid = isValidEmail(event.target.value)
         console.log(`Is ${event.target.value} valid mail? - ${isValid}`);
         this.setState({
             mailError: !isValid,
             mailErrorMessage: isValid ? "" : "Invalid Email address."
+        })
+    }
+
+    onUrlFieldBlurred(event) {
+        const isValid = isValidUrl(event.target.value)
+        console.log(`Is ${event.target.value} valid Url? - ${isValid}`);
+        this.setState({
+            gitUrlError: !isValid,
+            gitUrlErrorMessage: isValid ? "" : "Invalid URL."
         })
     }
 
@@ -308,6 +351,19 @@ class ECHPaper extends Component {
                     passwordErrorMessage: 'Not a valid password.'
                 })
             }
+        }
+    }
+
+    _performGitFetch() {
+        console.log("Hello?")
+        const validUrl = isValidUrl(this.state.gitUrl)
+        if (!validUrl) {
+            this.setState({
+                gitUrlError: true,
+                gitUrlErrorMessage: 'Not a valid URL.',
+            })
+        } else {
+            console.log("Todo: Git fetch")
         }
     }
 
@@ -371,7 +427,6 @@ class ECHPaper extends Component {
             } else if (this.props.type === "register") {
                 this._performRegistration();
             }
-
         }
     }
 }
@@ -381,6 +436,7 @@ ECHPaper.propTypes = {
     type: PropTypes.string,
     routeToRedirect: PropTypes.string,
     buttonTitle: PropTypes.string,
+    onButtonClickHandler: PropTypes.func,
     onRegistrationDone: PropTypes.func,
     onLoginDone: PropTypes.func,
 };
