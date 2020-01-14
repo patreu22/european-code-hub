@@ -9,11 +9,25 @@ const USER_SCHEMA = new mongoose.Schema({
     lastSessionToken: { type: String, default: '' },
 }, { collection: 'users' });
 
+//Status: "released" | "development" | "deprecated"
 const PROJECT_SCHEMA = new mongoose.Schema({
-    gitUrl: String,
     projectName: String,
     projectDescription: String,
-    contactMail: String
+    organization: String,
+    contact: {
+        contactName: String,
+        contactMail: String,
+    },
+    date: {
+        created: String,
+        lastUpdate: String
+    },
+    repoUrl: String,
+    programmingLanguages: [String],
+    readme: String,
+    license: String,
+    version: String,
+    status: String
 }, { collection: 'projects' });
 
 module.exports = {
