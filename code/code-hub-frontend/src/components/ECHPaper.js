@@ -7,6 +7,7 @@ import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword, isValidUrl } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
 import { setVerificationToken } from '../helper/cookieHelper'
+import { parseToJsonObject } from '../helper/fileHelper'
 import ImageUploader from 'react-images-upload';
 import ECHButton from './ECHButton'
 
@@ -26,6 +27,8 @@ class ECHPaper extends Component {
             formError: false,
             formErrorText: "",
             redirect: false,
+            jsonError: false,
+            jsonErrorMessage: '',
             gitUrl: "",
             gitUrlError: false,
             gitUrlErrorMessage: "",
@@ -175,10 +178,11 @@ class ECHPaper extends Component {
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
                     <div style={dropzoneWrapperStyle}>
+                        {/*TODO: Create file preview for JSON files*/}
                         <ImageUploader
                             withIcon={true}
                             buttonText='Upload Code.json'
-                            withPreview={false}
+                            withPreview={true}
                             label=""
                             imgExtension={[".json"]}
                             onChange={this.onJsonDrop}
@@ -186,9 +190,10 @@ class ECHPaper extends Component {
                             singleImage={true}
                             maxFileSize={5242880}
                             disable={this.state.jsonUploaded}
-                            buttonStyles={{ display: /*this.state.profileImage ? 'none' :*/ 'block' }}
+                            buttonStyles={{ display: this.state.json ? 'none' : 'block' }}
                         />
                     </div>
+                    {this._renderJsonSubmitHelperText()}
                     {this._renderSubmitButton()}
                 </form>
             </div>
@@ -210,11 +215,17 @@ class ECHPaper extends Component {
     onJsonDrop(files) {
         this.setState({
             json: files[0],
+            jsonError: false,
+            jsonErrorMessage: ''
         });
     }
 
     _renderFormHelperText() {
         return <FormHelperText error={this.state.formError}>{this.state.formErrorText}</FormHelperText>
+    }
+
+    _renderJsonSubmitHelperText() {
+        return <FormHelperText error={this.state.jsonError}>{this.state.jsonErrorMessage ?? ""}</FormHelperText>
     }
 
     _renderEmailField(inputFieldStyle) {
@@ -377,7 +388,25 @@ class ECHPaper extends Component {
     }
 
     _performJsonHandling() {
-        console.log("Todo: Handle submitted JSON")
+        const file = this.state.json;
+        if (file) {
+            parseToJsonObject(file)
+                .then(json => {
+                    console.log("Todo: Handle submitted JSON")
+                    console.log(json)
+                })
+                .catch(err => {
+                    this.setState({
+                        jsonError: true,
+                        jsonErrorMessage: 'No valid JSON'
+                    })
+                })
+        } else {
+            this.setState({
+                jsonError: true,
+                jsonErrorMessage: 'No file uploaded yet.'
+            })
+        }
     }
 
     _performGitFetch() {

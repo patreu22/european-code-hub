@@ -13,7 +13,8 @@ class Add extends Component {
         super(props);
         this.state = {
             //Choose for boxes, git to enter Git repo, manually to enter manually
-            contentType: "choose",
+            // contentType: "choose",
+            contentType: "json",
             pageTitle: "Add a new project"
         }
 
@@ -26,7 +27,6 @@ class Add extends Component {
     }
 
     render() {
-        console.log(this)
         var contentToRender;
         switch (this.state.contentType) {
             case "git":
@@ -94,10 +94,9 @@ class Add extends Component {
     })
 
     _renderChooseDialogue() {
-        console.log(this)
         return <Box flexDirection="row" flex="1" display="flex">
-            <ECHPaper title="Do you use a Git repository?" buttonTitle="Add project via git link" onButtonClickHandler={this._onGitClick}>
-                Amazing, we can do all the work for you!
+            <ECHPaper title="Do you use a Github repository?" buttonTitle="Add project via git link" onButtonClickHandler={this._onGitClick}>
+                Amazing, we can do nearly all the work for you!
                 We just need the link and a couple of information and we are good to go.
             </ECHPaper>
             <ECHPaper title="Submit a Code.json file?" buttonTitle="Add by file upload" onButtonClickHandler={this._onCodeJsonClick}>

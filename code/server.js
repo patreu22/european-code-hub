@@ -90,7 +90,7 @@ app.get('/api/get/user', function (req, res) {
     const authHeader = req.headers.authorization
 
     if (!username && !authHeader) {
-        return res.status(404).send({ msg: "Neither user nor auth token provided" });
+        return res.status(404).send({ msg: "Neither username nor auth token provided" });
     } else {
         //TODO: Change mail to username when username system is established
         const request = username
