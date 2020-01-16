@@ -4,6 +4,8 @@ import PageWrapper from '../components/PageWrapper';
 import ECHPaper from '../components/ECHPaper'
 import { Box } from '@material-ui/core';
 import ECHButton from '../components/ECHButton'
+import { connect } from 'react-redux'
+import { updateProject } from '../slices/ProjectSlice'
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
@@ -70,6 +72,7 @@ class Add extends Component {
         const title = this._projectDataExists() ? "Check data" : "Enter data"
         return <div>
             <ECHPaper type="addProjectManually" title={title} data={this.state.projectData}></ECHPaper>
+            <ECHButton onClick={() => this.props.updateProject({ updateMessage: "Yooo this is an update!" })}>Update project</ECHButton>
             {this._renderBackButton()}
         </div>
     }
@@ -136,11 +139,21 @@ class Add extends Component {
             <ECHPaper title="Submit a Code.json file?" buttonTitle="Add by file upload" onButtonClickHandler={this.onCodeJsonClick}>
                 If your organization uses a Code.json file to store project metadata you can use it here to create a new entry automatically.
             </ECHPaper>
-            <ECHPaper title="Add it manually?" buttonTitle="Add project manually" onButtonClickHandler={this._onManuallyClick}>
+            <ECHPaper title="Add it manually?" buttonTitle="Add project manually" onButtonClickHandler={this.onManuallyClick}>
                 Also great, we it only takes a couple of minutes and will help other people tremendously finding your project.
             </ECHPaper>
         </Box>
     }
 }
 
-export default Add;
+
+
+const mapStateToProps = state => {
+    return {
+        projectData: state,
+    }
+}
+
+const mapDispatchToProps = { updateProject }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Add);

@@ -3,14 +3,25 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const projectSlice = createSlice({
     name: "project",
-    initialState: 0,
+    initialState: {},
     reducers: {
-        increment: state => state + 1,
-        decrement: state => state - 1,
+        createProject: (state) => {
+            return {
+                ...state,
+            }
+        },
+        updateProject: (state, action) => {
+            const payload = action.payload;
+            const newState = {
+                ...state,
+                update: payload.updateMessage
+            }
+            return newState;
+        },
     }
 })
 
 // Redux boilerplate code
-// export const { increment, decrement } = projectSlice.actions
+export const { createProject, updateProject } = projectSlice.actions
 
 export default projectSlice;
