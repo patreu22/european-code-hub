@@ -6,9 +6,15 @@ import SearchHero from '../components/SearchHero';
 import ECHPaper from '../components/ECHPaper';
 import EuropeanStars from '../assets/europe_stars.svg';
 
+// TODO: Redux Boilerplate: To be removed
+// import { Button } from '@material-ui/core';
+// import { connect } from 'react-redux'
+// import { increment } from '../reducers/ProjectSlice'
+
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
 class Home extends Component {
+
     render() {
         const headlineStyling = {
             margin: 0,
@@ -24,13 +30,14 @@ class Home extends Component {
             paddingTop: '1vh'
         }
 
-
         return (
             < PageWrapper >
                 <Box style={heroStyling}>
                     <h1 style={headlineStyling}>The place for European Code</h1>
                     {this.starsLogo()}
                 </Box>
+                {/* <Button onClick={() => this.props.increment()}>Increase</Button>
+                <h1>Counter: {this.props.counter}</h1> */}
                 <SearchHero type="home" />
                 <Box flexDirection="row" flex="1" display="flex">
                     <ECHPaper title="Explore!" buttonTitle="Browse the catalogue" buttonLink="/catalogue">
@@ -44,19 +51,20 @@ class Home extends Component {
         );
     }
 
-    // _onCreateUser() {
-    //     console.log("Let's create a user!")
-    //     const password = '12345678';
-    //     registerUser("Steve McStevenson", password, "mymail@mailmy.com", "Coding Ninja")
-    // }
-
-    // _onCreateProject() {
-    //     registerProject({ gitUrl: "gitUrl", projectName: "Awesome Project", projectDescription: "Awesome description", contactMail: "awesome@contact.com" });
-    // }
-
     starsLogo() {
         return <img width={'100px'} height={'100px'} src={EuropeanStars} alt="logo" style={{ paddingTop: '10px', paddingBottom: '20px' }} />
     }
 }
+
+// Redux boilerplate for testing etc...
+// const mapStateToProps = state => {
+//     return {
+//         counter: state,
+//     }
+// }
+
+// const mapDispatchToProps = { increment }
+
+// export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
 export default Home;
