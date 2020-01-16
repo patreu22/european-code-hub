@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Button } from '@material-ui/core'
+import { Link } from 'react-router-dom'
 
 class ECHButton extends Component {
 
@@ -10,9 +11,19 @@ class ECHButton extends Component {
             margin: '2vh 0px 2vh 0px',
             width: this.props.width
         }
+
         return (
-            <Button style={buttonStyle} variant="contained" color="primary" href={this.props.buttonLink} onClick={this.props.onClick}>{this.props.children}</Button>
+            <Button
+                style={buttonStyle}
+                variant="contained"
+                color="primary"
+                component={Link}
+                to={this.props.buttonLink}
+                onClick={this.props.onClick}>
+                {this.props.children}
+            </Button>
         );
+
     }
 }
 

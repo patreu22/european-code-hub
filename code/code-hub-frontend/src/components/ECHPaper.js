@@ -3,6 +3,8 @@ import { Divider, FormHelperText, Paper, TextField } from '@material-ui/core'
 import { CheckCircleOutline as CheckCircleOutlineIcon } from '@material-ui/icons';
 import PropTypes from 'prop-types'
 import { Link, Redirect } from 'react-router-dom'
+import { connect } from 'react-redux'
+import { incrementSteps } from '../slices/ProjectSlice'
 import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword, isValidUrl } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
@@ -10,6 +12,7 @@ import { setVerificationToken } from '../helper/cookieHelper'
 import { parseToJsonObject } from '../helper/fileHelper'
 import ImageUploader from 'react-images-upload';
 import ECHButton from './ECHButton'
+import ECHTextfield from './ECHTextfield'
 
 class ECHPaper extends Component {
 
@@ -111,7 +114,7 @@ class ECHPaper extends Component {
         }
 
         const paragraphStyle = this.props.buttonTitle ? textWhenButtonVisible : textWhenButtonInvisible
-
+        console.log("### " + this.props.type)
         if (this.props.type === "login") {
             return <div>
                 {this.props.title ? <Divider /> : null}
@@ -190,10 +193,11 @@ class ECHPaper extends Component {
                 </form>
             </div>
         } else {
+            console.log("ECHPaper Button Link: " + this.props.buttonLink)
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <p style={paragraphStyle}>{this.props.children}</p>
-                {this.props.buttonTitle ? <ECHButton href={this.props.buttonLink} onClick={this.props.onButtonClickHandler}>{this.props.buttonTitle}</ECHButton> : null}
+                {this.props.buttonTitle ? <ECHButton buttonLink={this.props.buttonLink} onClick={this.props.onButtonClickHandler}>{this.props.buttonTitle}</ECHButton> : null}
             </div>
         }
     }
@@ -226,9 +230,8 @@ class ECHPaper extends Component {
         return <FormHelperText error={this.state.jsonError}>{this.state.jsonErrorMessage ?? ""}</FormHelperText>
     }
 
-    _renderEmailField(inputFieldStyle) {
-        return <TextField
-            style={inputFieldStyle}
+    _renderEmailField() {
+        return <ECHTextfield
             label="Email"
             onChange={(event) => this.onMailChanged(event)}
             onBlur={(event) => this.onMailFieldBlurred(event)}
@@ -238,9 +241,8 @@ class ECHPaper extends Component {
         />
     }
 
-    _renderUrlField(inputFieldStyle) {
-        return <TextField
-            style={inputFieldStyle}
+    _renderUrlField() {
+        return <ECHTextfield
             label="URL"
             onChange={(event) => this.onUrlChanged(event)}
             onBlur={(event) => this.onUrlFieldBlurred(event)}
@@ -249,14 +251,13 @@ class ECHPaper extends Component {
         />
     }
 
-    _renderPasswordField(inputFieldStyle) {
-        return <TextField
+    _renderPasswordField() {
+        return <ECHTextfield
             label="Password"
             type="password"
             error={this.state.passwordError}
             helperText={this.state.passwordErrorMessage}
             autoComplete="current-password"
-            style={inputFieldStyle}
             onChange={(event) => this.onPasswordChanged(event)}
             onBlur={(event) => this.onPasswordFieldBlurred(event)}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
@@ -269,7 +270,7 @@ class ECHPaper extends Component {
             paddingTop: '1vh',
             color: 'black'
         }
-
+        console.log("This.props.type: " + this.props.type)
         if (this.props.type === 'login') {
             return <div style={{ width: '100%' }}>
                 <ECHButton width="80%" onClick={this._performLogin}>Login</ECHButton>
@@ -392,7 +393,8 @@ class ECHPaper extends Component {
             parseToJsonObject(file)
                 .then(json => {
                     console.log(json)
-                    this.props.onJsonSubmitted(json)
+                    this.props.incrementSteps();
+                    // this.props.onJsonSubmitted(json)
                 })
                 .catch(err => {
                     console.log(err)
@@ -494,7 +496,6 @@ ECHPaper.propTypes = {
     onButtonClickHandler: PropTypes.func,
     onRegistrationDone: PropTypes.func,
     onLoginDone: PropTypes.func,
-    onJsonSubmitted: PropTypes.func
 };
 
 ECHPaper.defaultProps = {
@@ -502,4 +503,13 @@ ECHPaper.defaultProps = {
     onLoginDone: () => { },
 }
 
-export default ECHPaper;
+const mapStateToProps = state => {
+    return {
+        projectData: state.projectData,
+        step: state.step
+    }
+}
+
+const mapDispatchToProps = { incrementSteps }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ECHPaper);
