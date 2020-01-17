@@ -12,17 +12,31 @@ class ECHButton extends Component {
             width: this.props.width
         }
 
-        return (
-            <Button
-                style={buttonStyle}
-                variant="contained"
-                color="primary"
-                component={Link}
-                to={this.props.buttonLink}
-                onClick={this.props.onClick}>
-                {this.props.children}
-            </Button>
-        );
+        if (this.props.buttonLink) {
+            return (
+                <Button
+                    style={buttonStyle}
+                    variant="contained"
+                    color="primary"
+                    component={Link}
+                    to={this.props.buttonLink}
+                    onClick={this.props.onClick}>
+                    {this.props.children}
+                </Button>
+            );
+        } else {
+            return (
+                <Button
+                    style={buttonStyle}
+                    variant="contained"
+                    color="primary"
+                    onClick={this.props.onClick}>
+                    {this.props.children}
+                </Button>
+            )
+        }
+
+
 
     }
 }

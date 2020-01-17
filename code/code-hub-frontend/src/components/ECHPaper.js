@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Divider, FormHelperText, Paper, TextField } from '@material-ui/core'
+import { Divider, FormHelperText, Paper } from '@material-ui/core'
 import { CheckCircleOutline as CheckCircleOutlineIcon } from '@material-ui/icons';
 import PropTypes from 'prop-types'
 import { Link, Redirect } from 'react-router-dom'
@@ -193,7 +193,6 @@ class ECHPaper extends Component {
                 </form>
             </div>
         } else {
-            console.log("ECHPaper Button Link: " + this.props.buttonLink)
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <p style={paragraphStyle}>{this.props.children}</p>
