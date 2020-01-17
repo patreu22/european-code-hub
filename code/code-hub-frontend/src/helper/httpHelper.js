@@ -69,15 +69,6 @@ export function getOwnUserData() {
     })
 }
 
-export async function getAllProjects() {
-    const response = await axios.get('/api/get/projects')
-    //TODO: Remove sleep
-    await sleep(2000)
-    return new Promise(resolve => {
-        resolve({ projects: response.data })
-    });
-}
-
 //TODO: Change to username
 export function getUserData({ username }) {
     const options = {
@@ -97,6 +88,6 @@ export function getUserData({ username }) {
 }
 
 //TODO: Remove sleep
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
+// function sleep(ms) {
+//     return new Promise(resolve => setTimeout(resolve, ms));
+// }

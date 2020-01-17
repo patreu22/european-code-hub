@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import '../css/Home.css';
 import PageWrapper from '../components/PageWrapper';
-import { connect } from 'react-redux'
 import ECHGitDialogue from '../components/addProjectDialogues/ECHGitDialogue'
 import ECHChooseDialogue from '../components/addProjectDialogues/ECHChooseDialogue'
 import ECHJsonDialogue from '../components/addProjectDialogues/ECHJsonDialogue'
 import ECHManuallyDialogue from '../components/addProjectDialogues/ECHManuallyDialogue'
 
-import { resetAddProjectPage } from '../slices/ProjectSlice'
+import { connect } from 'react-redux'
+import { resetAddProjectPage } from '../slices/createProjectSlice'
 
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
@@ -58,10 +58,10 @@ class Add extends Component {
 
 const mapStateToProps = state => {
     return {
-        projectData: state.projectData,
-        currentStep: state.addProjectCurrentStep,
-        pageTitle: state.addProjectPageContent.pageTitle,
-        contentType: state.addProjectPageContent.contentType,
+        projectData: state.createProject.projectData,
+        currentStep: state.createProject.addProjectCurrentStep,
+        pageTitle: state.createProject.addProjectPageContent.pageTitle,
+        contentType: state.createProject.addProjectPageContent.contentType,
     }
 }
 

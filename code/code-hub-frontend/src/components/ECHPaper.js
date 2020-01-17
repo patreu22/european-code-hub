@@ -4,7 +4,7 @@ import { CheckCircleOutline as CheckCircleOutlineIcon } from '@material-ui/icons
 import PropTypes from 'prop-types'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
-import { incrementSteps } from '../slices/ProjectSlice'
+import { incrementSteps } from '../slices/createProjectSlice'
 import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword, isValidUrl } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
@@ -114,7 +114,6 @@ class ECHPaper extends Component {
         }
 
         const paragraphStyle = this.props.buttonTitle ? textWhenButtonVisible : textWhenButtonInvisible
-        console.log("### " + this.props.type)
         if (this.props.type === "login") {
             return <div>
                 {this.props.title ? <Divider /> : null}
@@ -269,7 +268,7 @@ class ECHPaper extends Component {
             paddingTop: '1vh',
             color: 'black'
         }
-        console.log("This.props.type: " + this.props.type)
+
         if (this.props.type === 'login') {
             return <div style={{ width: '100%' }}>
                 <ECHButton width="80%" onClick={this._performLogin}>Login</ECHButton>
@@ -504,8 +503,8 @@ ECHPaper.defaultProps = {
 
 const mapStateToProps = state => {
     return {
-        projectData: state.projectData,
-        step: state.step
+        projectData: state.createProject.projectData,
+        step: state.createProject.step
     }
 }
 

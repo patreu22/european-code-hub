@@ -1,7 +1,7 @@
 import React, { Component, } from 'react';
 import { Box } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { updateAddProjectPageContent, incrementSteps } from '../../slices/ProjectSlice'
+import { updateAddProjectPageContent, incrementSteps } from '../../slices/createProjectSlice'
 import ECHPaper from '../ECHPaper'
 
 

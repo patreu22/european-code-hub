@@ -8,8 +8,8 @@ const defaultAddProjectPageContent = {
 
 const defaultAddProjectCurrentStep = 0
 
-const projectSlice = createSlice({
-    name: "project",
+const createProjectSlice = createSlice({
+    name: "createProject",
     initialState: {
         projectData: {},
         addProjectCurrentStep: defaultAddProjectCurrentStep,
@@ -42,7 +42,6 @@ const projectSlice = createSlice({
                 ...state,
                 addProjectCurrentStep: currentStep > 0 ? currentStep - 1 : 0
             }
-            console.log(updated)
             return updated;
         },
         resetSteps: (state) => {
@@ -74,7 +73,6 @@ const projectSlice = createSlice({
     }
 })
 
-// Redux boilerplate code
 export const {
     createProject,
     updateProject,
@@ -83,6 +81,6 @@ export const {
     updateAddProjectPageContent,
     decrementSteps,
     resetAddProjectPage
-} = projectSlice.actions
+} = createProjectSlice.actions
 
-export default projectSlice;
+export default createProjectSlice;

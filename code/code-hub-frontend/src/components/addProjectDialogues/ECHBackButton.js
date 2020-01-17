@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import { connect } from 'react-redux'
-import { resetAddProjectPage } from '../../slices/ProjectSlice'
+import { resetAddProjectPage } from '../../slices/createProjectSlice'
 import ECHButton from '../ECHButton'
 
 class ECHBackButton extends Component {
