@@ -11,9 +11,13 @@ const projectOverviewSlice = createSlice({
     name: "projectOverview",
     initialState: {
         projects: [],
-        error: {},
+        error: {
+            code: null,
+            message: null
+        },
         addProjectCurrentStep: defaultAddProjectCurrentStep,
-        addProjectPageContent: defaultAddProjectPageContent
+        addProjectPageContent: defaultAddProjectPageContent,
+        isJsonUploaded: false
     },
     reducers: {
         fetchProjectData_BEGIN: (state) => {
@@ -30,14 +34,20 @@ const projectOverviewSlice = createSlice({
                 isLoading: false
             }
         },
+        jsonUploaded: (state) => {
+            return {
+                ...state,
+                isJsonUploaded: true
+            }
+        },
         fetchProjectData_FAILURE: (state, action) => {
             const payload = action.payload;
             return {
                 ...state,
                 isLoading: false,
                 error: {
-                    errorCode: payload.errorCode,
-                    errorMessage: payload.errorMessage
+                    code: payload.errorCode,
+                    message: payload.errorMessage
                 }
             }
         },
@@ -47,7 +57,8 @@ const projectOverviewSlice = createSlice({
 export const {
     fetchProjectData_BEGIN,
     fetchProjectData_SUCCESS,
-    fetchProjectData_FAILURE
+    fetchProjectData_FAILURE,
+    jsonUploaded
 } = projectOverviewSlice.actions
 
 export default projectOverviewSlice;

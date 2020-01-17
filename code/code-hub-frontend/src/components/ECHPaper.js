@@ -167,34 +167,13 @@ class ECHPaper extends Component {
                     {this._renderSubmitButton()}
                 </form>
             </div>
-        } else if (this.props.type === "addProjectViaJson") {
-            return <div>
-                {this.props.title ? <Divider /> : null}
-                <form style={formParagraphStyle}>
-                    <div style={dropzoneWrapperStyle}>
-                        {/*TODO: Create file preview for JSON files*/}
-                        <ImageUploader
-                            withIcon={true}
-                            buttonText='Upload Code.json'
-                            withPreview={true}
-                            label=""
-                            imgExtension={[".json"]}
-                            onChange={this.onJsonDrop}
-                            accept="accept=json"
-                            singleImage={true}
-                            maxFileSize={5242880}
-                            disable={this.state.jsonUploaded}
-                            buttonStyles={{ display: this.state.json ? 'none' : 'block' }}
-                        />
-                    </div>
-                    {this._renderJsonSubmitHelperText()}
-                    {this._renderSubmitButton()}
-                </form>
-            </div>
         } else {
+            const children = this.props.children.type
+                ? this.props.children
+                : <p style={paragraphStyle}>{this.props.children}</p>
             return <div>
                 {this.props.title ? <Divider /> : null}
-                <p style={paragraphStyle}>{this.props.children}</p>
+                <div style={paragraphStyle}>{children}</div>
                 {this.props.buttonTitle ? <ECHButton buttonLink={this.props.buttonLink} onClick={this.props.onButtonClickHandler}>{this.props.buttonTitle}</ECHButton> : null}
             </div>
         }
@@ -222,10 +201,6 @@ class ECHPaper extends Component {
 
     _renderFormHelperText() {
         return <FormHelperText error={this.state.formError}>{this.state.formErrorText}</FormHelperText>
-    }
-
-    _renderJsonSubmitHelperText() {
-        return <FormHelperText error={this.state.jsonError}>{this.state.jsonErrorMessage ?? ""}</FormHelperText>
     }
 
     _renderEmailField() {
@@ -282,10 +257,6 @@ class ECHPaper extends Component {
         } else if (this.props.type === 'addProjectViaGit') {
             return <div style={{ width: '100%' }}>
                 <ECHButton width="80%" onClick={this._performGitFetch}>Next step</ECHButton>
-            </div>
-        } else if (this.props.type === 'addProjectViaJson') {
-            return <div style={{ width: '100%' }}>
-                <ECHButton width="80%" onClick={this._performJsonHandling}>Next step</ECHButton>
             </div>
         }
     }
