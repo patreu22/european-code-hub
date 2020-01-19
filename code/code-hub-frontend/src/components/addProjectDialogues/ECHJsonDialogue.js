@@ -1,17 +1,34 @@
 import React, { Component, } from 'react';
+import { connect } from 'react-redux'
 import { Divider, FormHelperText } from '@material-ui/core'
 import ECHPaper from '../ECHPaper'
 import ECHButton from '../ECHButton'
 import ECHBackButton from './ECHBackButton'
 import ECHManuallyDialogue from './ECHManuallyDialogue'
+import { parseToJsonObject } from '../../helper/fileHelper'
+import { objectExists } from '../../helper/objectHelper'
+
+import { processJson } from '../../actions/jsonActions'
 
 import { formParagraphStyle, dropzoneWrapperStyle } from './dialogueStyles'
 import ImageUploader from 'react-images-upload';
-import { objectExists } from '../../helper/objectHelper'
-
-import { connect } from 'react-redux'
 
 class ECHJsonDialogue extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            jsonData: {},
+            isJsonUploaded: false,
+            error: {
+                code: null,
+                message: null
+            },
+        }
+
+        this.onJsonDrop = this.onJsonDrop.bind(this);
+        this.performJsonHandling = this.performJsonHandling.bind(this);
+    }
 
     render() {
         switch (this.props.currentStep) {
@@ -20,20 +37,17 @@ class ECHJsonDialogue extends Component {
                 return this._renderFirstStep();
             case 2:
                 console.log("Step 2")
-                return this._renderSecondStep();
+                return <ECHManuallyDialogue />
             default:
-                console.log("First step")
+                console.log("Default step")
                 return this._renderFirstStep();
         }
     }
 
     _renderFirstStep = () => <div>
-        <ECHPaper type="addProjectViaJson" title="Upload file">{this._renderContentField()}</ECHPaper>
+        <ECHPaper title="Upload file">{this._renderContentField()}</ECHPaper>
         <ECHBackButton />
     </div>
-
-    _renderSecondStep = () => <ECHManuallyDialogue />
-
 
     ///TODO: Create file preview for JSON files*/
     _renderContentField = () => {
@@ -51,8 +65,8 @@ class ECHJsonDialogue extends Component {
                         accept="accept=json"
                         singleImage={true}
                         maxFileSize={5242880}
-                        disable={this.props.jsonUploaded}
-                        buttonStyles={{ display: this.props.isJsonUploaded ? 'none' : 'block' }}
+                        disable={this.state.isJsonUploaded}
+                        buttonStyles={{ display: this.state.isJsonUploaded ? 'none' : 'block' }}
                     />
                 </div>
                 {this._renderJsonSubmitHelperText()}
@@ -61,35 +75,73 @@ class ECHJsonDialogue extends Component {
         </div>
     }
 
+    onJsonDrop(files) {
+        const fileProvided = files.length > 0
+        if (fileProvided) {
+            this.setState({
+                json: files[0],
+                isJsonUploaded: true,
+                error: {}
+            })
+        } else {
+            this.setState({
+                json: {},
+                isJsonUploaded: false
+            })
+        }
+    }
+
+    performJsonHandling() {
+        console.log("Handle Json")
+        const file = this.state.json;
+        if (file) {
+            parseToJsonObject(file)
+                .then(json => {
+                    this.setState({
+                        isJsonUploaded: true
+                    })
+                    this.props.processJson(json)
+                })
+                .catch(err => {
+                    console.log(err)
+                    this.setState({
+                        error: {
+                            code: 500,
+                            message: 'Json couldn\'t be parsed. Check the format.'
+                        }
+                    })
+                })
+        } else {
+            this.setState({
+                error: {
+                    code: 500,
+                    message: 'No file uploaded yet.'
+                }
+            })
+        }
+    }
+
     _renderJsonSubmitHelperText() {
-        const errorExists = objectExists(this.props.error)
+        const errorExists = objectExists(this.state.error)
         const errorMessage = errorExists
-            ? this.props.error.message
+            ? this.state.error.message
             : ""
-        console.log("Error Exists: " + errorExists)
         return errorExists
-            ? <FormHelperText error={this.state.formError}>{this.state.formErrorText}</FormHelperText>
+            ? <FormHelperText error={errorExists}>{errorMessage}</FormHelperText>
             : null
     }
 
-
-    //TODO: OnClick Handler --> _performJsonHandling
     _renderSubmitButton = () => <div style={{ width: '100%' }}>
-        <ECHButton width="80%" onClick={this._performJsonHandling}>Next step</ECHButton>
+        <ECHButton width="80%" onClick={this.performJsonHandling}>Next step</ECHButton>
     </div>
 }
 
 const mapStateToProps = state => {
     return {
-        projectData: state.createProject.projectData,
-        currentStep: state.createProject.addProjectCurrentStep,
-        isJsonUploaded: state.createProject.isJsonUploaded,
-        error: state.error
-        // pageTitle: state.createProject.addProjectPageContent.pageTitle,
-        // contentType: state.createProject.addProjectPageContent.contentType,
+        currentStep: state.createProject.addProjectCurrentStep
     }
 }
 
-const mapDispatchToProps = null //{ resetAddProjectPage }
+const mapDispatchToProps = { processJson }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHJsonDialogue);

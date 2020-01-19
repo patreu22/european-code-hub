@@ -20,12 +20,12 @@ const PROJECT_SCHEMA = new mongoose.Schema({
     },
     date: {
         created: String,
-        lastUpdate: String
+        lastModified: String
     },
     repoUrl: String,
     programmingLanguages: [String],
     readme: String,
-    license: String,
+    licenses: [String],
     version: String,
     status: String
 }, { collection: 'projects' });

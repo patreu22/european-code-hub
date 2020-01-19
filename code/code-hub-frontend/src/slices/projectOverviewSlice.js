@@ -17,7 +17,6 @@ const projectOverviewSlice = createSlice({
         },
         addProjectCurrentStep: defaultAddProjectCurrentStep,
         addProjectPageContent: defaultAddProjectPageContent,
-        isJsonUploaded: false
     },
     reducers: {
         fetchProjectData_BEGIN: (state) => {
@@ -32,12 +31,6 @@ const projectOverviewSlice = createSlice({
                 ...state,
                 projects: payload.projects,
                 isLoading: false
-            }
-        },
-        jsonUploaded: (state) => {
-            return {
-                ...state,
-                isJsonUploaded: true
             }
         },
         fetchProjectData_FAILURE: (state, action) => {
@@ -57,8 +50,7 @@ const projectOverviewSlice = createSlice({
 export const {
     fetchProjectData_BEGIN,
     fetchProjectData_SUCCESS,
-    fetchProjectData_FAILURE,
-    jsonUploaded
+    fetchProjectData_FAILURE
 } = projectOverviewSlice.actions
 
 export default projectOverviewSlice;

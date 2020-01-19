@@ -9,7 +9,6 @@ import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword, isValidUrl } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
 import { setVerificationToken } from '../helper/cookieHelper'
-import { parseToJsonObject } from '../helper/fileHelper'
 import ImageUploader from 'react-images-upload';
 import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
@@ -30,8 +29,6 @@ class ECHPaper extends Component {
             formError: false,
             formErrorText: "",
             redirect: false,
-            jsonError: false,
-            jsonErrorMessage: '',
             gitUrl: "",
             gitUrlError: false,
             gitUrlErrorMessage: "",
@@ -40,9 +37,7 @@ class ECHPaper extends Component {
         this._performLogin = this._performLogin.bind(this)
         this._performGitFetch = this._performGitFetch.bind(this)
         this._performRegistration = this._performRegistration.bind(this)
-        this._performJsonHandling = this._performJsonHandling.bind(this)
         this.onImageDrop = this.onImageDrop.bind(this);
-        this.onJsonDrop = this.onJsonDrop.bind(this);
         this._countDown = this._countDown.bind(this);
     }
 
@@ -154,11 +149,6 @@ class ECHPaper extends Component {
                     Click <Link to="/" style={{ color: 'black' }}>here</Link> to be redirected instantly.<br /><br />
                     Otherwise you will be sent back to the main page in {this.state.secondsLeft} second{this.state.secondsLeft === 1 ? "" : "s"} automatically.</div>
             </div >
-        } else if (this.props.type === "addProjectManually") {
-            return <div>
-                {this.props.title ? <Divider /> : null}
-                {this._renderAddProjectManuallyForm(formParagraphStyle)}
-            </div>
         } else if (this.props.type === "addProjectViaGit") {
             return <div>
                 {this.props.title ? <Divider /> : null}
@@ -183,20 +173,6 @@ class ECHPaper extends Component {
         this.setState({
             profileImage: pictureFiles[0],
         });
-    }
-
-    onJsonDrop(files) {
-        this.setState({
-            json: files[0],
-            jsonError: false,
-            jsonErrorMessage: ''
-        });
-    }
-
-    _renderAddProjectManuallyForm(formParagraphStyle) {
-        return <form style={formParagraphStyle}>
-            {this._renderSubmitButton()}
-        </form>
     }
 
     _renderFormHelperText() {
@@ -356,29 +332,6 @@ class ECHPaper extends Component {
         }
     }
 
-    _performJsonHandling() {
-        const file = this.state.json;
-        if (file) {
-            parseToJsonObject(file)
-                .then(json => {
-                    console.log(json)
-                    this.props.incrementSteps();
-                    // this.props.onJsonSubmitted(json)
-                })
-                .catch(err => {
-                    console.log(err)
-                    this.setState({
-                        jsonError: true,
-                        jsonErrorMessage: 'No valid JSON'
-                    })
-                })
-        } else {
-            this.setState({
-                jsonError: true,
-                jsonErrorMessage: 'No file uploaded yet.'
-            })
-        }
-    }
 
     _performGitFetch() {
         console.log("Hello?")

@@ -12,8 +12,9 @@ class ECHTextfield extends Component {
             label={this.props.label}
             onChange={this.props.onChange}
             onBlur={this.props.onBlur}
+            value={this.props.value}
             error={this.props.error}
-            helperText={this.props.error}
+            helperText={this.props.helperText}
             onKeyDown={this.props.onKeyDown}
         />
     }

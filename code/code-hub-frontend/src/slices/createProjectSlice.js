@@ -3,7 +3,6 @@ import { createSlice } from '@reduxjs/toolkit'
 const defaultAddProjectPageContent = {
     pageTitle: "Add a new project",
     contentType: "choose",
-    //contentType: "manually"
 }
 
 const defaultAddProjectCurrentStep = 0
@@ -13,19 +12,26 @@ const createProjectSlice = createSlice({
     initialState: {
         projectData: {},
         addProjectCurrentStep: defaultAddProjectCurrentStep,
-        addProjectPageContent: defaultAddProjectPageContent
+        addProjectPageContent: defaultAddProjectPageContent,
+
     },
     reducers: {
-        createProject: (state) => {
-            return {
-                ...state,
-            }
-        },
-        updateProject: (state, action) => {
+        setProjectData: (state, action) => {
             const payload = action.payload;
             const updated = {
                 ...state,
-                update: payload.updateMessage
+                projectData: payload.projectData
+            }
+            return updated;
+        },
+        updateProjectDataAttribute: (state, action) => {
+            const payload = action.payload;
+            const updated = {
+                ...state,
+                projectData: {
+                    ...state.projectData,
+                    [payload.key]: payload.value
+                }
             }
             return updated;
         },
@@ -33,14 +39,6 @@ const createProjectSlice = createSlice({
             const updated = {
                 ...state,
                 addProjectCurrentStep: state.addProjectCurrentStep + 1
-            }
-            return updated;
-        },
-        decrementSteps: (state) => {
-            const currentStep = state.addProjectCurrentStep
-            const updated = {
-                ...state,
-                addProjectCurrentStep: currentStep > 0 ? currentStep - 1 : 0
             }
             return updated;
         },
@@ -74,13 +72,12 @@ const createProjectSlice = createSlice({
 })
 
 export const {
-    createProject,
-    updateProject,
+    setProjectData,
     incrementSteps,
     resetSteps,
     updateAddProjectPageContent,
-    decrementSteps,
-    resetAddProjectPage
+    updateProjectDataAttribute,
+    resetAddProjectPage,
 } = createProjectSlice.actions
 
 export default createProjectSlice;
