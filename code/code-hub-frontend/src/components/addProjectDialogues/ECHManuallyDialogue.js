@@ -28,9 +28,10 @@ class ECHManuallyDialogue extends Component {
             dateCreatedErrorMessage: '',
             dateLastModifiedErrorMessage: '',
             programmingLanguagesErrorMessage: '',
-            licensesErrorMessage: '',
-            selectedList: []
+            licenseErrorMessage: '',
         }
+
+        this.statusChanged = this.statusChanged.bind(this)
     }
 
     render() {
@@ -51,9 +52,9 @@ class ECHManuallyDialogue extends Component {
     _renderAddProjectManuallyForm() {
         const contactName = this.props.projectData.contact ? this.props.projectData.contact.name : null
         const contactMail = this.props.projectData.contact ? this.props.projectData.contact.email : null
+        const status = this.props.projectData ? this.props.projectData.status ?? [] : []
 
         return <form style={formParagraphStyle}>
-            <ECHMultipleSelect title="Demo Input" />
             {this._renderField({
                 label: "Project name",
                 jsonKey: "projectName",
@@ -95,15 +96,13 @@ class ECHManuallyDialogue extends Component {
                 errorMessage: this.state.versionErrorMessage,
                 validationType: "text",
             })}
-            {/*TODO: Dropdown*/}
-            {this._renderField({
-                label: "Status",
-                jsonKey: "status",
-                value: this.props.projectData.status,
-                errorMessageName: "statusErrorMessage",
-                errorMessage: this.state.statusErrorMessage,
-                validationType: "text",
-            })}
+            <ECHMultipleSelect
+                title="Status"
+                multiple={false}
+                options={["Released", "Development", "Deprecated"]}
+                value={status}
+                onChange={this.statusChanged}
+            />
             {this._renderField({
                 label: "Contact name",
                 jsonKey: "contact.name",
@@ -122,7 +121,7 @@ class ECHManuallyDialogue extends Component {
             })}
             {/*TODO: Date Picker*/}
             {this._renderField({
-                label: "Date created",
+                label: "Date of project creation",
                 jsonKey: "dateCreated",
                 value: this.props.projectData.dateCreated,
                 errorMessageName: "dateCreatedErrorMessage",
@@ -149,26 +148,32 @@ class ECHManuallyDialogue extends Component {
             })}
             {/*TODO: Multiselect Dropdown*/}
             {this._renderField({
-                label: "Licenses",
-                jsonKey: "licenses",
-                value: this.props.projectData.licenses,
-                errorMessageName: "licensesErrorMessage",
-                errorMessage: this.state.licensesErrorMessage,
+                label: "License",
+                jsonKey: "license",
+                value: this.props.projectData.license,
+                errorMessageName: "licenseErrorMessage",
+                errorMessage: this.state.licenseErrorMessage,
                 validationType: "text",
             })}
             {this._renderSubmitButton()}
         </form>
     }
 
+    statusChanged(event) {
+        const newValue = event.target.value;
+        this.props.updateProjectDataAttribute({ key: "status", value: newValue })
+    }
 
     _renderField({ label, jsonKey, value, errorMessageName, errorMessage, validationType }) {
         const showError = errorMessage ? true : false
+        var makeMultiline = jsonKey === "projectDescription";
         return <ECHTextfield
             label={label}
             value={value ?? ""}
             onChange={(event) => this.onTextfieldChanged(jsonKey, event)}
             onBlur={(event) => this.onTextfieldBlurred(errorMessageName, validationType, event)}
             error={showError}
+            multiline={makeMultiline}
             helperText={errorMessage}
         />
     }

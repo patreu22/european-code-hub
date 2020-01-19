@@ -25,7 +25,7 @@ const PROJECT_SCHEMA = new mongoose.Schema({
     repoUrl: String,
     programmingLanguages: [String],
     readme: String,
-    licenses: [String],
+    license: String,
     version: String,
     status: String
 }, { collection: 'projects' });

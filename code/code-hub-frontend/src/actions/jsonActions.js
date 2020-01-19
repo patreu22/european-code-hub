@@ -23,9 +23,17 @@ export function processJson(object) {
         dateLastModified = jsonObject.date.lastModified;
     }
     const programmingLanguages = jsonObject.languages;
-    var licenses = []
+    var license = "";
     if (objectExists(jsonObject.permissions)) {
-        licenses = jsonObject.permissions.licenses;
+        const licenses = jsonObject.permissions.licenses;
+        if (typeof licenses !== 'undefined') {
+            if (licenses.length > 0) {
+                const firstLicense = licenses[0];
+                if (objectExists(firstLicense)) {
+                    license = firstLicense.name
+                }
+            }
+        }
     }
 
     const allValuePairs = [
@@ -38,7 +46,7 @@ export function processJson(object) {
         { repoUrl: repoUrl },
         { programmingLanguages: programmingLanguages },
         { readme: readme },
-        { licenses: licenses },
+        { license: license },
         { version: version },
         { status: status }
     ]

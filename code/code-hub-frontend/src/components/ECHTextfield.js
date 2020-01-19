@@ -16,6 +16,7 @@ class ECHTextfield extends Component {
             error={this.props.error}
             helperText={this.props.helperText}
             onKeyDown={this.props.onKeyDown}
+            multiline={this.props.multiline ?? false}
         />
     }
 }
