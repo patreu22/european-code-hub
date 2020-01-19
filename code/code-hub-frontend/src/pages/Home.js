@@ -11,26 +11,8 @@ import EuropeanStars from '../assets/europe_stars.svg';
 class Home extends Component {
 
     render() {
-        const headlineStyling = {
-            margin: 0,
-            padding: 10,
-            paddingTop: '2vh',
-            color: 'white'
-        }
-
-        const heroStyling = {
-            backgroundColor: '#004494',
-            width: '100vw',
-            textAlign: 'center',
-            paddingTop: '1vh'
-        }
-
         return (
-            < PageWrapper >
-                <Box style={heroStyling}>
-                    <h1 style={headlineStyling}>The place for European Code</h1>
-                    {this.starsLogo()}
-                </Box>
+            < PageWrapper headlineTitle="The place for European Code" headerContent={this.starsLogo()}>
                 <SearchHero type="home" />
                 <Box flexDirection="row" flex="1" display="flex">
                     <ECHPaper title="Explore!" buttonTitle="Browse the catalogue" buttonLink="/catalogue">
@@ -40,10 +22,11 @@ class Home extends Component {
                         Find out how to contribute to this great website. You can make this page more popular by sharing, developing or listing your own projects here.
                     </ECHPaper>
                 </Box>
-            </PageWrapper>
+            </PageWrapper >
         );
     }
 
+    //TODO: Make Image responsive
     starsLogo() {
         return <img width={'100px'} height={'100px'} src={EuropeanStars} alt="logo" style={{ paddingTop: '10px', paddingBottom: '20px' }} />
     }

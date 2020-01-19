@@ -28,7 +28,6 @@ class App extends React.Component {
     _renderDefaultTitle() {
         const headlineStyling = {
             margin: 0,
-            padding: 10,
             paddingTop: '20px',
             color: 'white'
         }
@@ -37,11 +36,14 @@ class App extends React.Component {
             backgroundColor: '#004494',
             width: '100vw',
             textAlign: 'center',
-            padding: '2vh 0 2vh 0'
+            padding: '3vh 0 3vh 0'
         }
+
+        const moreContent = this.props.headerContent ? this.props.headerContent : null
         return this.props.headlineTitle
             ? <Box style={heroStyling}>
                 <h1 style={headlineStyling}>{this.props.headlineTitle}</h1>
+                {moreContent}
             </Box>
             : null
     }
