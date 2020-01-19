@@ -24,13 +24,8 @@ app.get('/ping', function (req, res) {
 });
 
 app.post('/api/create/project', function (req, res) {
-    const project = req.body;
-    database.saveProjectToDB({
-        gitUrl: project.gitUrl,
-        projectName: project.projectName,
-        projectDescription: project.projectDescription,
-        contactMail: project.contactMail,
-    }).then(saved => {
+    const projectData = req.body.projectData;
+    database.saveProjectToDB(projectData).then(saved => {
         if (saved) {
             //200: Accepted
             res.sendStatus(200);

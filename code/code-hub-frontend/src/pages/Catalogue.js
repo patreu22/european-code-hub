@@ -1,8 +1,9 @@
 import '../css/Home.css';
 import React, { Component } from 'react';
 import PageWrapper from '../components/PageWrapper';
-import { CircularProgress, List } from '@material-ui/core';
+import { List } from '@material-ui/core';
 import ProjectListItem from '../components/ProjectListItem';
+import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 // import { FilterDrawer, filterSelectors, filterActions } from 'material-ui-filter'
 
 import { connect } from 'react-redux'
@@ -25,7 +26,7 @@ class Catalogue extends Component {
         // ];
 
         var contentBox = this.props.isLoading
-            ? <CircularProgress className="center" color="secondary" />
+            ? <ECHLoadingIndicator />
             : this.renderProjectList()
         return (
             < PageWrapper headlineTitle="Complete project catalogue">

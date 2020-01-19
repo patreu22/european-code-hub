@@ -25,23 +25,6 @@ export function registerUser(username, password, mail, position, profileImageFil
     });
 }
 
-export function registerProject({ gitUrl, projectName, projectDescription, contactMail }) {
-    return new Promise((resolve, reject) => {
-        axios.post('/api/create/project', {
-            gitUrl: gitUrl,
-            projectName: projectName,
-            projectDescription: projectDescription,
-            contactMail: contactMail
-        }).then(function (response) {
-            resolve(true)
-            console.log(response);
-        }).catch(function (err) {
-            reject(err)
-            console.log(err);
-        });
-    })
-}
-
 export function requestLoginToken(mail, password) {
     return new Promise((resolve, reject) => {
         axios.post('/api/create/token', {

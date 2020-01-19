@@ -1,10 +1,11 @@
 import React, { Component, } from 'react';
-import { Avatar, CircularProgress } from '@material-ui/core'
+import { Avatar } from '@material-ui/core'
 import PageWrapper from '../components/PageWrapper'
 import { Redirect } from 'react-router-dom'
 import { getVerificationToken } from '../helper/cookieHelper'
 import { getOwnUserData, getUserData } from '../helper/httpHelper'
 import { withRouter } from "react-router";
+import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 
 class Profile extends Component {
 
@@ -74,7 +75,7 @@ class Profile extends Component {
 
     render() {
         if (!this.state.redirectToLogin) {
-            const content = this.state.isLoading ? <CircularProgress className="center" color="secondary" /> : this.renderProfile()
+            const content = this.state.isLoading ? <ECHLoadingIndicator /> : this.renderProfile()
             return (
                 <PageWrapper headlineTitle="Profile">
                     {content}

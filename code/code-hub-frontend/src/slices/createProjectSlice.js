@@ -13,6 +13,8 @@ const createProjectSlice = createSlice({
         projectData: {},
         addProjectCurrentStep: defaultAddProjectCurrentStep,
         addProjectPageContent: defaultAddProjectPageContent,
+        isLoading: false,
+        successfullySubmitted: false
 
     },
     reducers: {
@@ -67,7 +69,31 @@ const createProjectSlice = createSlice({
                 }
             }
             return updated;
-        }
+        },
+        sendProject_BEGIN: (state) => {
+            return {
+                ...state,
+                isLoading: true
+            }
+        },
+        sendProject_SUCCESS: (state, action) => {
+            return {
+                ...state,
+                isLoading: false,
+                successfullySubmitted: true
+            }
+        },
+        sendProject_FAILURE: (state, action) => {
+            const payload = action.payload;
+            return {
+                ...state,
+                isLoading: false,
+                error: {
+                    code: payload.errorCode,
+                    message: payload.errorMessage
+                }
+            }
+        },
     }
 })
 
@@ -78,6 +104,10 @@ export const {
     updateAddProjectPageContent,
     updateProjectDataAttribute,
     resetAddProjectPage,
+    sendProject_BEGIN,
+    sendProject_SUCCESS,
+    sendProject_FAILURE
+
 } = createProjectSlice.actions
 
 export default createProjectSlice;

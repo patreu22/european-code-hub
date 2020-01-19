@@ -15,8 +15,8 @@ const PROJECT_SCHEMA = new mongoose.Schema({
     projectDescription: String,
     organization: String,
     contact: {
-        contactName: String,
-        contactMail: String,
+        name: String,
+        mail: String,
     },
     date: {
         created: String,

@@ -11,6 +11,7 @@ import { isValidText, isValidUrl } from '../../helper/validationHelper'
 import { formParagraphStyle } from './dialogueStyles'
 
 import { updateProjectDataAttribute } from '../../slices/createProjectSlice'
+import { sendNewProjectToBackend } from '../../actions/httpActions'
 
 class ECHManuallyDialogue extends Component {
 
@@ -32,6 +33,7 @@ class ECHManuallyDialogue extends Component {
         }
 
         this.statusChanged = this.statusChanged.bind(this)
+        this.performManuallyHandling = this.performManuallyHandling.bind(this)
     }
 
     render() {
@@ -197,13 +199,18 @@ class ECHManuallyDialogue extends Component {
     }
 
     performManuallyHandling() {
-        console.log("TODO: Handle data")
+        if (objectExists(this.props.projectData)) {
+            this.props.sendNewProjectToBackend(this.props.projectData)
+        } else {
+            //TODO: Handle review process
+            console.log("Handle review process of manual submission")
+        }
     }
 
     _renderSubmitButton = () => {
-        //TODO Check if review or new entry
+        const buttonTitle = objectExists(this.props.projectData) ? "Submit" : "Next step"
         return <div style={{ width: '100%' }}>
-            <ECHButton width="80%" onClick={this.performManuallyHandling}>Next step</ECHButton>
+            <ECHButton width="80%" onClick={this.performManuallyHandling}>{buttonTitle}</ECHButton>
         </div>
     }
 }
@@ -214,6 +221,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { updateProjectDataAttribute }
+const mapDispatchToProps = { updateProjectDataAttribute, sendNewProjectToBackend }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHManuallyDialogue);

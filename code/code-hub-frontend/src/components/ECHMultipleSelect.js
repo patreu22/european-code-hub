@@ -29,13 +29,18 @@ class ECHMultipleSelect extends Component {
             alignContent: 'center',
         }
 
+        const selectFieldStyle = {
+            textAlign: 'left',
+            width: '100%'
+        }
+
         const isMultiple = this.props.multiple ?? true
         return <div style={inputFieldStyle}>
             <div style={selectStyle}>
                 <InputLabel style={inputLabelStyle} id="multiple-checkbox-field-label">{this.props.title}</InputLabel>
             </div>
             <Select
-                style={{ textAlign: 'left', width: '100%' }}
+                style={selectFieldStyle}
                 labelId="multiple-checkbox-field-label"
                 multiple={isMultiple}
                 value={this.props.value ?? []}
