@@ -10,8 +10,6 @@ import { connect } from 'react-redux'
 import { resetAddProjectPage } from '../slices/createProjectSlice'
 
 
-//TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
-
 class Add extends Component {
 
     componentWillUnmount() {
@@ -19,47 +17,31 @@ class Add extends Component {
     }
 
     render() {
-        var contentToRender;
-        switch (this.props.contentType) {
-            case "choose":
-                contentToRender = <ECHChooseDialogue />;
-                break
-            case "git":
-                contentToRender = <ECHGitDialogue />;
-                break
-            case "json":
-                switch (this.props.currentStep) {
-                    case 1:
-                        contentToRender = <ECHJsonDialogue />;
-                        break
-                    case 2:
-                        contentToRender = <ECHManuallyDialogue />
-                        break
-                    default:
-                        contentToRender = <ECHJsonDialogue />;
-                        break
-                }
-                break
-            case "manually":
-                contentToRender = <ECHManuallyDialogue />
-                break
-            default:
-                contentToRender = <ECHChooseDialogue />;
-                break
-        }
-
         return (
             <PageWrapper headlineTitle={this.props.pageTitle}>
-                {contentToRender}
+                {this._renderContent()}
             </PageWrapper>
         );
+    }
+
+    _renderContent() {
+        switch (this.props.contentType) {
+            case "choose":
+                return <ECHChooseDialogue />;
+            case "git":
+                return <ECHGitDialogue />
+            case "json":
+                return <ECHJsonDialogue />;
+            case "manually":
+                return <ECHManuallyDialogue />
+            default:
+                return <ECHChooseDialogue />;
+        }
     }
 }
 
 const mapStateToProps = state => {
     return {
-        projectData: state.createProject.projectData,
-        currentStep: state.createProject.addProjectCurrentStep,
         pageTitle: state.createProject.addProjectPageContent.pageTitle,
         contentType: state.createProject.addProjectPageContent.contentType,
     }
