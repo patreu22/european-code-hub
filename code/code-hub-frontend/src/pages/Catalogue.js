@@ -59,9 +59,14 @@ class Catalogue extends Component {
             <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
         ))
 
-        return <List style={flexContainer}>
-            {projects}
-        </List>
+        //TODO: No data placeholder
+        if (this.props.projects.length === 0) {
+            return <div></div>
+        } else {
+            return <List style={flexContainer}>
+                {projects}
+            </List>
+        }
     }
 }
 

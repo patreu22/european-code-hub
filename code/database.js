@@ -60,6 +60,22 @@ function getAllProjects() {
     })
 }
 
+function getProjectByName(projectName) {
+    return new Promise(function (resolve, reject) {
+        models.PROJECT_MODEL.find({ projectName }, function (err, projects) {
+            if (err) {
+                reject(err)
+            } else {
+                if (projects.length === 0) {
+                    reject({ response: { status: 404 }, message: `No project with name ${projectName}` })
+                } else {
+                    resolve(projects[0])
+                }
+            }
+        });
+    })
+}
+
 function updateSessionToken({ mail, token }) {
     return new Promise(function (resolve, reject) {
         getUser({ mail: mail, stripData: false })
@@ -148,10 +164,6 @@ function saveProjectToDB(projectData) {
         date: {
             created: projectData.dateCreated,
             lastModified: projectData.dateLastModified
-        },
-        contact: {
-            name: projectData.contactName,
-            email: projectData.contactEmail
         }
     })
     return new Promise(function (resolve, reject) {
@@ -178,5 +190,6 @@ module.exports = {
     saveProjectToDB: saveProjectToDB,
     connectToDb: connectToDb,
     updateSessionToken: updateSessionToken,
-    getUser: getUser
+    getUser: getUser,
+    getProjectByName: getProjectByName
 }

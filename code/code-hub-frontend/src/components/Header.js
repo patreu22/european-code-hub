@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Badge, AppBar, Toolbar, Menu, MenuItem, Typography, IconButton } from '@material-ui/core/';
-import { Add as AddButton, Build as BuildIcon, DeleteForever as DeleteIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
+import { List as ListIcon, Add as AddButton, Build as BuildIcon, DeleteForever as DeleteIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { getVerificationToken, removeVerificationToken } from '../helper/cookieHelper'
@@ -107,6 +107,13 @@ function Header(props) {
                             <Badge color="secondary">
                                 <Link to="/search">
                                     <SearchIcon />
+                                </Link>
+                            </Badge>
+                        </IconButton>
+                        <IconButton color="inherit">
+                            <Badge color="secondary">
+                                <Link to="/catalogue">
+                                    <ListIcon />
                                 </Link>
                             </Badge>
                         </IconButton>

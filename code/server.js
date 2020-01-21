@@ -69,7 +69,14 @@ app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, 
         });
 });
 
-app.get('/api/get/projects', function (req, res) {
+app.get('/api/get/project', function (req, res) {
+    const projectName = req.query.projectName;
+    database.getProjectByName(projectName)
+        .then(projects => res.status(200).send(projects))
+        .catch((err) => res.sendStatus(err.code))
+});
+
+app.get('/api/get/projects/', function (req, res) {
     database.getAllProjects()
         .then(projects => {
             return res.status(200).send(projects)

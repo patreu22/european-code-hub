@@ -263,7 +263,7 @@ class ECHPaper extends Component {
         console.log(`Is ${event.target.value} valid mail? - ${isValid}`);
         this.setState({
             mailError: !isValid,
-            mailErrorMessage: isValid ? "" : "Invalid Email address."
+            mailErrorMessage: isValid ? "" : "Invalid Email address"
         })
     }
 
@@ -272,7 +272,7 @@ class ECHPaper extends Component {
         console.log(`Is ${event.target.value} valid Url? - ${isValid}`);
         this.setState({
             gitUrlError: !isValid,
-            gitUrlErrorMessage: isValid ? "" : "Invalid URL."
+            gitUrlErrorMessage: isValid ? "" : "Invalid URL"
         })
     }
 
@@ -290,7 +290,7 @@ class ECHPaper extends Component {
         const isValid = isValidPassword(event.target.value)
         this.setState({
             passwordError: !isValid,
-            passwordErrorMessage: isValid ? "" : "Invalid Password."
+            passwordErrorMessage: isValid ? "" : "Invalid Password"
         })
     }
 

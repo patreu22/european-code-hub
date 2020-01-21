@@ -16,7 +16,7 @@ const PROJECT_SCHEMA = new mongoose.Schema({
     organization: String,
     contact: {
         name: String,
-        mail: String,
+        email: String,
     },
     date: {
         created: String,

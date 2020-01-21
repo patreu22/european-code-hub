@@ -8,6 +8,7 @@ class ECHTextfield extends Component {
             paddingBottom: '1.5vw'
         }
         return <TextField
+            type={this.props.type}
             style={inputFieldStyle}
             label={this.props.label}
             onChange={this.props.onChange}
