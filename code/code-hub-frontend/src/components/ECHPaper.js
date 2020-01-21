@@ -58,8 +58,8 @@ class ECHPaper extends Component {
             marginBottom: '4vH',
             paddingTop: '1vh',
             backgroundColor: 'F5F5F5',
-            minWidth: this.props.width ?? '29vw',
-            maxWidth: this.props.width ?? '100vw',
+            minWidth: this.props.minWidth ?? this.props.width ?? '29vw',
+            maxWidth: this.props.maxWidth ?? this.props.width ?? '100vw',
             alignSelf: 'baseline'
         }
 
