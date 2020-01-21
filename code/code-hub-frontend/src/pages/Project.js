@@ -22,6 +22,7 @@ import {
     WorkOutline as WorkIcon,
     WorkOff as WorkOffIcon,
 } from '@material-ui/icons/';
+import MarkdownRenderer from 'react-markdown-renderer';
 import { Divider, Tooltip } from '@material-ui/core';
 
 class Project extends Component {
@@ -64,6 +65,7 @@ class Project extends Component {
                     {this._renderContactBox()}
                     {this._renderCodeBox()}
                 </div>
+                {this._renderReadme(this.props.currentProject.readme)}
             </div>
         } else {
             //TODO: No data Placeholder
@@ -75,6 +77,14 @@ class Project extends Component {
         return <ECHPaper title="Project description">
             <div>
                 {this.props.currentProject.projectDescription}
+            </div>
+        </ECHPaper>
+    }
+
+    _renderReadme(markdown) {
+        return <ECHPaper title="Readme" width="85vw">
+            <div>
+                <MarkdownRenderer markdown={markdown} />
             </div>
         </ECHPaper>
     }

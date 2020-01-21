@@ -25,6 +25,17 @@ class ECHButton extends Component {
                     {this.props.children}
                 </Button>
             );
+        } else if (this.props.href) {
+            return (
+                <Button
+                    style={buttonStyle}
+                    variant="contained"
+                    color="primary"
+                    href={this.props.href}
+                    onClick={this.props.onClick}>
+                    {this.props.children}
+                </Button>
+            );
         } else {
             return (
                 <Button
