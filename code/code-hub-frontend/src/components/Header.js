@@ -112,7 +112,7 @@ function Header(props) {
                         </IconButton>
                         <IconButton color="inherit">
                             <Badge color="secondary">
-                                <Link to="/catalogue">
+                                <Link to="/projects">
                                     <ListIcon />
                                 </Link>
                             </Badge>

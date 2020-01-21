@@ -69,8 +69,3 @@ export function getUserData({ username }) {
             .catch(err => reject(err))
     })
 }
-
-//TODO: Remove sleep
-// function sleep(ms) {
-//     return new Promise(resolve => setTimeout(resolve, ms));
-// }

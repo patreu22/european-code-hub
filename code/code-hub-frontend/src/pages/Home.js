@@ -15,7 +15,7 @@ class Home extends Component {
             < PageWrapper headlineTitle="The place for European Code" headerContent={this.starsLogo()}>
                 <SearchHero type="home" />
                 <Box flexDirection="row" flex="1" display="flex">
-                    <ECHPaper title="Explore!" buttonTitle="Browse the catalogue" buttonLink="/catalogue">
+                    <ECHPaper title="Explore!" buttonTitle="Browse the catalogue" buttonLink="/projects">
                         See all the different projects listed on this page. They are all programmed, funded and/or maintained by the administrations of the European Countries.
                     </ECHPaper>
                     <ECHPaper title="Contribute?" buttonTitle="Contribution page" buttonLink="/contribute">

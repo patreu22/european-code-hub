@@ -20,6 +20,7 @@ class ECHButton extends Component {
                     color="primary"
                     component={Link}
                     to={this.props.buttonLink}
+                    href={this.props.href}
                     onClick={this.props.onClick}>
                     {this.props.children}
                 </Button>

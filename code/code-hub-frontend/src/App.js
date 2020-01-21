@@ -41,13 +41,13 @@ class App extends React.Component {
               <Route exact path="/" component={Home} />
               <Route path="/hello" component={Hello} />
               <Route path="/add" component={Add} />
-              <Route path="/catalogue" component={Catalogue} />
               <Route path="/contribute" component={Contribute} />
-              <Route path="/projects/:projectname" component={Project} />
               <Route path="/search/:searchterm" component={Search} />
               <Route path="/login" component={Login} />
               <Route path="/register" component={Register} />
               <Route path="/user/:username?" component={Profile} />
+              <Route path="/projects/:projectname" component={Project} />
+              <Route path="/projects" component={Catalogue} />
             </Switch>
           </LastLocationProvider>
         </Router>

@@ -43,7 +43,8 @@ const currentProjectSlice = createSlice({
 export const {
     fetchProjectByName_BEGIN,
     fetchProjectByName_SUCCESS,
-    fetchProjectByName_FAILURE
+    fetchProjectByName_FAILURE,
+    resetCurrentProject
 } = currentProjectSlice.actions
 
 export default currentProjectSlice;

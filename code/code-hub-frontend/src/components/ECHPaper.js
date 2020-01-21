@@ -10,6 +10,7 @@ import { isValidEmail, isValidPassword, isValidUrl } from '../helper/validationH
 import { requestLoginToken } from '../helper/httpHelper'
 import { setVerificationToken } from '../helper/cookieHelper'
 import ImageUploader from 'react-images-upload';
+import { objectExists } from '../helper/objectHelper'
 import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
 
@@ -57,7 +58,8 @@ class ECHPaper extends Component {
             marginBottom: '4vH',
             paddingTop: '1vh',
             backgroundColor: 'F5F5F5',
-            width: '29vw',
+            minWidth: this.props.width ?? '29vw',
+            maxWidth: this.props.width ?? '100vw',
             alignSelf: 'baseline'
         }
 
@@ -158,13 +160,15 @@ class ECHPaper extends Component {
                 </form>
             </div>
         } else {
-            const children = this.props.children.type
-                ? this.props.children
-                : <p style={paragraphStyle}>{this.props.children}</p>
+            const children = objectExists(this.props.children)
+                ? this.props.children.type
+                    ? this.props.children
+                    : <p style={paragraphStyle}>{this.props.children}</p>
+                : null
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <div style={paragraphStyle}>{children}</div>
-                {this.props.buttonTitle ? <ECHButton buttonLink={this.props.buttonLink} onClick={this.props.onButtonClickHandler}>{this.props.buttonTitle}</ECHButton> : null}
+                {this.props.buttonTitle ? <ECHButton buttonLink={this.props.buttonLink} onClick={this.props.onButtonClickHandler} href={this.props.href}>{this.props.buttonTitle}</ECHButton> : null}
             </div>
         }
     }
