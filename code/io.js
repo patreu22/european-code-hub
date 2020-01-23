@@ -1,4 +1,6 @@
 const fs = require('fs');
+const request = require('request');
+const readline = require('readline');
 const multer = require('multer');
 
 function getUploadMiddleware() {
@@ -31,8 +33,48 @@ function deleteProfileImageFromHardDrive(profileImagePath) {
     }
 }
 
+function getRemoteMarkdownFileAsDataString(repoLink) {
+    return new Promise((resolve, reject) => {
+        const url = _getReadmeUrl(repoLink)
+        const tempFileName = `temp/readme${Date.now()}`
+        const writeStream = fs.createWriteStream(tempFileName)
+        request(url).pipe(writeStream)
+
+        writeStream.on('close', function () {
+            const readInterface = readline.createInterface({
+                input: fs.createReadStream(tempFileName),
+                console: false
+            });
+
+            var markdownString = ""
+            readInterface.on('line', function (line) {
+                markdownString = markdownString + line + "\n"
+            });
+
+            readInterface.on('close', function () {
+                fs.unlink(tempFileName, () => { })
+                resolve(markdownString)
+            });
+        });
+
+        writeStream.on('error', function (err) {
+            console.log(err);
+            reject(err)
+        });
+    });
+}
+
+function _getReadmeUrl(repoUrl) {
+    const splittedUrl = repoUrl.split("github.com/")[1].split("/");
+    const repoOwner = splittedUrl[0]
+    const repoName = splittedUrl[1]
+    const url = "https://raw.githubusercontent.com/" + repoOwner + "/" + repoName + "/master/README.md"
+    return url.replace(".git/master/README.md", "/master/README.md")
+}
+
 module.exports = {
     getProfileImageOrDefaultData: getProfileImageOrDefaultData,
     deleteProfileImageFromHardDrive: deleteProfileImageFromHardDrive,
-    getUploadMiddleware: getUploadMiddleware
+    getUploadMiddleware: getUploadMiddleware,
+    getRemoteMarkdownFileAsDataString: getRemoteMarkdownFileAsDataString
 }

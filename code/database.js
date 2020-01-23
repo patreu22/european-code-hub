@@ -131,6 +131,27 @@ function getUser({ token, mail, username, stripData = true }) {
     });
 }
 
+function updateProjectReadme(projectName, readmeText) {
+    return new Promise(function (resolve, reject) {
+        models.PROJECT_MODEL.findOne({ projectName }, function (err, projectData) {
+            if (projectData) {
+                projectData.readme = readmeText
+                projectData.save(function (err) {
+                    if (err) {
+                        console.log(err)
+                        reject(err)
+                    } else {
+                        console.log(`Updated project ${projectName}`)
+                        resolve(true)
+                    }
+                });
+            } else {
+                reject(err)
+            }
+        });
+    });
+}
+
 
 function saveUserToDB({ username, password, mail, position, profileImagePath, lastSessionToken }) {
     const newUser = models.USER_MODEL({
@@ -174,7 +195,7 @@ function saveProjectToDB(projectData) {
             } else {
                 console.log(newProject);
                 console.log("Saved to DB");
-                resolve(true)
+                resolve({ newProject, saved: true })
             }
         });
     });
@@ -191,5 +212,6 @@ module.exports = {
     connectToDb: connectToDb,
     updateSessionToken: updateSessionToken,
     getUser: getUser,
-    getProjectByName: getProjectByName
+    getProjectByName: getProjectByName,
+    updateProjectReadme: updateProjectReadme
 }

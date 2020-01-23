@@ -22,7 +22,7 @@ import {
     WorkOutline as WorkIcon,
     WorkOff as WorkOffIcon,
 } from '@material-ui/icons/';
-import MarkdownRenderer from 'react-markdown-renderer';
+import MarkdownGithub from 'react-markdown-github';
 import { Divider, Tooltip } from '@material-ui/core';
 
 class Project extends Component {
@@ -65,7 +65,7 @@ class Project extends Component {
                     {this._renderContactBox()}
                     {this._renderCodeBox()}
                 </div>
-                {this._renderReadme(this.props.currentProject.readme)}
+                {this._renderReadme()}
             </div>
         } else {
             //TODO: No data Placeholder
@@ -81,12 +81,25 @@ class Project extends Component {
         </ECHPaper>
     }
 
-    _renderReadme(markdown) {
+    _renderReadme() {
+        const markdown = this.props.currentProject.readme
+        const url = this.props.currentProject.repoUrl
         return <ECHPaper title="Readme" width="85vw">
             <div>
-                <MarkdownRenderer markdown={markdown} />
+                <MarkdownGithub
+                    source={markdown}
+                    sourceUri={this._getReadmeSourceUri(url)}
+                />
             </div>
         </ECHPaper>
+    }
+
+    _getReadmeSourceUri(repoUrl) {
+        const splittedUrl = repoUrl.split("github.com/")[1].split("/");
+        const repoOwner = splittedUrl[0]
+        const repoName = splittedUrl[1]
+        const sourceUri = "https://raw.githubusercontent.com/" + repoOwner + "/" + repoName + "/master/README.md"
+        return sourceUri
     }
 
     _renderProjectDetails() {
