@@ -15,11 +15,15 @@ class Home extends Component {
             < PageWrapper headlineTitle="The place for European Code" headerContent={this.starsLogo()}>
                 <SearchHero type="home" />
                 <Box flexDirection="row" flex="1" display="flex">
-                    <ECHPaper title="Explore!" buttonTitle="Browse the catalogue" buttonLink="/projects">
-                        See all the different projects listed on this page. They are all programmed, funded and/or maintained by the administrations of the European Countries.
+                    <ECHPaper width="29vw" title="Explore!" buttonTitle="Browse the catalogue" buttonLink="/projects">
+                        <div>
+                            See all the different projects listed on this page. They are all programmed, funded and/or maintained by the administrations of the European Countries.
+                        </div>
                     </ECHPaper>
-                    <ECHPaper title="Contribute?" buttonTitle="Contribution page" buttonLink="/contribute">
-                        Find out how to contribute to this great website. You can make this page more popular by sharing, developing or listing your own projects here.
+                    <ECHPaper width="29vw" title="Contribute?" buttonTitle="Contribution page" buttonLink="/contribute">
+                        <div>
+                            Find out how to contribute to this great website. You can make this page more popular by sharing, developing or listing your own projects here.
+                        </div>
                     </ECHPaper>
                 </Box>
             </PageWrapper >
