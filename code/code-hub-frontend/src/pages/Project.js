@@ -87,6 +87,7 @@ class Project extends Component {
         return <ECHPaper title="Readme" width="85vw">
             <div>
                 <MarkdownGithub
+                    escapeHtml={false}
                     source={markdown}
                     sourceUri={this._getReadmeSourceUri(url)}
                 />
@@ -128,12 +129,12 @@ class Project extends Component {
                     text: project.version,
                     tooltipText: "Version"
                 })}
-                {this._renderIconAndText({
+                {objectExists(this.props.date) && this._renderIconAndText({
                     icon: <CreateIcon />,
                     text: project.date.created,
                     tooltipText: "Created on"
                 })}
-                {this._renderIconAndText({
+                {objectExists(this.props.date) && this._renderIconAndText({
                     icon: <UpdateIcon />,
                     text: project.date.lastModified,
                     tooltipText: "Last modified on"
@@ -183,6 +184,7 @@ class Project extends Component {
             ? <a href={link}>{text}</a>
             : <span>{text}</span>
 
+        if (typeof text === 'undefined') { return null }
 
         if (tooltipText) {
             return <div style={textLineStyle}>
