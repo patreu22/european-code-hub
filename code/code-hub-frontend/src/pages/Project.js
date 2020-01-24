@@ -84,7 +84,7 @@ class Project extends Component {
     _renderReadme() {
         const markdown = this.props.currentProject.readme
         const url = this.props.currentProject.repoUrl
-        return <ECHPaper title="Readme" width="85vw">
+        return markdown && <ECHPaper title="Readme" width="85vw">
             <div>
                 <MarkdownGithub
                     escapeHtml={false}
