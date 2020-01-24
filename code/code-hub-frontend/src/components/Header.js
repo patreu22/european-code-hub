@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Badge, AppBar, Toolbar, Menu, MenuItem, Typography, IconButton } from '@material-ui/core/';
-import { List as ListIcon, Add as AddButton, Build as BuildIcon, DeleteForever as DeleteIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
+import { AppBar, Toolbar, Menu, MenuItem, Typography, IconButton, Tooltip } from '@material-ui/core/';
+import { List as ListIcon, Add as AddIcon, Build as BuildIcon, DeleteForever as DeleteIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { getVerificationToken, removeVerificationToken } from '../helper/cookieHelper'
@@ -82,8 +82,61 @@ function Header(props) {
         </Menu>
     );
 
+    const _getMenuEntry = (menuEntry, index) => {
+        const linkIcon = menuEntry.link
+            ? <Link to={menuEntry.link}>{menuEntry.icon}</Link>
+            // eslint-disable-next-line jsx-a11y/anchor-is-valid
+            : <a>{menuEntry.icon}</a>
+        return <Tooltip title={menuEntry.tooltipText} key={index}>
+            <IconButton className={classes.headerLink} onClick={menuEntry.onClickHandler} edge="end">
+                {linkIcon}
+            </IconButton>
+        </Tooltip>
+    }
+
+    const headerMenu = [
+        {
+            icon: <HomeIcon />,
+            link: "/",
+            tooltipText: "Home page"
+        },
+        {
+            icon: <SearchIcon />,
+            link: "/search",
+            tooltipText: "Search project(s)"
+        },
+        {
+            icon: <ListIcon />,
+            link: "/projects",
+            tooltipText: "Browse projects"
+        },
+        {
+            icon: <AddIcon />,
+            link: "/add",
+            tooltipText: "Add new project"
+        },
+        {
+            icon: <BuildIcon />,
+            link: "/contribute",
+            tooltipText: "Support this project"
+        },
+        {
+            icon: <DeleteIcon />,
+            onClickHandler: removeVerificationToken,
+            tooltipText: "Remove verification cookie"
+        },
+        {
+            icon: <AccountCircle />,
+            onClickHandler: handleLoginClick,
+            tooltipText: "Login / Go",
+            edge: "end"
+        },
+    ]
+
+    const menuEntries = headerMenu.map((entry, index) => _getMenuEntry(entry, index))
+
     return (
-        <div className={classes.header}>
+        < div className={classes.header} >
             <AppBar position="static">
                 <Toolbar className={classes.headerToolbar}>
                     <Link className={classes.headerLink} to="/">
@@ -96,73 +149,16 @@ function Header(props) {
                     </Link>
                     <div className={classes.grow} />
                     <div className={classes.sectionDesktop}>
-                        <IconButton className={classes.headerLink}>
-                            <Badge color="default">
-                                <Link to="/">
-                                    <HomeIcon />
-                                </Link>
-                            </Badge>
-                        </IconButton>
-                        <IconButton color="inherit">
-                            <Badge color="secondary">
-                                <Link to="/search">
-                                    <SearchIcon />
-                                </Link>
-                            </Badge>
-                        </IconButton>
-                        <IconButton color="inherit">
-                            <Badge color="secondary">
-                                <Link to="/projects">
-                                    <ListIcon />
-                                </Link>
-                            </Badge>
-                        </IconButton>
-                        <IconButton color="inherit">
-                            <Badge color="secondary">
-                                <Link to="/contribute">
-                                    <BuildIcon />
-                                </Link>
-                            </Badge>
-                        </IconButton>
-                        <IconButton color="inherit">
-                            <Badge color="secondary">
-                                <Link to="/add">
-                                    <AddButton />
-                                </Link>
-                            </Badge>
-                        </IconButton>
-                        <IconButton color="inherit">
-                            <Badge badgeContent={2} color="secondary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton color="inherit" onClick={() => {
-                            removeVerificationToken()
-                        }}>
-                            <Badge color="secondary">
-                                <DeleteIcon />
-                            </Badge>
-                        </IconButton>
-                        <IconButton
-                            edge="end"
-                            aria-label="account of current user"
-                            aria-controls={menuId}
-                            aria-haspopup="true"
-                            onClick={handleLoginClick}
-                            // onClick={handleProfileMenuOpen}
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
+                        {menuEntries}
                     </div>
-                    <div className={classes.sectionMobile}>
+                    {/* <div className={classes.sectionMobile}>
                         <IconButton
                             aria-label="show more"
                             aria-haspopup="true"
                             color="inherit"
                         >
                         </IconButton>
-                    </div>
+                    </div> */}
                 </Toolbar>
             </AppBar>
             {renderMenu}
