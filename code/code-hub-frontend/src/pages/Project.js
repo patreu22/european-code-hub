@@ -211,7 +211,7 @@ class Project extends Component {
     }
 
     _renderContactBox() {
-        return objectExists(this.props.contact) && <ECHPaper title="Contact details">
+        return objectExists(this.props.currentProject.contact) && <ECHPaper title="Contact details">
             <div>
                 {this._renderIconAndText({
                     icon: <PersonIcon />,
