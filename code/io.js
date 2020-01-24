@@ -35,40 +35,62 @@ function deleteProfileImageFromHardDrive(profileImagePath) {
 
 function getRemoteMarkdownFileAsDataString(repoLink) {
     return new Promise((resolve, reject) => {
-        const url = _getReadmeUrl(repoLink)
-        const tempFileName = `temp/readme${Date.now()}`
-        const writeStream = fs.createWriteStream(tempFileName)
-        request(url).pipe(writeStream)
-
-        writeStream.on('close', function () {
-            const readInterface = readline.createInterface({
-                input: fs.createReadStream(tempFileName),
-                console: false
-            });
-
-            var markdownString = ""
-            readInterface.on('line', function (line) {
-                markdownString = markdownString + line + "\n"
-            });
-
-            readInterface.on('close', function () {
-                fs.unlink(tempFileName, () => { })
-                resolve(markdownString)
-            });
-        });
-
-        writeStream.on('error', function (err) {
-            console.log(err);
-            reject(err)
-        });
+        _requestReadme(resolve, reject, repoLink);
     });
 }
 
-function _getReadmeUrl(repoUrl) {
+function _requestReadme(resolve, reject, repoLink, readmeFileName) {
+    const writeStream = _getWriteStream(resolve, reject)
+    request(_getReadmeUrl(repoLink, readmeFileName))
+        .on('response', function (response) {
+            if (response.statusCode === 200) {
+                response.pipe(writeStream)
+            } else if (response.statusCode === 404) {
+                if (readmeFileName === "README.markdown") {
+                    reject({ error: "Can't find Readme" })
+                } else {
+                    _requestReadme(resolve, reject, repoLink, "README.markdown")
+                }
+            } else {
+                reject({ error: "Unknown status code" })
+            }
+        })
+}
+
+function _getWriteStream(resolve, reject) {
+    const tempFileName = `temp/readme${Date.now()}`
+    const writeStream = fs.createWriteStream(tempFileName)
+
+    writeStream.on('close', function () {
+        const readInterface = readline.createInterface({
+            input: fs.createReadStream(tempFileName),
+            console: false
+        });
+
+        var markdownString = ""
+        readInterface.on('line', function (line) {
+            markdownString = markdownString + line + "\n"
+        });
+
+        readInterface.on('close', function () {
+            fs.unlink(tempFileName, () => { })
+            resolve(markdownString)
+        });
+    });
+
+    writeStream.on('error', function (err) {
+        console.log(err);
+        reject(err)
+    });
+
+    return writeStream
+}
+
+function _getReadmeUrl(repoUrl, readmeFileName = "README.md") {
     const splittedUrl = repoUrl.split("github.com/")[1].split("/");
     const repoOwner = splittedUrl[0]
     const repoName = splittedUrl[1]
-    const url = "https://raw.githubusercontent.com/" + repoOwner + "/" + repoName + "/master/README.md"
+    const url = "https://raw.githubusercontent.com/" + repoOwner + "/" + repoName + "/master/" + readmeFileName
     return url.replace(".git/master/README.md", "/master/README.md")
 }
 
