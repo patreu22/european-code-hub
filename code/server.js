@@ -88,13 +88,21 @@ app.get('/api/get/project', function (req, res) {
 });
 
 app.get('/api/get/projects/', function (req, res) {
-    database.getAllProjects()
-        .then(projects => {
-            return res.status(200).send(projects)
-        })
-        .catch(() => {
-            return res.sendStatus(400);
-        })
+    const resultsToSkip = req.query.resultsToSkip;
+    const itemsPerLoad = req.query.itemsPerLoad;
+    if (typeof resultsToSkip === "undefined") {
+        database.getAllProjects()
+            .then(projects => res.status(200).send(projects))
+            .catch(() => res.sendStatus(400))
+    } else {
+        console.log("Get chunk")
+        database.getProjectChunk(parseInt(resultsToSkip), parseInt(itemsPerLoad))
+            .then(projects => res.status(200).send(projects))
+            .catch((err) => {
+                console.log(err)
+                res.sendStatus(400)
+            })
+    }
 });
 
 //Returns either user by username query or own data by auth token

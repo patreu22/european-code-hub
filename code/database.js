@@ -49,14 +49,23 @@ function userAndHashExistInDB({ mail, password }) {
 
 function getAllProjects() {
     return new Promise(function (resolve, reject) {
-        models.PROJECT_MODEL.find({}, function (err, docs) {
-            if (err) {
-                console.log(err)
-                reject(err)
-            } else {
-                resolve(docs)
-            }
-        });
+        models.PROJECT_MODEL.find({})
+            .collation({ locale: "en" })
+            .sort("projectName")
+            .then((results) => resolve(results))
+            .catch((err) => reject(err))
+    })
+}
+
+function getProjectChunk(resultsToSkip, itemsPerLoad) {
+    return new Promise(function (resolve, reject) {
+        models.PROJECT_MODEL.find({})
+            .skip(resultsToSkip)
+            .limit(itemsPerLoad)
+            .collation({ locale: "en" })
+            .sort("projectName")
+            .then((results) => resolve(results))
+            .catch((err) => reject(err))
     })
 }
 
@@ -213,5 +222,6 @@ module.exports = {
     updateSessionToken: updateSessionToken,
     getUser: getUser,
     getProjectByName: getProjectByName,
-    updateProjectReadme: updateProjectReadme
+    updateProjectReadme: updateProjectReadme,
+    getProjectChunk: getProjectChunk
 }

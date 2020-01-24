@@ -4,6 +4,8 @@ import PageWrapper from '../components/PageWrapper';
 import { List } from '@material-ui/core';
 import ProjectListItem from '../components/ProjectListItem';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
+import InfiniteScroll from 'react-infinite-scroller';
+import { getProjectChunk } from '../helper/httpHelper'
 // import { FilterDrawer, filterSelectors, filterActions } from 'material-ui-filter'
 
 import { connect } from 'react-redux'
@@ -13,9 +15,20 @@ import { getAllProjects } from '../actions/httpActions'
 
 class Catalogue extends Component {
 
-    componentDidMount() {
-        this.props.getAllProjects()
+    constructor(props) {
+        super(props)
+        this.state = {
+            items: [],
+            page: 0,
+            hasMore: true
+        }
+
+        this.loadFunc = this.loadFunc.bind(this)
     }
+
+    // componentDidMount() {
+    //     // getProjectChunk(4).then((response) => console.log(response))
+    // }
 
     render() {
         // const filterFields = [
@@ -28,6 +41,7 @@ class Catalogue extends Component {
         var contentBox = this.props.isLoading
             ? <ECHLoadingIndicator />
             : this.renderProjectList()
+
         return (
             < PageWrapper headlineTitle="Complete project catalogue">
                 {/* <FilterDrawer
@@ -40,8 +54,44 @@ class Catalogue extends Component {
                     /> */}
                 {/* <SearchHero type="catalogue" /> */}
                 {contentBox}
+                <InfiniteScroll
+                    pageStart={2}
+                    loadMore={this.loadFunc}
+                    hasMore={this.state.hasMore}
+                    loader={<div className="loader" key={0}>Loading ...</div>}
+                >
+                    {this.state.items}
+                </InfiniteScroll>
             </PageWrapper >
         );
+    }
+
+    loadFunc() {
+        console.log("Load more!")
+        const itemsPerLoad = 3
+        const itemsToSkip = this.state.page * itemsPerLoad
+        console.log(`Items to skip: ${itemsToSkip} | Items per Load: ${itemsPerLoad}`)
+        getProjectChunk(itemsToSkip, itemsPerLoad).then((response) => {
+            const items = response.projects
+            if (items.length === 0) {
+                console.log("Nothing more to load")
+                this.setState({
+                    hasMore: false
+                })
+            } else {
+                console.log("More to load!")
+                this.setState({
+                    hasMore: true
+                })
+            }
+            const transformedItems = items.map((projectData) => <ProjectListItem project={projectData}></ProjectListItem>)
+            const updatedItems = this.state.items.concat(transformedItems).map((item, index) => React.cloneElement(item, { key: index, index: index }))
+            console.log(updatedItems)
+            this.setState({
+                items: updatedItems,
+                page: this.state.page + 1
+            })
+        })
     }
 
     renderProjectList = () => {
