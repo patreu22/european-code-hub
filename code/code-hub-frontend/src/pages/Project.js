@@ -157,7 +157,7 @@ class Project extends Component {
     }
 
     _renderDescriptionText() {
-        return <div style={{ paddingBottom: '25px' }}>
+        return this.props.currentProject.projectDescription && <div style={{ paddingBottom: '25px' }}>
             <div>
                 <div style={{ display: 'inline-block', fontWeight: 'bold' }}>
                     Project description
@@ -205,13 +205,13 @@ class Project extends Component {
 
     _renderCodeBox() {
         const url = this.props.currentProject.repoUrl
-        return <ECHPaper title="Code Repository" buttonTitle="Go to repository page" href={url}>
+        return url && <ECHPaper title="Code Repository" buttonTitle="Go to repository page" href={url}>
             <ECHCopyBox repoUrl={url} />
         </ECHPaper >
     }
 
     _renderContactBox() {
-        return <ECHPaper title="Contact details">
+        return objectExists(this.props.contact) && <ECHPaper title="Contact details">
             <div>
                 {this._renderIconAndText({
                     icon: <PersonIcon />,
