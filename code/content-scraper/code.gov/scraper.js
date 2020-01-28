@@ -45,8 +45,10 @@ function transformRepoToProjectData(repo) {
     }
 
 
+    const projectName = repo.name.trim()
+
     var projectData = {
-        projectName: repo.name,
+        projectName: projectName,
         projectDescription: repo.description,
         organization: repo.organization,
         contact: {
@@ -78,6 +80,3 @@ function registerProject({ projectData }) {
 
 
 main()
-
-
-

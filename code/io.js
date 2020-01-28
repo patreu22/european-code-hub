@@ -40,21 +40,31 @@ function getRemoteMarkdownFileAsDataString(repoLink) {
 }
 
 function _requestReadme(resolve, reject, repoLink, readmeFileName) {
-    const writeStream = _getWriteStream(resolve, reject, repoLink)
+    const possibleReadmeFileNames = ["README.md", "README.markdown", "README.txt", "Readme.txt", "README.rst"]
     const readmeUrl = _getReadmeUrl(repoLink, readmeFileName)
     request(readmeUrl)
         .on('response', function (response) {
             if (response.statusCode === 200) {
+                const writeStream = _getWriteStream(resolve, reject, repoLink)
                 response.pipe(writeStream)
             } else if (response.statusCode === 404) {
-                if (readmeFileName === "README.markdown") {
-                    reject({ error: "Can't find Readme" })
+                if (readmeFileName === possibleReadmeFileNames[possibleReadmeFileNames.length - 1]) {
+                    reject({ error: "Can't find any Readme" })
                 } else {
-                    _requestReadme(resolve, reject, repoLink, "README.markdown")
+                    const index = possibleReadmeFileNames.indexOf(readmeFileName)
+                    if (index > -1 && index + 1 <= possibleReadmeFileNames.length - 1) {
+                        const nextReadmeName = possibleReadmeFileNames[index + 1]
+                        _requestReadme(resolve, reject, repoLink, nextReadmeName)
+                    } else {
+                        reject({ error: "ReadmeFileNames array out of bounds" })
+                    }
                 }
             } else {
                 reject({ error: "Unknown status code" })
             }
+        })
+        .on('error', function (err) {
+            console.error(err)
         })
 }
 
