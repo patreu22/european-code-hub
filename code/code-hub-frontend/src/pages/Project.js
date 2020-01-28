@@ -119,7 +119,7 @@ class Project extends Component {
                     text: project.license,
                     tooltipText: "License"
                 })}
-                {this._renderIconAndText({
+                {project.programmingLanguages.length > 0 && this._renderIconAndText({
                     icon: <DeveloperModeIcon />,
                     text: project.programmingLanguages.join(', '),
                     tooltipText: "Used programming languages"
