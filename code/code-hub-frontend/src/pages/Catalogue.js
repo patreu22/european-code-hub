@@ -4,6 +4,7 @@ import PageWrapper from '../components/PageWrapper';
 import { List } from '@material-ui/core';
 import ProjectListItem from '../components/ProjectListItem';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
+import ECHFilterBar from '../components/ECHFilterBar'
 import InfiniteScroll from 'react-infinite-scroller';
 import { getProjectChunk } from '../helper/httpHelper'
 
@@ -45,6 +46,7 @@ class Catalogue extends Component {
 
         return (
             < PageWrapper headlineTitle="Complete project catalogue">
+                <ECHFilterBar />
                 {/* <FilterDrawer
                         name={'demo'}
                         fields={filterFields}
@@ -60,7 +62,7 @@ class Catalogue extends Component {
                     pageStart={0}
                     loadMore={this.loadFunc}
                     hasMore={this.state.hasMore}
-                    loader={<div className="loader" key={0}><ECHLoadingIndicator /></div>}
+                    loader={<div style={{ paddingTop: '10px' }} className="loader" key={0}><ECHLoadingIndicator /></div>}
                 >
                     {this.state.items}
                 </InfiniteScroll>
