@@ -5,12 +5,14 @@ class ECHFilterBar extends Component {
 
     render() {
         const filterBarStyling = {
-            backgroundColor: '#1675E0',
-            display: 'block',
             width: '100vw',
+            backgroundColor: '#1675E0',
             textAlign: 'center',
-            padding: '20px 0 20px 0'
+            padding: '20px 0 20px 0',
+            marginBottom: '20px',
+            color: 'white'
         }
+
         return (
             <Box style={filterBarStyling}>This is a filter bar</Box>
         );

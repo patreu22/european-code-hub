@@ -2,12 +2,14 @@ import React from 'react';
 import Header from './Header';
 import Footer from './Footer';
 import { Box } from '@material-ui/core';
+import Sticky from 'react-sticky-el';
+import ECHFilterBar from './ECHFilterBar'
 
 class App extends React.Component {
+
     render() {
         const contentStyle = {
             minHeight: '90vH',
-            paddingTop: '5vH',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center'
@@ -15,7 +17,9 @@ class App extends React.Component {
 
         return (
             <span>
-                <Header />
+                <Sticky style={{ zIndex: 1000 }}>
+                    <Header />
+                </Sticky>
                 <div style={contentStyle}>
                     {this._renderDefaultTitle()}
                     {this.props.children}
@@ -28,7 +32,6 @@ class App extends React.Component {
     _renderDefaultTitle() {
         const headlineStyling = {
             margin: 0,
-            paddingTop: '20px',
             color: 'white'
         }
 

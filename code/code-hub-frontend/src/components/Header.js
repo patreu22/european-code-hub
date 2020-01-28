@@ -1,7 +1,15 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, Menu, MenuItem, Typography, IconButton, Tooltip } from '@material-ui/core/';
-import { List as ListIcon, Add as AddIcon, Build as BuildIcon, DeleteForever as DeleteIcon, Search as SearchIcon, Home as HomeIcon, Notifications as NotificationsIcon, AccountCircle } from '@material-ui/icons/';
+import {
+    List as ListIcon,
+    Add as AddIcon,
+    Build as BuildIcon,
+    DeleteForever as DeleteIcon,
+    Search as SearchIcon,
+    Home as HomeIcon,
+    AccountCircle
+} from '@material-ui/icons/';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { getVerificationToken, removeVerificationToken } from '../helper/cookieHelper'
@@ -11,12 +19,6 @@ import EuropeanLogo from '../assets/europe_logo.png';
 const useStyles = makeStyles(theme => ({
     grow: {
         flexGrow: 1,
-    },
-    header: {
-        position: 'fixed',
-        top: 0,
-        width: '100vw',
-        zIndex: 100,
     },
     headerToolbar: {
         minHeight: '5vh',

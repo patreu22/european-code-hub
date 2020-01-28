@@ -4,9 +4,12 @@ import PageWrapper from '../components/PageWrapper';
 import { List } from '@material-ui/core';
 import ProjectListItem from '../components/ProjectListItem';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
-import ECHFilterBar from '../components/ECHFilterBar'
+
 import InfiniteScroll from 'react-infinite-scroller';
 import { getProjectChunk } from '../helper/httpHelper'
+
+import ECHFilterBar from '../components/ECHFilterBar'
+
 
 // import { FilterDrawer, filterSelectors, filterActions } from 'material-ui-filter'
 
@@ -24,13 +27,8 @@ class Catalogue extends Component {
             page: 0,
             hasMore: true
         }
-
         this.loadFunc = this.loadFunc.bind(this)
     }
-
-    // componentDidMount() {
-    //     // getProjectChunk(4).then((response) => console.log(response))
-    // }
 
     render() {
         // const filterFields = [
@@ -45,7 +43,7 @@ class Catalogue extends Component {
             : this.renderProjectList()
 
         return (
-            < PageWrapper headlineTitle="Complete project catalogue">
+            < PageWrapper headlineTitle="Complete project catalogue" showFilterBar={true}>
                 <ECHFilterBar />
                 {/* <FilterDrawer
                         name={'demo'}
