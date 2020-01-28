@@ -5,6 +5,7 @@ require('dotenv').config()
 
 const BASE_URL = "https://api.code.gov/repos";
 const API_KEY = process.env.CODE_GOV_API_KEY;
+const NUMBER_OF_PROJECTS_TO_FETCH = 1000
 
 
 function main() {
@@ -17,8 +18,7 @@ function scrapeCodeGov() {
         url: BASE_URL,
         params: {
             api_key: API_KEY,
-            size: 10,
-            // size: 10000
+            size: NUMBER_OF_PROJECTS_TO_FETCH,
         }
     }
 
@@ -33,6 +33,18 @@ function scrapeCodeGov() {
 }
 
 function transformRepoToProjectData(repo) {
+    var license;
+    if (typeof repo.permissions != "undefined") {
+        if (typeof repo.permissions.licenses !== "undefined") {
+            if (typeof repo.permissions.licenses[0] !== "undefined") {
+                license = repo.permissions.licenses[0].name
+            } else {
+                license = null
+            }
+        }
+    }
+
+
     var projectData = {
         projectName: repo.name,
         projectDescription: repo.description,
@@ -48,7 +60,7 @@ function transformRepoToProjectData(repo) {
         repoUrl: repo.repositoryURL,
         programmingLanguages: repo.languages,
         readme: "",
-        license: repo.permissions.licenses[0].name,
+        license: license,
         version: repo.version,
         status: repo.status
     }
