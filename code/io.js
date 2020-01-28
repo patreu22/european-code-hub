@@ -40,8 +40,9 @@ function getRemoteMarkdownFileAsDataString(repoLink) {
 }
 
 function _requestReadme(resolve, reject, repoLink, readmeFileName) {
-    const writeStream = _getWriteStream(resolve, reject)
-    request(_getReadmeUrl(repoLink, readmeFileName))
+    const writeStream = _getWriteStream(resolve, reject, repoLink)
+    const readmeUrl = _getReadmeUrl(repoLink, readmeFileName)
+    request(readmeUrl)
         .on('response', function (response) {
             if (response.statusCode === 200) {
                 response.pipe(writeStream)
@@ -57,8 +58,9 @@ function _requestReadme(resolve, reject, repoLink, readmeFileName) {
         })
 }
 
-function _getWriteStream(resolve, reject) {
-    const tempFileName = `temp/readme${Date.now()}`
+function _getWriteStream(resolve, reject, repoLink) {
+    const repoName = _getRepoName(repoLink)
+    const tempFileName = `temp/${repoName}-readme${Date.now()}`
     const writeStream = fs.createWriteStream(tempFileName)
 
     writeStream.on('close', function () {
@@ -92,6 +94,12 @@ function _getReadmeUrl(repoUrl, readmeFileName = "README.md") {
     const repoName = splittedUrl[1]
     const url = "https://raw.githubusercontent.com/" + repoOwner + "/" + repoName + "/master/" + readmeFileName
     return url.replace(".git/master/README.md", "/master/README.md")
+}
+
+function _getRepoName(repoUrl) {
+    const splittedUrl = repoUrl.split("github.com/")[1].split("/");
+    const repoName = splittedUrl[1]
+    return repoName || ""
 }
 
 module.exports = {

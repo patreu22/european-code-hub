@@ -25,29 +25,33 @@ app.get('/ping', function (req, res) {
 
 app.post('/api/create/project', function (req, res) {
     const projectData = req.body.projectData;
-    database.saveProjectToDB(projectData).then(response => {
-        if (response.saved) {
-            io.getRemoteMarkdownFileAsDataString(projectData.repoUrl)
-                .then((markdown) => database.updateProjectReadme(projectData.projectName, markdown)
-                    .then((response) => {
-                        if (response === true) {
-                            //200: Accepted
-                            res.sendStatus(200);
-                        } else {
-                            res.sendStatus(400);
-                        }
+    database.saveProjectToDB(projectData)
+        .then(response => {
+            if (response.saved) {
+                io.getRemoteMarkdownFileAsDataString(projectData.repoUrl)
+                    .then(
+                        (markdown) => database.updateProjectReadme(projectData.projectName, markdown)
+                            .then((response) => {
+                                if (response === true) {
+                                    //200: Accepted
+                                    res.sendStatus(200);
+                                } else {
+                                    res.sendStatus(400);
+                                }
+                            })
+                            .catch((err) => res.sendStatus(400))
+                    )
+                    .catch((err) => {
+                        res.sendStatus(400)
                     })
-                    .catch((err) => res.sendStatus(400))
-                )
-                .catch((err) => res.sendStatus(400))
-        } else {
-            //202: Accepted but could not be processed
-            res.sendStatus(202)
-        }
-    }).catch(error => {
-        //500: Internal Server error
-        res.sendStatus(500);
-    })
+            } else {
+                //202: Accepted but could not be processed
+                res.sendStatus(202)
+            }
+        }).catch(error => {
+            //500: Internal Server error
+            res.sendStatus(500);
+        })
 })
 
 app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, res) => {
@@ -95,7 +99,6 @@ app.get('/api/get/projects/', function (req, res) {
             .then(projects => res.status(200).send(projects))
             .catch(() => res.sendStatus(400))
     } else {
-        console.log("Get chunk")
         database.getProjectChunk(parseInt(resultsToSkip), parseInt(itemsPerLoad))
             .then(projects => res.status(200).send(projects))
             .catch((err) => {
