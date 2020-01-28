@@ -6,6 +6,7 @@ import ProjectListItem from '../components/ProjectListItem';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import InfiniteScroll from 'react-infinite-scroller';
 import { getProjectChunk } from '../helper/httpHelper'
+
 // import { FilterDrawer, filterSelectors, filterActions } from 'material-ui-filter'
 
 import { connect } from 'react-redux'
@@ -54,11 +55,12 @@ class Catalogue extends Component {
                     /> */}
                 {/* <SearchHero type="catalogue" /> */}
                 {contentBox}
+                {/* TODO: Center loader */}
                 <InfiniteScroll
-                    pageStart={2}
+                    pageStart={0}
                     loadMore={this.loadFunc}
                     hasMore={this.state.hasMore}
-                    loader={<div className="loader" key={0}>Loading ...</div>}
+                    loader={<div className="loader" key={0}><ECHLoadingIndicator /></div>}
                 >
                     {this.state.items}
                 </InfiniteScroll>
@@ -67,29 +69,18 @@ class Catalogue extends Component {
     }
 
     loadFunc() {
-        console.log("Load more!")
-        const itemsPerLoad = 3
+        const itemsPerLoad = 10
         const itemsToSkip = this.state.page * itemsPerLoad
-        console.log(`Items to skip: ${itemsToSkip} | Items per Load: ${itemsPerLoad}`)
         getProjectChunk(itemsToSkip, itemsPerLoad).then((response) => {
             const items = response.projects
-            if (items.length === 0) {
-                console.log("Nothing more to load")
-                this.setState({
-                    hasMore: false
-                })
-            } else {
-                console.log("More to load!")
-                this.setState({
-                    hasMore: true
-                })
-            }
+            var moreToLoad = !(items.length === 0)
             const transformedItems = items.map((projectData) => <ProjectListItem project={projectData}></ProjectListItem>)
             const updatedItems = this.state.items.concat(transformedItems).map((item, index) => React.cloneElement(item, { key: index, index: index }))
             console.log(updatedItems)
             this.setState({
                 items: updatedItems,
-                page: this.state.page + 1
+                page: this.state.page + 1,
+                hasMore: moreToLoad
             })
         })
     }

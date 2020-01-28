@@ -11,9 +11,8 @@ class ProjectListItem extends Component {
         const project = this.props.project
         const index = this.props.index
         const paperStyle = {
-            width: '25vw',
+            width: '80vw',
             color: 'black',
-            // backgroundColor: 'F8F8FF',
             backgroundColor: 'F5F5F5',
             flexDirection: 'row',
             display: 'flex',
@@ -49,14 +48,6 @@ class ProjectListItem extends Component {
         } else {
             return "- No description available -"
         }
-    }
-
-    _getColor(index) {
-        return this.isEven(index) ? '#F2F2F2' : '#B8C4CC'
-    }
-
-    isEven(n) {
-        return n % 2 === 0;
     }
 }
 
