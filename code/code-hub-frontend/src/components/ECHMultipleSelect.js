@@ -1,5 +1,5 @@
 import React, { Component, } from 'react';
-import { Select, InputLabel, MenuItem, Checkbox, ListItemText, Input } from '@material-ui/core'
+import { Select, InputLabel, MenuItem, Checkbox, ListItemText, Input, FormControl } from '@material-ui/core'
 
 class ECHMultipleSelect extends Component {
     render() {
@@ -14,19 +14,9 @@ class ECHMultipleSelect extends Component {
             },
         };
 
-        const inputFieldStyle = {
-            width: '80%',
-            paddingBottom: '1.5vw',
-            paddingTop: '1.5vw'
-        }
-
         const inputLabelStyle = {
             textAlign: 'left',
-        }
-
-        const selectStyle = {
-            display: 'flex',
-            alignContent: 'center',
+            width: this.props.width || '200px',
         }
 
         const selectFieldStyle = {
@@ -34,14 +24,26 @@ class ECHMultipleSelect extends Component {
             width: '100%'
         }
 
+        const regularFormControlStyle = {
+            width: this.props.width || '200px',
+            paddingBottom: '1.5vw'
+        }
+
+        const filterBarFormControlStyle = {
+            width: this.props.width || '200px',
+            paddingBottom: '1.5vw',
+            paddingTop: '1.5vw'
+        }
+
         const isMultiple = this.props.multiple ?? true
-        return <div style={inputFieldStyle}>
-            <div style={selectStyle}>
-                <InputLabel style={inputLabelStyle} id="multiple-checkbox-field-label">{this.props.title}</InputLabel>
-            </div>
+        const formControlStyle = this.props.useInFilterBar
+            ? filterBarFormControlStyle
+            : regularFormControlStyle
+        return <FormControl style={{ ...formControlStyle, ...this.props.style }}>
+            <InputLabel style={inputLabelStyle} id="select-label">{this.props.title}</InputLabel>
             <Select
                 style={selectFieldStyle}
-                labelId="multiple-checkbox-field-label"
+                labelId="select-label"
                 multiple={isMultiple}
                 value={this.props.value ?? []}
                 onChange={this.props.onChange}
@@ -52,14 +54,14 @@ class ECHMultipleSelect extends Component {
                 }
                 MenuProps={MenuProps}
             >
-                {this.props.options.map(option => {
+                {(this.props.options || []).map(option => {
                     return <MenuItem key={option} value={option}>
-                        <Checkbox color="primary" checked={this.props.value.indexOf(option) > -1} />
+                        <Checkbox color="primary" checked={(this.props.value || []).indexOf(option) > -1} />
                         <ListItemText primary={option} />
                     </MenuItem>
                 })}
             </Select>
-        </div >
+        </FormControl>
     }
 }
 

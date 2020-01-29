@@ -39,7 +39,7 @@ class ECHManuallyDialogue extends Component {
     render() {
         const title = objectExists(this.props.projectData) ? "Check data" : "Enter data"
         return <div>
-            <ECHPaper title={title}>{this._renderContentField()}</ECHPaper>
+            <ECHPaper width={"40vw"} title={title}>{this._renderContentField()}</ECHPaper>
             <ECHBackButton />
         </div>
     }
@@ -100,6 +100,7 @@ class ECHManuallyDialogue extends Component {
             })}
             <ECHMultipleSelect
                 title="Status"
+                width="80%"
                 multiple={false}
                 options={["Released", "Development", "Deprecated"]}
                 value={status}
