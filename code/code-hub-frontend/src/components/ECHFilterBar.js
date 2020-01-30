@@ -1,6 +1,10 @@
 import React, { Component, } from 'react';
 import { Box } from '@material-ui/core'
 import ECHMultipleSelect from './ECHMultipleSelect'
+import { connect } from 'react-redux'
+import { getFilteredProjects } from '../actions/httpActions'
+import { addFilter } from '../slices/projectOverviewSlice'
+
 
 class ECHFilterBar extends Component {
 
@@ -41,7 +45,7 @@ class ECHFilterBar extends Component {
                     title="Programming language"
                     multiple={true}
                     options={["Released", "Development", "Deprecated"]}
-                    value={this.state.languageFilter}
+                    value={this.props.currentFilters.programmingLanguage}
                     onChange={this._onLanguageFilterChanged}
                     style={{ paddingRight: '50px' }}
                 />
@@ -49,7 +53,7 @@ class ECHFilterBar extends Component {
                     title="License"
                     multiple={true}
                     options={["Creative Commons Zero v1.0 Universal", "BSD-3-Clause", "NOASSERTION"]}
-                    value={this.state.licenseFilter}
+                    value={this.props.currentFilters.license}
                     onChange={this._onLicenseFilterChanged}
                 />
             </div>
@@ -57,16 +61,31 @@ class ECHFilterBar extends Component {
     }
 
     _onLanguageFilterChanged(event) {
-        this.setState({
-            languageFilter: event.target.value
+        this.props.addFilter({
+            filter: {
+                filterKey: "programmingLanguage",
+                filterValue: event.target.value
+            }
         })
     }
 
     _onLicenseFilterChanged(event) {
-        this.setState({
-            licenseFilter: event.target.value
+        this.props.addFilter({
+            filter: {
+                filterKey: "license",
+                filterValue: event.target.value
+            }
         })
     }
 }
 
-export default ECHFilterBar;
+const mapStateToProps = state => {
+    return {
+        projects: state.projectOverview.projects,
+        currentFilters: state.projectOverview.currentFilters
+    }
+}
+
+const mapDispatchToProps = { getFilteredProjects, addFilter }
+
+export default connect(mapStateToProps, mapDispatchToProps)(ECHFilterBar);

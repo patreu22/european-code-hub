@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import ECHFilterBar from '../components/ECHFilterBar'
 
 import { connect } from 'react-redux'
-import { getAllProjects, getFilteredProjects, getProjectChunk } from '../actions/httpActions'
+import { getProjectChunk } from '../actions/httpActions'
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
@@ -82,6 +82,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getAllProjects, getFilteredProjects, getProjectChunk }
+const mapDispatchToProps = { getProjectChunk }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Catalogue);
