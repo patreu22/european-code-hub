@@ -46,7 +46,7 @@ export function getFilteredProjects(filter) {
 export function getProjectChunk(currentPage) {
     return function (dispatch) {
         const itemsPerLoad = 20
-        const resultsToSkip = currentPage * itemsPerLoad
+        const resultsToSkip = (currentPage - 1) * itemsPerLoad
         dispatch(loadAdditionalProjectData_BEGIN)
         const options = {
             method: 'GET',
