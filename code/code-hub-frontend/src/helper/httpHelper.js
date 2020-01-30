@@ -38,22 +38,7 @@ export function requestLoginToken(mail, password) {
     });
 }
 
-export function getProjectChunk(resultsToSkip, itemsPerLoad) {
-    return new Promise((resolve, reject) => {
-        const options = {
-            method: 'GET',
-            url: '/api/get/projects',
-            params: {
-                resultsToSkip: resultsToSkip,
-                itemsPerLoad: itemsPerLoad
-            }
-        }
 
-        axios(options)
-            .then(response => resolve({ projects: response.data }))
-            .catch(err => reject(err))
-    })
-}
 
 export function getOwnUserData() {
     const options = {

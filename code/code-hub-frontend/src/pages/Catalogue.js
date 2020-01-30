@@ -6,15 +6,11 @@ import ProjectListItem from '../components/ProjectListItem';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 
 import InfiniteScroll from 'react-infinite-scroller';
-import { getProjectChunk } from '../helper/httpHelper'
 
 import ECHFilterBar from '../components/ECHFilterBar'
 
-
-// import { FilterDrawer, filterSelectors, filterActions } from 'material-ui-filter'
-
 import { connect } from 'react-redux'
-import { getAllProjects } from '../actions/httpActions'
+import { getAllProjects, getFilteredProjects, getProjectChunk } from '../actions/httpActions'
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
@@ -22,68 +18,35 @@ class Catalogue extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            items: [],
-            page: 0,
-            hasMore: true
-        }
         this.loadFunc = this.loadFunc.bind(this)
     }
 
     render() {
-        // const filterFields = [
-        //     { name: 'name', label: 'Name' },
-        //     { name: 'email', label: 'Email' },
-        //     { name: 'registered', label: 'Registered', type: 'date' },
-        //     { name: 'isActive', label: 'Is Active', type: 'bool' },
-        // ];
-
         var contentBox = this.props.isLoading
             ? <ECHLoadingIndicator />
-            : this.renderProjectList()
+            : this._renderInfiniteScroll()
 
         return (
             < PageWrapper headlineTitle="Complete project catalogue" showFilterBar={true}>
                 <ECHFilterBar />
-                {/* <FilterDrawer
-                        name={'demo'}
-                        fields={filterFields}
-                        locale={'de-DE'}
-                        DateTimeFormat={global.Intl.DateTimeFormat}
-                        okLabel="OK"
-                        cancelLabel="Abbrechen"
-                    /> */}
                 {/* <SearchHero type="catalogue" /> */}
                 {contentBox}
-                {/* TODO: Center loader */}
-                <InfiniteScroll
-                    pageStart={0}
-                    loadMore={this.loadFunc}
-                    hasMore={this.state.hasMore}
-                    loader={<div style={{ paddingTop: '10px' }} className="loader" key={0}><ECHLoadingIndicator /></div>}
-                >
-                    {this.state.items}
-                </InfiniteScroll>
             </PageWrapper >
         );
     }
 
-    loadFunc() {
-        const itemsPerLoad = 10
-        const itemsToSkip = this.state.page * itemsPerLoad
-        getProjectChunk(itemsToSkip, itemsPerLoad).then((response) => {
-            const items = response.projects
-            var moreToLoad = !(items.length === 0)
-            const transformedItems = items.map((projectData) => <ProjectListItem project={projectData}></ProjectListItem>)
-            const updatedItems = this.state.items.concat(transformedItems).map((item, index) => React.cloneElement(item, { key: index, index: index }))
-            console.log(updatedItems)
-            this.setState({
-                items: updatedItems,
-                page: this.state.page + 1,
-                hasMore: moreToLoad
-            })
-        })
+    _renderInfiniteScroll() {
+        return <InfiniteScroll
+            pageStart={0}
+            loadMore={this.loadFunc}
+            hasMore={this.props.moreChunkToLoad}
+            loader={<div style={{ paddingTop: '10px', paddingBottom: '10px', textAlign: 'center' }} className="loader" key={0}><ECHLoadingIndicator /></div>}
+        >
+            {this.renderProjectList()}
+        </InfiniteScroll>
     }
+
+    loadFunc = (page) => this.props.getProjectChunk(page)
 
     renderProjectList = () => {
         const flexContainer = {
@@ -114,10 +77,11 @@ class Catalogue extends Component {
 const mapStateToProps = state => {
     return {
         projects: state.projectOverview.projects,
-        isLoading: state.projectOverview.isLoading
+        isLoading: state.projectOverview.isLoading,
+        moreChunkToLoad: state.projectOverview.moreChunkToLoad,
     }
 }
 
-const mapDispatchToProps = { getAllProjects }
+const mapDispatchToProps = { getAllProjects, getFilteredProjects, getProjectChunk }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Catalogue);
