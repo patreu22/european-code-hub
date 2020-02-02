@@ -57,9 +57,10 @@ function getAllProjects() {
     })
 }
 
-function getProjectChunk(resultsToSkip, itemsPerLoad) {
+function getProjectChunk(filters, resultsToSkip, itemsPerLoad) {
+    const query = _getQueryObject(filters)
     return new Promise(function (resolve, reject) {
-        models.PROJECT_MODEL.find({})
+        models.PROJECT_MODEL.find(query)
             .skip(resultsToSkip)
             .limit(itemsPerLoad)
             .collation({ locale: "en" })
@@ -67,6 +68,16 @@ function getProjectChunk(resultsToSkip, itemsPerLoad) {
             .then((results) => resolve(results))
             .catch((err) => reject(err))
     })
+}
+
+function _getQueryObject(filters) {
+    var query = {}
+    for (let [key, value] of Object.entries(filters)) {
+        console.log(`${key}`);
+        console.log(value)
+        query = { ...query, [key]: value }
+    }
+    return query
 }
 
 function getProjectByName(projectName) {
@@ -223,5 +234,5 @@ module.exports = {
     getUser: getUser,
     getProjectByName: getProjectByName,
     updateProjectReadme: updateProjectReadme,
-    getProjectChunk: getProjectChunk
+    getProjectChunk: getProjectChunk,
 }

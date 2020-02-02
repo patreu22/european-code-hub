@@ -94,18 +94,13 @@ app.get('/api/get/project', function (req, res) {
 app.get('/api/get/projects/', function (req, res) {
     const resultsToSkip = req.query.resultsToSkip;
     const itemsPerLoad = req.query.itemsPerLoad;
-    if (typeof resultsToSkip === "undefined") {
-        database.getAllProjects()
-            .then(projects => res.status(200).send(projects))
-            .catch(() => res.sendStatus(400))
-    } else {
-        database.getProjectChunk(parseInt(resultsToSkip), parseInt(itemsPerLoad))
-            .then(projects => res.status(200).send(projects))
-            .catch((err) => {
-                console.log(err)
-                res.sendStatus(400)
-            })
-    }
+    const filters = req.query.filters;
+    database.getProjectChunk(JSON.parse(filters || '{}'), parseInt(resultsToSkip), parseInt(itemsPerLoad))
+        .then(projects => res.status(200).send(projects))
+        .catch((err) => {
+            console.log(err)
+            res.sendStatus(400)
+        })
 });
 
 //Returns either user by username query or own data by auth token

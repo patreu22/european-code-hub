@@ -9,7 +9,7 @@ const USER_SCHEMA = new mongoose.Schema({
     lastSessionToken: { type: String, default: '' },
 }, { collection: 'users' });
 
-//Status: "released" | "development" | "deprecated"
+//Status: "released" | "development" | "deprecated" | "archival"
 const PROJECT_SCHEMA = new mongoose.Schema({
     projectName: String,
     projectDescription: String,
