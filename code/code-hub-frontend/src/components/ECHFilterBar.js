@@ -1,9 +1,11 @@
 import React, { Component, } from 'react';
 import { Box } from '@material-ui/core'
 import ECHMultipleSelect from './ECHMultipleSelect'
+import ECHIconButton from './ECHIconButton'
 import { connect } from 'react-redux'
 import { getFilteredProjects } from '../actions/httpActions'
-import { addFilter, removeFilter } from '../slices/projectOverviewSlice'
+import { addFilter, removeFilter, resetFilters } from '../slices/projectOverviewSlice'
+import { DeleteSweep as DeleteSweepIcon } from '@material-ui/icons/';
 
 class ECHFilterBar extends Component {
 
@@ -49,7 +51,17 @@ class ECHFilterBar extends Component {
                     options={["Creative Commons Zero v1.0 Universal", "BSD-3-Clause", "NOASSERTION"]}
                     value={this.props.currentFilters.license}
                     onChange={(event) => this._onFilterChanged(event, "license", this.props.currentFilters.license)}
+                    style={{ paddingRight: '50px' }}
                 />
+                <ECHMultipleSelect
+                    title="Organization"
+                    multiple={true}
+                    options={["Internal Revenue Service(IRS)", "Bureau of the Fiscal Service(BFS)", "18F"]}
+                    value={this.props.currentFilters.organization}
+                    onChange={(event) => this._onFilterChanged(event, "organization", this.props.currentFilters.organization)}
+                    style={{ paddingRight: '50px' }}
+                />
+                <ECHIconButton tooltipText="Reset filters" icon={<DeleteSweepIcon />} onClick={this.props.resetFilters} />
             </div>
         </div >
     }
@@ -75,6 +87,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getFilteredProjects, addFilter, removeFilter }
+const mapDispatchToProps = { getFilteredProjects, addFilter, removeFilter, resetFilters }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHFilterBar);

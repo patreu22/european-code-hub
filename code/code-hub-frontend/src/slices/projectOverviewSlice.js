@@ -41,6 +41,12 @@ const projectOverviewSlice = createSlice({
             }
             return updated
         },
+        resetFilters: (state) => {
+            return {
+                ...state,
+                currentFilters: {}
+            }
+        },
         loadFilteredData_BEGIN: (state) => {
             return {
                 ...state,
@@ -78,7 +84,8 @@ export const {
     loadFilteredData_SUCCESS,
     loadFilteredData_FAILURE,
     addFilter,
-    removeFilter
+    removeFilter,
+    resetFilters
 } = projectOverviewSlice.actions
 
 export default projectOverviewSlice;

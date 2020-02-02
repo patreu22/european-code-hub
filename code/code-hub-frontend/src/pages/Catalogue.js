@@ -70,7 +70,7 @@ class Catalogue extends Component {
 
         //TODO: No data placeholder
         if (this.props.projects.length === 0) {
-            return <div></div>
+            return <div>No data!</div>
         } else {
             return <List style={flexContainer}>
                 {projects}
