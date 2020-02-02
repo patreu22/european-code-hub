@@ -3,8 +3,7 @@ import { Box } from '@material-ui/core'
 import ECHMultipleSelect from './ECHMultipleSelect'
 import { connect } from 'react-redux'
 import { getFilteredProjects } from '../actions/httpActions'
-import { addFilter } from '../slices/projectOverviewSlice'
-
+import { addFilter, removeFilter } from '../slices/projectOverviewSlice'
 
 class ECHFilterBar extends Component {
 
@@ -15,8 +14,14 @@ class ECHFilterBar extends Component {
             licenseFilter: []
         }
 
-        this._onLanguageFilterChanged = this._onLanguageFilterChanged.bind(this)
+        this._onStatusFilterChanged = this._onStatusFilterChanged.bind(this)
         this._onLicenseFilterChanged = this._onLicenseFilterChanged.bind(this)
+    }
+
+    componentDidUpdate(prevProps) {
+        if (prevProps.currentFilters !== this.props.currentFilters) {
+            this.props.getFilteredProjects(this.props.currentFilters, 1, false)
+        }
     }
 
     render() {
@@ -42,11 +47,11 @@ class ECHFilterBar extends Component {
         return <div style={filterStyle}>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <ECHMultipleSelect
-                    title="Programming language"
+                    title="Status"
                     multiple={true}
-                    options={["Released", "Development", "Deprecated"]}
-                    value={this.props.currentFilters.programmingLanguage}
-                    onChange={this._onLanguageFilterChanged}
+                    options={["Archival", "Released", "Development", "Deprecated"]}
+                    value={this.props.currentFilters.status}
+                    onChange={this._onStatusFilterChanged}
                     style={{ paddingRight: '50px' }}
                 />
                 <ECHMultipleSelect
@@ -60,13 +65,19 @@ class ECHFilterBar extends Component {
         </div >
     }
 
-    _onLanguageFilterChanged(event) {
-        this.props.addFilter({
-            filter: {
-                filterKey: "programmingLanguage",
-                filterValue: event.target.value
-            }
-        })
+    _onStatusFilterChanged(event) {
+        if (event.target.value === this.props.currentFilters.status) {
+            this.props.removeFilter({
+                filterKey: "status"
+            })
+        } else {
+            this.props.addFilter({
+                filter: {
+                    filterKey: "status",
+                    filterValue: event.target.value
+                }
+            })
+        }
     }
 
     _onLicenseFilterChanged(event) {
@@ -82,10 +93,10 @@ class ECHFilterBar extends Component {
 const mapStateToProps = state => {
     return {
         projects: state.projectOverview.projects,
-        currentFilters: state.projectOverview.currentFilters
+        currentFilters: state.projectOverview.currentFilters,
     }
 }
 
-const mapDispatchToProps = { getFilteredProjects, addFilter }
+const mapDispatchToProps = { getFilteredProjects, addFilter, removeFilter }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHFilterBar);

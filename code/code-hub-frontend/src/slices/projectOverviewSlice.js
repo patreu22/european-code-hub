@@ -21,37 +21,6 @@ const projectOverviewSlice = createSlice({
         addProjectPageContent: defaultAddProjectPageContent,
     },
     reducers: {
-        fetchProjectData_BEGIN: (state) => {
-            return {
-                ...state,
-                isLoading: true
-            }
-        },
-        fetchProjectData_SUCCESS: (state, action) => {
-            const payload = action.payload;
-            return {
-                ...state,
-                projects: payload.projects,
-                isLoading: false
-            }
-        },
-        fetchProjectData_FAILURE: (state, action) => {
-            const payload = action.payload;
-            return {
-                ...state,
-                isLoading: false,
-                error: {
-                    code: payload.errorCode,
-                    message: payload.errorMessage
-                }
-            }
-        },
-        loadAdditionalProjectData_BEGIN: (state) => {
-            return {
-                ...state,
-                isLoading: true
-            }
-        },
         addFilter: (state, action) => {
             const payload = action.payload;
             const filter = payload.filter;
@@ -61,27 +30,16 @@ const projectOverviewSlice = createSlice({
             }
             return updated
         },
-        loadAdditionalProjectData_SUCCESS: (state, action) => {
+        removeFilter: (state, action) => {
             const payload = action.payload;
-            const moreToLoad = !(payload.projects.length === 0)
+            const filterKey = payload.filterKey
+            const currentClone = Object.assign({}, state.currentFilters)
+            delete currentClone[filterKey]
             const updated = {
                 ...state,
-                projects: state.projects.concat(payload.projects),
-                moreChunkToLoad: moreToLoad,
-                isLoading: false
+                currentFilters: currentClone
             }
             return updated
-        },
-        loadAdditionalProjectData_FAILURE: (state, action) => {
-            const payload = action.payload;
-            return {
-                ...state,
-                isLoading: false,
-                error: {
-                    code: payload.errorCode,
-                    message: payload.errorMessage
-                }
-            }
         },
         loadFilteredData_BEGIN: (state) => {
             return {
@@ -91,11 +49,15 @@ const projectOverviewSlice = createSlice({
         },
         loadFilteredData_SUCCESS: (state, action) => {
             const payload = action.payload;
-            return {
+            const moreToLoad = !(payload.projects.length === 0)
+            const shouldConcat = payload.shouldConcatResults || false
+            const updated = {
                 ...state,
-                projects: payload.projects,
-                isLoading: false
+                projects: shouldConcat ? state.projects.concat(payload.projects) : payload.projects,
+                isLoading: false,
+                moreChunkToLoad: moreToLoad
             }
+            return updated
         },
         loadFilteredData_FAILURE: (state, action) => {
             const payload = action.payload;
@@ -112,16 +74,11 @@ const projectOverviewSlice = createSlice({
 })
 
 export const {
-    fetchProjectData_BEGIN,
-    fetchProjectData_SUCCESS,
-    fetchProjectData_FAILURE,
-    loadAdditionalProjectData_BEGIN,
-    loadAdditionalProjectData_SUCCESS,
-    loadAdditionalProjectData_FAILURE,
     loadFilteredData_BEGIN,
     loadFilteredData_SUCCESS,
     loadFilteredData_FAILURE,
-    addFilter
+    addFilter,
+    removeFilter
 } = projectOverviewSlice.actions
 
 export default projectOverviewSlice;

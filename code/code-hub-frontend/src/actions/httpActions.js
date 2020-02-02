@@ -1,12 +1,9 @@
 import * as axios from 'axios';
 import { getVerificationToken } from '../helper/cookieHelper'
 import {
-    fetchProjectData_BEGIN,
-    fetchProjectData_SUCCESS,
-    fetchProjectData_FAILURE,
-    loadAdditionalProjectData_BEGIN,
-    loadAdditionalProjectData_SUCCESS,
-    loadAdditionalProjectData_FAILURE
+    loadFilteredData_BEGIN,
+    loadFilteredData_SUCCESS,
+    loadFilteredData_FAILURE
 } from '../slices/projectOverviewSlice'
 import {
     sendProject_BEGIN,
@@ -20,49 +17,24 @@ import {
 } from '../slices/currentProjectSlice'
 
 
-export function getAllProjects() {
-    return function (dispatch) {
-        dispatch(fetchProjectData_BEGIN)
-        axios.get('/api/get/projects')
-            .then(response => dispatch(fetchProjectData_SUCCESS({ projects: response.data })))
-            .catch(err => dispatch(fetchProjectData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
-    }
-}
-
-export function getFilteredProjects(filter) {
-    return function (dispatch) {
-        dispatch(fetchProjectData_BEGIN)
-        const options = {
-            method: 'GET',
-            url: '/api/get/project',
-            params: { filter }
-        }
-        axios(options)
-            .then(response => dispatch(fetchProjectData_SUCCESS({ projects: response.data })))
-            .catch(err => dispatch(fetchProjectData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
-    }
-}
-
-export function getProjectChunk(currentPage) {
+export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
     return function (dispatch) {
         const itemsPerLoad = 20
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
-        dispatch(loadAdditionalProjectData_BEGIN)
+        dispatch(loadFilteredData_BEGIN)
         const options = {
             method: 'GET',
             url: '/api/get/projects',
             params: {
+                filters: filters,
                 resultsToSkip: resultsToSkip,
                 itemsPerLoad: itemsPerLoad
             }
         }
-
+        //TODO: Handle error
         axios(options)
-            .then(response => dispatch(loadAdditionalProjectData_SUCCESS({ projects: response.data })))
-            .catch(err => {
-                console.log(err)
-                dispatch(loadAdditionalProjectData_FAILURE({ errorCode: err.response.status, errorMessage: err.message }))
-            })
+            .then(response => dispatch(loadFilteredData_SUCCESS({ projects: response.data, shouldConcatResults })))
+            .catch(err => dispatch(loadFilteredData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }
 

@@ -56,13 +56,15 @@ class ECHMultipleSelect extends Component {
             >
                 {(this.props.options || []).map(option => {
                     return <MenuItem key={option} value={option}>
-                        <Checkbox color="primary" checked={(this.props.value || []).indexOf(option) > -1} />
+                        <Checkbox color="primary" checked={this.itemIsChecked(option)} />
                         <ListItemText primary={option} />
                     </MenuItem>
                 })}
             </Select>
         </FormControl>
     }
+
+    itemIsChecked = (option) => (this.props.value || []).indexOf(option) > -1
 }
 
 export default ECHMultipleSelect;

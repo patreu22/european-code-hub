@@ -10,7 +10,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import ECHFilterBar from '../components/ECHFilterBar'
 
 import { connect } from 'react-redux'
-import { getProjectChunk } from '../actions/httpActions'
+import { getFilteredProjects } from '../actions/httpActions'
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
@@ -36,17 +36,22 @@ class Catalogue extends Component {
     }
 
     _renderInfiniteScroll() {
+        const infiniteScrollStyle = {
+            paddingBottom: '50px'
+        }
+
         return <InfiniteScroll
             pageStart={0}
             loadMore={this.loadFunc}
             hasMore={this.props.moreChunkToLoad}
+            style={infiniteScrollStyle}
             loader={<div style={{ paddingTop: '10px', paddingBottom: '10px', textAlign: 'center' }} className="loader" key={0}><ECHLoadingIndicator /></div>}
         >
             {this.renderProjectList()}
         </InfiniteScroll>
     }
 
-    loadFunc = (page) => this.props.getProjectChunk(page)
+    loadFunc = (page) => this.props.getFilteredProjects(this.props.currentFilters, page, true)
 
     renderProjectList = () => {
         const flexContainer = {
@@ -82,6 +87,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getProjectChunk }
+const mapDispatchToProps = { getFilteredProjects }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Catalogue);
