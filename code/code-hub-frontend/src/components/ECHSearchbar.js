@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { Divider, InputBase } from '@material-ui/core'
+import { Autocomplete } from '@material-ui/lab'
 import SearchIcon from '@material-ui/icons/Search';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
+import { getSearchSuggestion } from '../helper/httpHelper'
 
 const useStyles = makeStyles(theme => ({
     search: {
@@ -43,10 +45,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 // class Searchbar extends React.Component {
-function Searchbar(props) {
+function ECHSearchbar(props) {
     const classes = useStyles();
     const [searchInput, setSearchInput] = useState('');
-
+    const [suggestions, setSuggestions] = useState([]);
 
     return (
         <div>
@@ -57,15 +59,42 @@ function Searchbar(props) {
                         <Divider orientation="vertical" className={classes.divider} />
                     </div >
                 </Link>
-                <InputBase
-                    placeholder="What are you looking for..?"
-                    onKeyDown={(e) => _handleKeyDown(e, props, searchInput)}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className={classes.inputInput}
+                <Autocomplete
+                    options={suggestions}
+                    renderInput={params => (
+                        // TODO: Fix Input base (example is with TextField)
+                        <InputBase {...params} placeholder="What are you looking for..?"
+                            onKeyDown={(e) => _handleKeyDown(e, props, searchInput)}
+                            onChange={(event) => {
+                                const input = event.target.value
+                                if (input.length > 2) {
+                                    getSearchSuggestion(input)
+                                        .then((suggestions) => {
+                                            setSuggestions(suggestions)
+                                            console.log(suggestions)
+                                        })
+                                    //TODO: Get suggestions!
+                                }
+                            }}
+                            className={classes.inputInput}
+                        />
+                    )}
                 />
             </div>
         </div >
     );
+}
+
+function _handleInputChange(event) {
+    const input = event.target.value
+    if (input.length > 2) {
+        getSearchSuggestion(input)
+            .then((suggestions) => {
+                this.setSuggestions(suggestions)
+                console.log(suggestions)
+            })
+        //TODO: Get suggestions!
+    }
 }
 
 function _getClassName(searchInput, classes) {
@@ -78,4 +107,4 @@ function _handleKeyDown(event, props, searchInput) {
     }
 }
 
-export default withRouter(Searchbar);
+export default withRouter(ECHSearchbar);

@@ -38,7 +38,21 @@ export function requestLoginToken(mail, password) {
     });
 }
 
+export function getSearchSuggestion(searchTerm) {
+    const options = {
+        method: 'GET',
+        url: '/api/get/autocomplete',
+        params: {
+            searchTerm
+        }
+    }
 
+    return new Promise((resolve, reject) => {
+        axios(options)
+            .then(response => resolve(response.data))
+            .catch(err => reject(err))
+    })
+}
 
 export function getOwnUserData() {
     const options = {

@@ -1,6 +1,6 @@
 import React, { Component, } from 'react';
 import { Divider, Paper } from '@material-ui/core';
-import Searchbar from './Searchbar';
+import ECHSearchbar from './ECHSearchbar';
 import { Link } from 'react-router-dom'
 
 const subHeadlineStyling = {
@@ -41,7 +41,7 @@ class SearchHero extends Component {
                 <h3 style={subHeadlineStyling}>Find Open Source projects funded by the public</h3>
                 <Divider style={dividerStyling} />
                 <div style={{ width: '80%' }} className="center">
-                    <Searchbar />
+                    <ECHSearchbar />
                 </div>
                 <div style={{ paddingTop: '1vh', color: 'black' }}>or do you want to  <Link to="/add" style={{ color: 'black' }}>add your own</Link> project?</div>
             </Paper>
@@ -53,7 +53,7 @@ class SearchHero extends Component {
             <Paper style={subHeroStyling}>
                 <h3 style={subHeadlineStyling}>Searching for something more specific?</h3>
                 <div style={{ width: '50%' }} className="center">
-                    <Searchbar />
+                    <ECHSearchbar />
                 </div>
             </Paper>
         );
