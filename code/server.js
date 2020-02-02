@@ -20,6 +20,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/ping', function (req, res) {
+    database.indexProjects();
     return res.send('pong');
 });
 
@@ -102,6 +103,17 @@ app.get('/api/get/projects/', function (req, res) {
             res.sendStatus(400)
         })
 });
+
+app.get('/api/get/autocomplete', function (req, res) {
+    const searchTerm = req.query.searchTerm;
+    database.getSuggestionList(searchTerm)
+        .then(suggestions => res.status(200).send(suggestions))
+        .catch((err) => {
+            console.log("Error!")
+            console.log(err)
+            res.sendStatus(400)
+        })
+})
 
 //Returns either user by username query or own data by auth token
 app.get('/api/get/user', function (req, res) {

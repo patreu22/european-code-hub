@@ -35,6 +35,7 @@ class ECHFilterBar extends Component {
             display: 'inline-block'
         }
 
+        //TODO: Save options on server
         return <div style={filterStyle}>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <ECHMultipleSelect

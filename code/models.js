@@ -30,7 +30,16 @@ const PROJECT_SCHEMA = new mongoose.Schema({
     status: String
 }, { collection: 'projects' });
 
+
+const WORDS_SCHEMA = new mongoose.Schema({
+    _id: String,
+    value: {
+        documents: Array
+    },
+}, { collection: 'words' });
+
 module.exports = {
     USER_MODEL: new mongoose.model('User', USER_SCHEMA),
-    PROJECT_MODEL: new mongoose.model('Project', PROJECT_SCHEMA)
+    PROJECT_MODEL: new mongoose.model('Project', PROJECT_SCHEMA),
+    WORDS_SCHEMA: new mongoose.model('Words', WORDS_SCHEMA)
 }
