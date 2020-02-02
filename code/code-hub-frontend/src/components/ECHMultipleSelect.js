@@ -55,7 +55,7 @@ class ECHMultipleSelect extends Component {
                 MenuProps={MenuProps}
             >
                 {(this.props.options || []).map(option => {
-                    return <MenuItem key={option} value={option}>
+                    return <MenuItem key={option} value={option} style={{ whiteSpace: 'normal' }}>
                         <Checkbox color="primary" checked={this.itemIsChecked(option)} />
                         <ListItemText primary={option} />
                     </MenuItem>

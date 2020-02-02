@@ -7,17 +7,6 @@ import { addFilter, removeFilter } from '../slices/projectOverviewSlice'
 
 class ECHFilterBar extends Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            languageFilter: [],
-            licenseFilter: []
-        }
-
-        this._onStatusFilterChanged = this._onStatusFilterChanged.bind(this)
-        this._onLicenseFilterChanged = this._onLicenseFilterChanged.bind(this)
-    }
-
     componentDidUpdate(prevProps) {
         if (prevProps.currentFilters !== this.props.currentFilters) {
             this.props.getFilteredProjects(this.props.currentFilters, 1, false)
@@ -51,7 +40,7 @@ class ECHFilterBar extends Component {
                     multiple={true}
                     options={["Archival", "Released", "Development", "Deprecated"]}
                     value={this.props.currentFilters.status}
-                    onChange={this._onStatusFilterChanged}
+                    onChange={(event) => this._onFilterChanged(event, "status", this.props.currentFilters.status)}
                     style={{ paddingRight: '50px' }}
                 />
                 <ECHMultipleSelect
@@ -59,34 +48,23 @@ class ECHFilterBar extends Component {
                     multiple={true}
                     options={["Creative Commons Zero v1.0 Universal", "BSD-3-Clause", "NOASSERTION"]}
                     value={this.props.currentFilters.license}
-                    onChange={this._onLicenseFilterChanged}
+                    onChange={(event) => this._onFilterChanged(event, "license", this.props.currentFilters.license)}
                 />
             </div>
         </div >
     }
 
-    _onStatusFilterChanged(event) {
-        if (event.target.value === this.props.currentFilters.status) {
-            this.props.removeFilter({
-                filterKey: "status"
-            })
+    _onFilterChanged(event, filterKey, filterProp) {
+        if (event.target.value === filterProp || event.target.value.length === 0) {
+            this.props.removeFilter({ filterKey })
         } else {
             this.props.addFilter({
                 filter: {
-                    filterKey: "status",
+                    filterKey,
                     filterValue: event.target.value
                 }
             })
         }
-    }
-
-    _onLicenseFilterChanged(event) {
-        this.props.addFilter({
-            filter: {
-                filterKey: "license",
-                filterValue: event.target.value
-            }
-        })
     }
 }
 
