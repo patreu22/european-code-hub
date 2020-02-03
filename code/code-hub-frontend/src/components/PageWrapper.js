@@ -3,7 +3,6 @@ import Header from './Header';
 import Footer from './Footer';
 import { Box } from '@material-ui/core';
 import Sticky from 'react-sticky-el';
-import ECHFilterBar from './ECHFilterBar'
 
 class App extends React.Component {
 

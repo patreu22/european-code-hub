@@ -29,7 +29,6 @@ class Catalogue extends Component {
         return (
             < PageWrapper headlineTitle="Complete project catalogue" showFilterBar={true}>
                 <ECHFilterBar />
-                {/* <SearchHero type="catalogue" /> */}
                 {contentBox}
             </PageWrapper >
         );

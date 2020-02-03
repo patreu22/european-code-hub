@@ -1,5 +1,5 @@
 import React, { Component, } from 'react';
-import { Divider, Paper } from '@material-ui/core';
+import { Box, Divider, Paper } from '@material-ui/core';
 import ECHSearchbar from './ECHSearchbar';
 import { Link } from 'react-router-dom'
 
@@ -23,7 +23,16 @@ const dividerStyling = {
     margin: '1vh 0 3vh 0'
 }
 
-class SearchHero extends Component {
+const filterBarStyling = {
+    width: '100vw',
+    backgroundColor: '#1675E0',
+    textAlign: 'center',
+    padding: '20px 0 20px 0',
+    marginBottom: '20px',
+    color: 'white'
+}
+
+class ECHSearchHero extends Component {
 
     render() {
         const type = this.props.type
@@ -36,13 +45,14 @@ class SearchHero extends Component {
     }
 
     _renderMainSearchHero() {
+        console.log(this.props.initialValue)
         return (
             <Paper style={subHeroStyling}>
                 <h3 style={subHeadlineStyling}>Find Open Source projects funded by the public</h3>
                 <Divider style={dividerStyling} />
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '5px' }}>
                     <div style={{ width: '80%' }} >
-                        <ECHSearchbar />
+                        <ECHSearchbar initialValue={this.props.initialValue} />
                     </div>
                 </div>
                 <div style={{ paddingTop: '1vh', color: 'black' }}>or do you want to  <Link to="/add" style={{ color: 'black' }}>add your own</Link> project?</div>
@@ -52,14 +62,13 @@ class SearchHero extends Component {
 
     _renderCatalogueSearchHero() {
         return (
-            <Paper style={subHeroStyling}>
-                <h3 style={subHeadlineStyling}>Searching for something more specific?</h3>
-                <div style={{ width: '80%' }} className="center">
+            <Box style={filterBarStyling}>
+                <div style={{ width: '50%' }} className="center">
                     <ECHSearchbar />
                 </div>
-            </Paper>
+            </Box>
         );
     }
 }
 
-export default SearchHero;
+export default ECHSearchHero;

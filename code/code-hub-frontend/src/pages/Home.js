@@ -2,7 +2,7 @@ import '../css/Home.css';
 import React, { Component } from 'react';
 import { Box } from '@material-ui/core';
 import PageWrapper from '../components/PageWrapper';
-import SearchHero from '../components/SearchHero';
+import ECHSearchHero from '../components/ECHSearchHero';
 import ECHPaper from '../components/ECHPaper';
 import EuropeanStars from '../assets/europe_stars.svg';
 
@@ -10,10 +10,12 @@ import EuropeanStars from '../assets/europe_stars.svg';
 
 class Home extends Component {
 
+    starsLogo = <img width={'100vw'} height={'100vw'} src={EuropeanStars} alt="logo" style={{ paddingTop: '10px', paddingBottom: '20px' }} />
+
     render() {
         return (
-            < PageWrapper headlineTitle="The place for European Code" headerContent={this.starsLogo()}>
-                <SearchHero type="home" />
+            < PageWrapper headlineTitle="The place for European Code" headerContent={this.starsLogo}>
+                <ECHSearchHero type="home" />
                 <Box flexDirection="row" flex="1" display="flex">
                     <ECHPaper width="29vw" title="Explore!" buttonTitle="Browse the catalogue" buttonLink="/projects">
                         <div>
@@ -28,11 +30,6 @@ class Home extends Component {
                 </Box>
             </PageWrapper >
         );
-    }
-
-    //TODO: Make Image responsive
-    starsLogo() {
-        return <img width={'100px'} height={'100px'} src={EuropeanStars} alt="logo" style={{ paddingTop: '10px', paddingBottom: '20px' }} />
     }
 }
 

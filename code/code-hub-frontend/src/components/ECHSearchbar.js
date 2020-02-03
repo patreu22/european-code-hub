@@ -36,18 +36,18 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(1, 1, 1, 7),
         width: `calc(100% - 100px)`
     },
-    fullComponentStyle: {
-        backgroundColor: '#f5f5f5',
+    fullComponent: props => ({
+        backgroundColor: props.noBackgroundColor ? 'inherit' : '#f5f5f5',
         '&:hover': {
-            backgroundColor: '#DBDBDB',
+            backgroundColor: props.noBackgroundColor ? 'inherit' : '#DBDBDB',
         },
-    }
+    })
 }));
 
 // class Searchbar extends React.Component {
 function ECHSearchbar(props) {
-    const classes = useStyles();
-    const [searchInput, setSearchInput] = useState('');
+    const classes = useStyles(props);
+    const [searchInput, setSearchInput] = useState(props.initialValue || '');
     const [suggestions, setSuggestions] = useState([]);
     const [searchSuggestionsOpened, setSearchSuggestionsOpened] = useState(false);
 
@@ -68,18 +68,25 @@ function ECHSearchbar(props) {
 
     const _handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            if (searchSuggestionsOpened) {
-                setSearchSuggestionsOpened(false)
-                setSearchInput(event.target.value)
+            if (suggestions.length !== 0) {
+                if (searchSuggestionsOpened) {
+                    //Don't move anywhere, just pass the changes to the state
+                    setSearchSuggestionsOpened(false)
+                    setSearchInput(event.target.value)
+                } else {
+                    //Everything set, go to search page
+                    props.history.push(`/search/${searchInput}`);
+                }
             } else {
+                //Plain text, no suggestions
+                setSearchInput(event.target.value)
                 props.history.push(`/search/${searchInput}`);
             }
-
         }
     }
 
     return (
-        <div className={classes.fullComponentStyle}>
+        <div className={classes.fullComponent}>
             <div className={classes.search}>
                 <Link to={`/search/${searchInput}`} className={_getClassName(searchInput, classes)}>
                     <div className={classes.searchIcon}>
@@ -94,7 +101,6 @@ function ECHSearchbar(props) {
                     open={searchSuggestionsOpened}
                     disableOpenOnFocus
                     forcePopupIcon={false}
-                    // TODO: Bulletproof? - check edge cases
                     onChange={() => setSearchSuggestionsOpened(false)}
                     noOptionsText={"No suggestions..."}
                     options={suggestions}
