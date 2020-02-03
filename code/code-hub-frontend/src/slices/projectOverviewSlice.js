@@ -47,7 +47,7 @@ const projectOverviewSlice = createSlice({
         },
         loadFilteredData_SUCCESS: (state, action) => {
             const payload = action.payload;
-            const moreToLoad = !(payload.projects.length === 0)
+            const moreToLoad = !(payload.projects.length < payload.itemsPerLoad)
             const shouldConcat = payload.shouldConcatResults || false
             const updated = {
                 ...state,

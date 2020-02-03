@@ -38,7 +38,7 @@ export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
         }
         //TODO: Handle error
         axios(options)
-            .then(response => dispatch(loadFilteredData_SUCCESS({ projects: response.data, shouldConcatResults })))
+            .then(response => dispatch(loadFilteredData_SUCCESS({ projects: response.data, shouldConcatResults, itemsPerLoad })))
             .catch(err => dispatch(loadFilteredData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }
@@ -59,7 +59,7 @@ export function getSearchResults(searchTerm, currentPage, shouldConcatResults) {
         }
 
         axios(options)
-            .then(response => dispatch(getSearchResults_SUCCESS({ projects: response.data, shouldConcatResults })))
+            .then(response => dispatch(getSearchResults_SUCCESS({ projects: response.data, shouldConcatResults, itemsPerLoad })))
             .catch(err => dispatch(getSearchResults_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }
