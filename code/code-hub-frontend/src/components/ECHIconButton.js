@@ -13,11 +13,16 @@ class ECHIconButton extends Component {
             // eslint-disable-next-line jsx-a11y/anchor-is-valid
             : <a>{this.props.icon}</a>
 
+        const buttonStyle = {
+            ...this.props.style,
+            ...headerLinkStyle,
+        }
+
         return <Tooltip title={this.props.tooltipText}>
-            <IconButton className={headerLinkStyle} onClick={this.props.onClick}>
+            <IconButton onClick={this.props.onClick} style={buttonStyle}>
                 {linkIcon}
             </IconButton>
-        </Tooltip>
+        </Tooltip >
     }
 }
 

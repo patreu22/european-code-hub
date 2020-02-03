@@ -35,7 +35,7 @@ class Search extends Component {
             ? <ECHLoadingIndicator />
             : this._renderContent(searchTerm)
         return (
-            <PageWrapper headlineTitle="Search">
+            <PageWrapper headlineTitle="Search" showBackButton={true} showBackButton={true}>
                 <ECHSearchHero type="catalogue" initialValue={searchTerm || ''} />
                 {content}
             </PageWrapper>

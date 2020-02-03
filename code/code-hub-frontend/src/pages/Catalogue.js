@@ -27,7 +27,7 @@ class Catalogue extends Component {
             />
 
         return (
-            < PageWrapper headlineTitle="Complete project catalogue">
+            < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
                 <ECHFilterBar />
                 {contentBox}
             </PageWrapper >

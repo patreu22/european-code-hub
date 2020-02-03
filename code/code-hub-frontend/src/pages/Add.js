@@ -20,7 +20,7 @@ class Add extends Component {
     render() {
         const content = this.props.isLoading ? <ECHLoadingIndicator /> : this._renderContent()
         return (
-            <PageWrapper headlineTitle={this.props.pageTitle}>
+            <PageWrapper headlineTitle={this.props.pageTitle} showBackButton={true}>
                 {content}
             </PageWrapper>
         );

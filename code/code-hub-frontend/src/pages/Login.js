@@ -7,7 +7,7 @@ class Login extends Component {
     render() {
         const pathToRedirect = this.props.lastLocation ? this.props.lastLocation.pathname : "/"
         return (
-            <PageWrapper headlineTitle="Login">
+            <PageWrapper headlineTitle="Login" showBackButton={true}>
                 <div style={{ alignContent: 'center' }}>
                     <ECHPaper type="login" title="Login" routeToRedirect={pathToRedirect} />
                 </div>

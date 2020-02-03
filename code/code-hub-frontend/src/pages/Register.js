@@ -22,7 +22,7 @@ class Register extends Component {
             ? "Registration successful"
             : "Register"
         return (
-            <PageWrapper headlineTitle="Register">
+            <PageWrapper headlineTitle="Register" showBackButton={true}>
                 <div style={{ alignContent: 'center' }}>
                     <ECHPaper type={echPaperType} title={echPaperTitle} onRegistrationDone={this._onRegistrationDoneHandler} />
                 </div>

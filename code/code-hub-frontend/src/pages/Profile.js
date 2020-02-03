@@ -77,7 +77,7 @@ class Profile extends Component {
         if (!this.state.redirectToLogin) {
             const content = this.state.isLoading ? <ECHLoadingIndicator /> : this.renderProfile()
             return (
-                <PageWrapper headlineTitle="Profile">
+                <PageWrapper headlineTitle="Profile" showBackButton={true}>
                     {content}
                 </PageWrapper>
             );

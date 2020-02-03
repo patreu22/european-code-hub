@@ -7,7 +7,7 @@ import ECHPaper from '../components/ECHPaper'
 class Contribute extends Component {
     render() {
         return (
-            <PageWrapper headlineTitle="Contribute to this project">
+            <PageWrapper headlineTitle="Contribute to this project" showBackButton={true}>
                 <Box flexDirection="row" flex="1" display="flex">
                     <ECHPaper title="Great you are here!" buttonTitle="Github project" buttonLink="https://github.com/patreu22/european-code-hub">
                         We are really excited that you want to join us. The best way would be to connect with us on Github. You can either create your own

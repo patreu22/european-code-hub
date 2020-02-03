@@ -37,7 +37,7 @@ class Project extends Component {
             ? <ECHLoadingIndicator />
             : this._renderContent()
 
-        return <PageWrapper headlineTitle={this.props.match.params.projectname}>
+        return <PageWrapper headlineTitle={this.props.match.params.projectname} showBackButton={true}>
             {content}
         </PageWrapper>
     }
@@ -58,7 +58,6 @@ class Project extends Component {
         };
 
         if (objectExists(this.props.currentProject)) {
-            console.log(this.props.currentProject)
             return <div style={flexContainer}>
                 {this._renderProjectDetails()}
                 <div>
@@ -104,7 +103,6 @@ class Project extends Component {
     }
 
     _renderProjectDetails() {
-        // console.log(this.props.currentProject.programmingLanguages.join(', '))
         const project = this.props.currentProject
         return <ECHPaper title="Project details" maxWidth="30vw">
             <div>
