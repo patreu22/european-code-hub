@@ -40,8 +40,10 @@ class SearchHero extends Component {
             <Paper style={subHeroStyling}>
                 <h3 style={subHeadlineStyling}>Find Open Source projects funded by the public</h3>
                 <Divider style={dividerStyling} />
-                <div style={{ width: '80%' }} className="center">
-                    <ECHSearchbar />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '5px' }}>
+                    <div style={{ width: '80%' }} >
+                        <ECHSearchbar />
+                    </div>
                 </div>
                 <div style={{ paddingTop: '1vh', color: 'black' }}>or do you want to  <Link to="/add" style={{ color: 'black' }}>add your own</Link> project?</div>
             </Paper>
@@ -52,7 +54,7 @@ class SearchHero extends Component {
         return (
             <Paper style={subHeroStyling}>
                 <h3 style={subHeadlineStyling}>Searching for something more specific?</h3>
-                <div style={{ width: '50%' }} className="center">
+                <div style={{ width: '80%' }} className="center">
                     <ECHSearchbar />
                 </div>
             </Paper>
