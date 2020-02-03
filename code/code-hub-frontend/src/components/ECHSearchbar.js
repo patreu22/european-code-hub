@@ -53,12 +53,12 @@ function ECHSearchbar(props) {
 
     const _handleInputChange = (event) => {
         const input = event.target.value
+        setSearchInput(input)
         if (input.length > 2) {
             setSearchSuggestionsOpened(true)
             getSearchSuggestion(input)
                 .then((suggestions) => {
                     setSuggestions(suggestions)
-                    setSearchInput(input)
                     console.log(suggestions)
                 })
         } else {
@@ -100,6 +100,7 @@ function ECHSearchbar(props) {
                     freeSolo
                     open={searchSuggestionsOpened}
                     disableOpenOnFocus
+                    defaultValue={props.initialValue || ''}
                     forcePopupIcon={false}
                     onChange={() => setSearchSuggestionsOpened(false)}
                     noOptionsText={"No suggestions..."}

@@ -45,7 +45,6 @@ class ECHSearchHero extends Component {
     }
 
     _renderMainSearchHero() {
-        console.log(this.props.initialValue)
         return (
             <Paper style={subHeroStyling}>
                 <h3 style={subHeadlineStyling}>Find Open Source projects funded by the public</h3>
@@ -64,7 +63,7 @@ class ECHSearchHero extends Component {
         return (
             <Box style={filterBarStyling}>
                 <div style={{ width: '50%' }} className="center">
-                    <ECHSearchbar />
+                    <ECHSearchbar initialValue={this.props.initialValue} />
                 </div>
             </Box>
         );
