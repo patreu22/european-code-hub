@@ -2,6 +2,7 @@ import React, { Component, } from 'react';
 import PageWrapper from '../components/PageWrapper';
 import ECHSearchHero from '../components/ECHSearchHero';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
+import ECHInfiniteList from '../components/ECHInfiniteList';
 import { connect } from 'react-redux'
 import { getSearchResults } from '../actions/httpActions'
 
@@ -10,6 +11,7 @@ class Search extends Component {
     constructor(props) {
         super(props)
         this._renderContent = this._renderContent.bind(this)
+        this.loadFunc = this.loadFunc.bind(this)
     }
 
     componentDidMount() {
@@ -20,8 +22,11 @@ class Search extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        console.log("Update!")
-        console.log(this.props)
+        const previousSearchTerm = prevProps.match.params.searchterm;
+        const currentSearchTerm = this.props.match.params.searchterm;
+        if (previousSearchTerm !== currentSearchTerm) {
+            this.props.getSearchResults(currentSearchTerm, 1, false)
+        }
     }
 
     render() {
@@ -38,10 +43,14 @@ class Search extends Component {
     }
 
     _renderContent = (searchTerm) => {
-        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-            {searchTerm && <h1> Search term: {searchTerm} </h1>}
-        </div>
+        return <ECHInfiniteList
+            projects={this.props.projects}
+            hasMore={this.props.moreChunkToLoad}
+            loadMore={(page) => this.loadFunc(page, searchTerm)}
+        />
     }
+
+    loadFunc = (page, searchTerm) => this.props.getSearchResults(searchTerm, page, true)
 }
 
 const mapStateToProps = state => {

@@ -116,6 +116,7 @@ function updateSessionToken({ mail, token }) {
 }
 
 function getSearchResults(searchTerm) {
+    //TODO: Fix the ^ --> Means only the exact word, should be something like contains or similar...
     return new Promise(function (resolve, reject) {
         models.WORDS_SCHEMA
             .find({ _id: searchTerm }, function (err, docs) {
