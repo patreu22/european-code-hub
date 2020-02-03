@@ -20,6 +20,10 @@ import {
     getSearchResults_SUCCESS,
     getSearchResults_FAILURE
 } from '../slices/searchSlice'
+import {
+    fetchProfilePicture_SUCCESS,
+    setVerificationCookie
+} from '../slices/userSlice'
 
 
 export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
@@ -87,6 +91,25 @@ export function getProjectByName(projectName) {
 
         axios(options)
             .then(response => dispatch(fetchProjectByName_SUCCESS({ project: response.data })))
+            .catch(err => dispatch(fetchProjectByName_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+    }
+}
+
+export function setVerificationCookieAndProfileImageInStore(token) {
+    return function (dispatch) {
+        console.log("Lets go!")
+        // dispatch(fetchProjectByName_BEGIN())
+        //TODO: Set Cookie and Profile Picture!
+        dispatch(setVerificationCookie({ cookie: token }))
+        const options = {
+            method: 'GET',
+            headers: { Authorization: token },
+            url: '/api/get/user/profileImage',
+        }
+
+        //TODO: catch
+        axios(options)
+            .then(response => dispatch(fetchProfilePicture_SUCCESS({ profilePicture: response.data })))
             .catch(err => dispatch(fetchProjectByName_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }

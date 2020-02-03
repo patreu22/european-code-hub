@@ -9,6 +9,10 @@ import {
 } from "react-router-dom";
 import { LastLocationProvider } from 'react-router-last-location';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { connect } from 'react-redux'
+import { setVerificationCookieAndProfileImageInStore } from './actions/httpActions'
+import { getVerificationToken } from './helper/cookieHelper'
+
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Add from './pages/Add';
@@ -30,6 +34,11 @@ const theme = createMuiTheme({
   }
 })
 class App extends React.Component {
+
+  componentDidMount() {
+    const token = getVerificationToken()
+    this.props.setVerificationCookieAndProfileImageInStore(token)
+  }
 
   render() {
     return (
@@ -54,7 +63,15 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => {
+  return {
+    verificationCookie: state.user.cookie
+  }
+}
+
+const mapDispatchToProps = { setVerificationCookieAndProfileImageInStore }
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
 
 // European color Blue: #004494
 // Yellow: #ffd617

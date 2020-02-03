@@ -166,9 +166,9 @@ app.post('/api/create/token', function (req, res) {
     })
 });
 
-app.get('/api/get/user/profileImage/:mail', function (req, res) {
-    const mail = req.params.mail;
-    database.getUser({ mail: mail })
+app.get('/api/get/user/profileImage', function (req, res) {
+    const authHeader = req.headers.authorization
+    database.getUser({ token: authHeader })
         .then((user) => {
             return res.status(200).contentType(user.profilePicture.contentType).send(user.profilePicture.data)
         })
