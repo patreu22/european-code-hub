@@ -115,6 +115,16 @@ app.get('/api/get/autocomplete', function (req, res) {
         })
 })
 
+app.get('/api/get/searchResults', function (req, res) {
+    const searchTerm = req.query.searchTerm;
+    database.getSearchResults(searchTerm)
+        .then(results => res.status(200).send(results))
+        .catch((err) => {
+            console.log(err)
+            res.sendStatus(400)
+        })
+})
+
 //Returns either user by username query or own data by auth token
 app.get('/api/get/user', function (req, res) {
     const username = req.query.username

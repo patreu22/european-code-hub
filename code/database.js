@@ -115,6 +115,33 @@ function updateSessionToken({ mail, token }) {
     })
 }
 
+function getSearchResults(searchTerm) {
+    return new Promise(function (resolve, reject) {
+        models.WORDS_SCHEMA
+            .find({ _id: searchTerm }, function (err, docs) {
+                if (err) {
+                    reject(err)
+                } else {
+                    if (docs[0]) {
+                        const documentsToFetch = docs[0].value.documents || []
+                        const documentFetchPromises = documentsToFetch.map((documentKey) => {
+                            const result = models.PROJECT_MODEL.findById(documentKey)
+                                .then(project => project)
+                                .catch(err => reject(err))
+                            return result
+                        })
+                        Promise.all(documentFetchPromises)
+                            .then(projects => resolve(projects))
+                            .catch(err => reject(err))
+                    } else {
+                        resolve([])
+                    }
+
+                }
+            })
+    })
+}
+
 function getSuggestionList(searchTerm) {
     const regex = new RegExp("^" + searchTerm)
     return new Promise(function (resolve, reject) {
@@ -350,5 +377,6 @@ module.exports = {
     updateProjectReadme: updateProjectReadme,
     getProjectChunk: getProjectChunk,
     indexProjects: indexProjects,
-    getSuggestionList: getSuggestionList
+    getSuggestionList: getSuggestionList,
+    getSearchResults: getSearchResults
 }

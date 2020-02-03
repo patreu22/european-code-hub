@@ -100,7 +100,7 @@ function ECHSearchbar(props) {
                     freeSolo
                     open={searchSuggestionsOpened}
                     disableOpenOnFocus
-                    defaultValue={props.initialValue || ''}
+                    value={searchInput}
                     forcePopupIcon={false}
                     onChange={() => setSearchSuggestionsOpened(false)}
                     noOptionsText={"No suggestions..."}

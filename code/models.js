@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const USER_SCHEMA = new mongoose.Schema({
+    _id: mongoose.Types.ObjectId,
     username: String,
     password: String,
     mail: String,
@@ -11,6 +12,7 @@ const USER_SCHEMA = new mongoose.Schema({
 
 //Status: "released" | "development" | "deprecated" | "archival"
 const PROJECT_SCHEMA = new mongoose.Schema({
+    _id: mongoose.Types.ObjectId,
     projectName: String,
     projectDescription: String,
     organization: String,

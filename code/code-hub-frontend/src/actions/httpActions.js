@@ -15,26 +15,52 @@ import {
     fetchProjectByName_SUCCESS,
     fetchProjectByName_FAILURE
 } from '../slices/currentProjectSlice'
+import {
+    getSearchResults_BEGIN,
+    getSearchResults_SUCCESS,
+    getSearchResults_FAILURE
+} from '../slices/searchSlice'
 
 
 export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
     return function (dispatch) {
         const itemsPerLoad = 20
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
-        dispatch(loadFilteredData_BEGIN)
+        dispatch(loadFilteredData_BEGIN())
         const options = {
             method: 'GET',
             url: '/api/get/projects',
             params: {
-                filters: filters,
-                resultsToSkip: resultsToSkip,
-                itemsPerLoad: itemsPerLoad
+                filters,
+                resultsToSkip,
+                itemsPerLoad
             }
         }
         //TODO: Handle error
         axios(options)
             .then(response => dispatch(loadFilteredData_SUCCESS({ projects: response.data, shouldConcatResults })))
             .catch(err => dispatch(loadFilteredData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+    }
+}
+
+export function getSearchResults(searchTerm, currentPage, shouldConcatResults) {
+    return function (dispatch) {
+        const itemsPerLoad = 20
+        const resultsToSkip = (currentPage - 1) * itemsPerLoad
+        dispatch(getSearchResults_BEGIN())
+        const options = {
+            method: 'GET',
+            url: '/api/get/searchResults',
+            params: {
+                searchTerm,
+                resultsToSkip,
+                itemsPerLoad
+            }
+        }
+
+        axios(options)
+            .then(response => dispatch(getSearchResults_SUCCESS({ projects: response.data, shouldConcatResults })))
+            .catch(err => dispatch(getSearchResults_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }
 

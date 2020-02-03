@@ -1,24 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
 
-const defaultAddProjectPageContent = {
-    isLoading: false,
-    projectsToDisplay: []
-}
-
-const defaultAddProjectCurrentStep = 0
-
 const projectOverviewSlice = createSlice({
     name: "projectOverview",
     initialState: {
         projects: [],
+        isLoading: false,
         error: {
             code: null,
             message: null
         },
         currentFilters: {},
         moreChunkToLoad: true,
-        addProjectCurrentStep: defaultAddProjectCurrentStep,
-        addProjectPageContent: defaultAddProjectPageContent,
     },
     reducers: {
         addFilter: (state, action) => {
