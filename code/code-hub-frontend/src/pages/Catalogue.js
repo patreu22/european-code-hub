@@ -1,12 +1,8 @@
 import '../css/Home.css';
 import React, { Component } from 'react';
 import PageWrapper from '../components/PageWrapper';
-import { List } from '@material-ui/core';
-import ProjectListItem from '../components/ProjectListItem';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
-
-import InfiniteScroll from 'react-infinite-scroller';
-
+import ECHInfiniteList from '../components/ECHInfiniteList';
 import ECHFilterBar from '../components/ECHFilterBar'
 
 import { connect } from 'react-redux'
@@ -24,7 +20,11 @@ class Catalogue extends Component {
     render() {
         var contentBox = this.props.isLoading
             ? <ECHLoadingIndicator />
-            : this._renderInfiniteScroll()
+            : <ECHInfiniteList
+                projects={this.props.projects}
+                hasMore={this.props.moreChunkToLoad}
+                loadMore={this.loadFunc}
+            />
 
         return (
             < PageWrapper headlineTitle="Complete project catalogue" showFilterBar={true}>
@@ -34,48 +34,8 @@ class Catalogue extends Component {
         );
     }
 
-    _renderInfiniteScroll() {
-        const infiniteScrollStyle = {
-            paddingBottom: '50px'
-        }
-
-        return <InfiniteScroll
-            pageStart={0}
-            loadMore={this.loadFunc}
-            hasMore={this.props.moreChunkToLoad}
-            style={infiniteScrollStyle}
-            loader={<div style={{ paddingTop: '10px', paddingBottom: '10px', textAlign: 'center' }} className="loader" key={0}><ECHLoadingIndicator /></div>}
-        >
-            {this.renderProjectList()}
-        </InfiniteScroll>
-    }
-
     loadFunc = (page) => this.props.getFilteredProjects(this.props.currentFilters, page, true)
 
-    renderProjectList = () => {
-        const flexContainer = {
-            display: 'flex',
-            flexDirection: 'row',
-            flexWrap: 'wrap',
-            padding: 0,
-            width: '85vw',
-            marginTop: '1vh',
-            justifyContent: 'flex-start'
-        };
-
-        const projects = this.props.projects.map((project, index) => (
-            <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
-        ))
-
-        //TODO: No data placeholder
-        if (this.props.projects.length === 0) {
-            return <div>No data!</div>
-        } else {
-            return <List style={flexContainer}>
-                {projects}
-            </List>
-        }
-    }
 }
 
 const mapStateToProps = state => {
