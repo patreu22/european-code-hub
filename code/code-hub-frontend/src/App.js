@@ -11,7 +11,6 @@ import { LastLocationProvider } from 'react-router-last-location';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import Home from './pages/Home';
 import Search from './pages/Search';
-import Hello from './pages/Hello';
 import Add from './pages/Add';
 import Catalogue from './pages/Catalogue'
 import Project from './pages/Project'
@@ -39,7 +38,6 @@ class App extends React.Component {
           <LastLocationProvider>
             <Switch>
               <Route exact path="/" component={Home} />
-              <Route path="/hello" component={Hello} />
               <Route path="/add" component={Add} />
               <Route path="/contribute" component={Contribute} />
               <Route path="/search/:searchterm?" component={Search} />
