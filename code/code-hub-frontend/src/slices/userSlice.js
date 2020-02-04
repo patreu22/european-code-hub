@@ -4,7 +4,7 @@ const userSlice = createSlice({
     name: "user",
     initialState: {
         cookie: '',
-        profilePicture: ''
+        profilePicture: '',
     },
     reducers: {
         setVerificationCookie: (state, action) => {
@@ -35,7 +35,7 @@ const userSlice = createSlice({
                 cookie: ''
             }
         },
-        logoutUser: (state) => {
+        resetUserData: (state) => {
             return {
                 ...state,
                 cookie: '',
@@ -49,7 +49,7 @@ const userSlice = createSlice({
 export const {
     setVerificationCookie,
     fetchProfilePicture_SUCCESS,
-    logout
+    resetUserData
 } = userSlice.actions
 
 export default userSlice;
