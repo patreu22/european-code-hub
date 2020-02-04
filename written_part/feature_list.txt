@@ -8,11 +8,11 @@
 		- Description (Could be parsed from project Readme)
 		- Tags
 		- Programming language? (Could be tag) --> Not useful imho
-	- Auto-Complete feature (feasible with Elasticsearch) 
+	- Auto-Complete feature (feasible with Elasticsearch or plain MongoDB) 
 - Multi-Language Support
-- Subscribe feature/Alert for specific keywords
+- Subscribe feature/Alert for specific keywords [CANCELED]
 	- Receive an email when a new project is added that contains a specific keyword the user subscribed for before 
-- Useful Start-Page
+- Useful Start-Page [DONE]
 	- Search feature
 	- Link to browsing catalogue
 	- Add a new project button
@@ -21,7 +21,7 @@
 	- Delete your account
 	- Transfer entries to another user
 	- Update your entries
-- Open API to fetch data? (Open Exchange Canada)
+- Open API to fetch data? (Open Exchange Canada) [POSTPONED]
 - Email Server to verify registrations (Bonus?)
 - Suchmaschinenoptimierung? (Wie viele % der Nutzer starten ihre suche bei Google?)
 - Connect to Github / Register with Github?
@@ -29,7 +29,7 @@
 - Fetch "Add new data" from Github link => e.g. https://raw.githubusercontent.com/patreu22/european-code-hub/master/README.md?token=ACWWANIR7OK622PG2EHKMZS6E3FM4
 - Fetch "Add new data" from uploaded code.json (compliant to code.gov file schema)
 - Auto-Update feature: Crawl all Git repos everyday and update metadata that changed
-- Dashboard with statistics and more infos for the public
+- Dashboard with statistics and more infos for the public [POSTPONED]
 - Code.json validator?
 
 --> Verweis auf NPM/Dart.dev
