@@ -14,6 +14,7 @@ import { objectExists } from '../helper/objectHelper'
 import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
 import { LOGIN } from '../routes'
+import { setVerificationCookieAndProfileImageInStore } from '../actions/httpActions'
 
 class ECHPaper extends Component {
 
@@ -307,6 +308,7 @@ class ECHPaper extends Component {
             requestLoginToken(this.state.mail, this.state.password)
                 .then((token) => {
                     setVerificationToken(token);
+                    this.props.setVerificationCookieAndProfileImageInStore(token)
                     this.setState({
                         redirect: true
                     })
@@ -437,6 +439,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { incrementSteps }
+const mapDispatchToProps = { incrementSteps, setVerificationCookieAndProfileImageInStore }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHPaper);
