@@ -30,6 +30,7 @@
 - Fetch "Add new data" from uploaded code.json (compliant to code.gov file schema)
 - Auto-Update feature: Crawl all Git repos everyday and update metadata that changed
 - Dashboard with statistics and more infos for the public
+- Code.json validator?
 
 --> Verweis auf NPM/Dart.dev
 
