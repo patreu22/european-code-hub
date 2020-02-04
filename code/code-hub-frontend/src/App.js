@@ -12,7 +12,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { setVerificationCookieAndProfileImageInStore } from './actions/httpActions'
 import { getVerificationToken } from './helper/cookieHelper'
-
+import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS } from './routes'
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Add from './pages/Add';
@@ -46,15 +46,15 @@ class App extends React.Component {
         <Router>
           <LastLocationProvider>
             <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/add" component={Add} />
-              <Route path="/contribute" component={Contribute} />
-              <Route path="/search/:searchterm?" component={Search} />
-              <Route path="/login" component={Login} />
-              <Route path="/register" component={Register} />
-              <Route path="/user/:username?" component={Profile} />
-              <Route path="/projects/:projectname" component={Project} />
-              <Route path="/projects" component={Catalogue} />
+              <Route exact path={HOME} component={Home} />
+              <Route path={ADD} component={Add} />
+              <Route path={CONTRIBUTE} component={Contribute} />
+              <Route path={`${SEARCH}/:searchterm?`} component={Search} />
+              <Route path={LOGIN} component={Login} />
+              <Route path={REGISTER} component={Register} />
+              <Route path={`${USER}/:username?`} component={Profile} />
+              <Route path={`${PROJECTS}/:projectname`} component={Project} />
+              <Route path={PROJECTS} component={Catalogue} />
             </Switch>
           </LastLocationProvider>
         </Router>
@@ -64,9 +64,7 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return {
-    verificationCookie: state.user.cookie
-  }
+  return {}
 }
 
 const mapDispatchToProps = { setVerificationCookieAndProfileImageInStore }

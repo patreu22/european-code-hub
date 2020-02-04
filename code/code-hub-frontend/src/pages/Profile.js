@@ -6,6 +6,7 @@ import { getVerificationToken } from '../helper/cookieHelper'
 import { getOwnUserData, getUserData } from '../helper/httpHelper'
 import { withRouter } from "react-router";
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
+import { USER, LOGIN } from '../routes'
 
 class Profile extends Component {
 
@@ -82,9 +83,9 @@ class Profile extends Component {
                 </PageWrapper>
             );
         } else if (this.state.redirectToOwnProfile) {
-            return <Redirect to={`/user/${this.state.myusername}`} />
+            return <Redirect to={`${USER}/${this.state.myusername}`} />
         } else {
-            return <Redirect to='/login' />
+            return <Redirect to={LOGIN} />
         }
     }
 

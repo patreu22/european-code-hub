@@ -24,6 +24,7 @@ import {
     fetchProfilePicture_SUCCESS,
     setVerificationCookie
 } from '../slices/userSlice'
+import { getOwnUserData } from '../helper/httpHelper'
 
 
 export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
@@ -79,6 +80,7 @@ export function sendNewProjectToBackend(projectData) {
     }
 }
 
+//TODO: Remove all getVerificationToken() functions and use Redux
 export function getProjectByName(projectName) {
     return function (dispatch) {
         dispatch(fetchProjectByName_BEGIN())
@@ -97,19 +99,9 @@ export function getProjectByName(projectName) {
 
 export function setVerificationCookieAndProfileImageInStore(token) {
     return function (dispatch) {
-        console.log("Lets go!")
-        // dispatch(fetchProjectByName_BEGIN())
-        //TODO: Set Cookie and Profile Picture!
         dispatch(setVerificationCookie({ cookie: token }))
-        const options = {
-            method: 'GET',
-            headers: { Authorization: token },
-            url: '/api/get/user/profileImage',
-        }
-
-        //TODO: catch
-        axios(options)
-            .then(response => dispatch(fetchProfilePicture_SUCCESS({ profilePicture: response.data })))
+        getOwnUserData()
+            .then(user => dispatch(fetchProfilePicture_SUCCESS({ profilePicture: user.profilePicture.data.data })))
             .catch(err => dispatch(fetchProjectByName_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }

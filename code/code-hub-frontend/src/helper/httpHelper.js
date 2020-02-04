@@ -1,5 +1,5 @@
 import * as axios from 'axios';
-import { getVerificationToken } from '../helper/cookieHelper'
+import store from '../store'
 
 export function registerUser(username, password, mail, position, profileImageFile) {
     var formData = new FormData();
@@ -55,9 +55,10 @@ export function getSearchSuggestion(searchTerm) {
 }
 
 export function getOwnUserData() {
+    const reduxState = store.getState();
     const options = {
         method: 'GET',
-        headers: { Authorization: getVerificationToken() },
+        headers: { Authorization: reduxState.user.cookie },
         url: '/api/get/user/'
     }
 
@@ -70,9 +71,10 @@ export function getOwnUserData() {
 
 //TODO: Change to username
 export function getUserData({ username }) {
+    const reduxState = store.getState();
     const options = {
         method: 'GET',
-        headers: { Authorization: getVerificationToken() },
+        headers: { Authorization: reduxState.user.cookie },
         url: '/api/get/user',
         params: {
             username: username

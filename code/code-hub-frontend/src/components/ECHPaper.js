@@ -13,6 +13,7 @@ import ImageUploader from 'react-images-upload';
 import { objectExists } from '../helper/objectHelper'
 import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
+import { LOGIN } from '../routes'
 
 class ECHPaper extends Component {
 
@@ -232,7 +233,7 @@ class ECHPaper extends Component {
         } else if (this.props.type === 'register') {
             return <div style={{ width: '100%' }}>
                 <ECHButton width="80%" onClick={this._performRegistration}>Register</ECHButton>
-                <div style={registerTextStyle}>You already have an account?  <Link to="/login" style={{ color: 'black' }}>Login</Link> directly.</div>
+                <div style={registerTextStyle}>You already have an account?  <Link to={LOGIN} style={{ color: 'black' }}>Login</Link> directly.</div>
             </div>
         } else if (this.props.type === 'addProjectViaGit') {
             return <div style={{ width: '100%' }}>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { AppBar, Toolbar, Menu, MenuItem, Typography, IconButton, Tooltip } from '@material-ui/core/';
+import { Avatar, AppBar, Toolbar, Menu, MenuItem, Typography, IconButton, Tooltip } from '@material-ui/core/';
 import {
     List as ListIcon,
     Add as AddIcon,
@@ -8,11 +8,12 @@ import {
     DeleteForever as DeleteIcon,
     Search as SearchIcon,
     Home as HomeIcon,
-    AccountCircle
 } from '@material-ui/icons/';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { getVerificationToken, removeVerificationToken } from '../helper/cookieHelper'
+import { connect } from 'react-redux'
+import { USER, LOGIN, CONTRIBUTE } from '../routes'
 
 import EuropeanLogo from '../assets/europe_logo.png';
 
@@ -53,12 +54,16 @@ function Header(props) {
     //     setAnchorEl(event.currentTarget);
     // };
 
+    const profileImagePicture = "data:image/png;base64," + btoa(new Uint8Array(props.profilePicture).reduce(function (data, byte) {
+        return data + String.fromCharCode(byte);
+    }, ''));
+
     const handleLoginClick = event => {
         const token = getVerificationToken();
         if (typeof token === 'undefined' || token === '') {
-            props.history.push(`/login`);
+            props.history.push(LOGIN);
         } else {
-            props.history.push(`/user`);
+            props.history.push(USER);
         }
 
     };
@@ -119,7 +124,7 @@ function Header(props) {
         },
         {
             icon: <BuildIcon />,
-            link: "/contribute",
+            link: CONTRIBUTE,
             tooltipText: "Support this project"
         },
         {
@@ -128,7 +133,7 @@ function Header(props) {
             tooltipText: "Remove verification cookie"
         },
         {
-            icon: <AccountCircle />,
+            icon: <Avatar src={profileImagePicture} alt="Profile Image" />,
             onClickHandler: handleLoginClick,
             tooltipText: "Login / Go",
             edge: "end"
@@ -168,4 +173,13 @@ function Header(props) {
     );
 }
 
-export default withRouter(Header);
+const mapStateToProps = state => {
+    return {
+        verificationCookie: state.user.cookie,
+        profilePicture: state.user.profilePicture
+    }
+}
+
+const mapDispatchToProps = {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(Header));

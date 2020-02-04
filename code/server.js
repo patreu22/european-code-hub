@@ -169,9 +169,7 @@ app.post('/api/create/token', function (req, res) {
 app.get('/api/get/user/profileImage', function (req, res) {
     const authHeader = req.headers.authorization
     database.getUser({ token: authHeader })
-        .then((user) => {
-            return res.status(200).contentType(user.profilePicture.contentType).send(user.profilePicture.data)
-        })
+        .then((user) => res.status(200).contentType(user.profilePicture.contentType).send(user.profilePicture.data))
         .catch(() => {
             console.log("No user found");
             return res.sendStatus(404)
