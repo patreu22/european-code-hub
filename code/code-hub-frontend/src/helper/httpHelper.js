@@ -53,37 +53,3 @@ export function getSearchSuggestion(searchTerm) {
             .catch(err => reject(err))
     })
 }
-
-export function getOwnUserData() {
-    const reduxState = store.getState();
-    const options = {
-        method: 'GET',
-        headers: { Authorization: reduxState.user.cookie },
-        url: '/api/get/user/'
-    }
-
-    return new Promise((resolve, reject) => {
-        axios(options)
-            .then(response => resolve(response.data))
-            .catch(err => reject(err))
-    })
-}
-
-//TODO: Change to username
-export function getUserData({ username }) {
-    const reduxState = store.getState();
-    const options = {
-        method: 'GET',
-        headers: { Authorization: reduxState.user.cookie },
-        url: '/api/get/user',
-        params: {
-            username: username
-        }
-    }
-
-    return new Promise((resolve, reject) => {
-        axios(options)
-            .then(response => resolve(response.data))
-            .catch(err => reject(err))
-    })
-}

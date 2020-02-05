@@ -1,92 +1,49 @@
 import React, { Component, } from 'react';
 import { Avatar } from '@material-ui/core'
 import PageWrapper from '../components/PageWrapper'
-import { Redirect } from 'react-router-dom'
-import { getVerificationToken } from '../helper/cookieHelper'
-import { getOwnUserData, getUserData } from '../helper/httpHelper'
+import { getUserByName, getUserByToken } from '../actions/httpActions'
 import { withRouter } from "react-router";
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
-import { USER, LOGIN } from '../routes'
+import NotFound from './NotFound'
+import { connect } from 'react-redux'
+import { objectExists } from '../helper/objectHelper'
 
 class Profile extends Component {
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            redirectToLogin: false,
-            redirectToOwnProfile: false,
-            myusername: '',
-            isLoading: false,
-            isOwnProfile: false,
-            mail: '',
-            position: '',
-            profilePicture: null,
-        }
-    }
-
     componentDidMount() {
-        const token = getVerificationToken()
-        if ((typeof token === 'undefined' || token === '') && !this.props.match.params.username) {
-            // TODO: Redirect to Error 404: Not found page
-            this.setState({
-                redirectToLogin: true
-            })
-        } else {
-            if (this.props.match.params.username) {
-                this.setState({ isLoading: true })
-                this.fetchUserData();
-            } else {
-                this.setState({
-                    isLoading: true,
-                    isOwnProfile: true
-                })
-                this.fetchOwnUserData();
-            }
+        const userName = this.props.match.params.username;
+        if (userName) {
+            this.props.getUserByName(userName)
         }
     }
 
-    fetchOwnUserData() {
-        this.handleReceivedData(getOwnUserData)
-    }
-
-    fetchUserData() {
-        const userToFetchData = this.props.match.params.username
-        //TODO: Change to username instead of email
-        const fetchPromise = () => getUserData({ username: userToFetchData })
-        this.handleReceivedData(fetchPromise)
-    }
-
-    handleReceivedData(promise) {
-        promise().then(data => {
-            var imageBaseString = "data:image/png;base64," + btoa(new Uint8Array(data.profilePicture.data.data).reduce(function (data, byte) {
-                return data + String.fromCharCode(byte);
-            }, ''));
-            this.setState({
-                username: data.username,
-                mail: data.mail,
-                position: data.position,
-                profilePicture: imageBaseString,
-                isLoading: false
-            })
-        }).catch(err => {
-            const userNotFound = err.response.status === 404
-            this.setState({ isLoading: false, redirectToLogin: userNotFound })
-        })
+    componentDidUpdate() {
+        const username = this.props.match.params.username;
+        const cookie = this.props.cookie
+        const ownUserDataExists = objectExists(this.props.ownUserData)
+        if (!username && !ownUserDataExists && cookie) {
+            this.props.getUserByToken(cookie)
+        }
     }
 
     render() {
-        if (!this.state.redirectToLogin) {
-            const content = this.state.isLoading ? <ECHLoadingIndicator /> : this.renderProfile()
-            return (
-                <PageWrapper headlineTitle="Profile" showBackButton={true}>
-                    {content}
-                </PageWrapper>
-            );
-        } else if (this.state.redirectToOwnProfile) {
-            return <Redirect to={`${USER}/${this.state.myusername}`} />
-        } else {
-            return <Redirect to={LOGIN} />
+        const error = this.props.error
+        if (error) {
+            if (error.code === 404) {
+                return <NotFound />
+            }
         }
+
+        // if (!this.state.redirectToLogin) {
+        const content = this.props.isLoading
+            ? <ECHLoadingIndicator />
+            : this.renderProfile()
+
+        return (
+            <PageWrapper headlineTitle="Profile" showBackButton={true}>
+                {content}
+            </PageWrapper>
+        );
     }
 
     renderProfile() {
@@ -109,17 +66,42 @@ class Profile extends Component {
             padding: '0 3vw 0 3vw'
         }
 
+        const currentData = objectExists(this.props.currentUserData)
+            ? this.props.currentUserData
+            : this.props.ownUserData
+
+        var profilePictureData = ""
+        if (currentData.profilePicture) {
+            profilePictureData = currentData.profilePicture.data.data
+        }
+        const profilePictureBaseString = "data:image/png;base64," + btoa(new Uint8Array(profilePictureData).reduce(function (data, byte) {
+            return data + String.fromCharCode(byte);
+        }, ''));
+
         return <div style={contentWrapperStyle}>
             <div style={rowStyle}>
-                {this.state.profilePicture && <Avatar src={this.state.profilePicture} alt="Profile Image" style={profilePictureStyle} />}
+                {currentData.profilePicture && <Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />}
                 <div style={profileTextStyle}>
-                    <h2>Username: {this.state.username}</h2>
-                    <h2>Mail: {this.state.mail}</h2>
-                    <h2>Position: {this.state.position}</h2>
+                    <h2>Username: {currentData.username}</h2>
+                    <h2>Mail: {currentData.mail}</h2>
+                    <h2>Position: {currentData.position}</h2>
                 </div>
             </div>
         </div>
     }
 }
 
-export default withRouter(Profile);
+
+const mapStateToProps = state => {
+    return {
+        isLoading: state.user.isLoading,
+        cookie: state.user.cookie,
+        currentUserData: state.user.currentUserData,
+        ownUserData: state.user.ownUserData,
+        error: state.user.error
+    }
+}
+
+const mapDispatchToProps = { getUserByName, getUserByToken }
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));

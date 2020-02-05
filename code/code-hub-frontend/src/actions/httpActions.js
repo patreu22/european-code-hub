@@ -22,6 +22,13 @@ import {
 } from '../slices/searchSlice'
 import {
     fetchProfilePicture_SUCCESS,
+    fetchProfilePicture_FAILURE,
+    fetchUserData_BEGIN,
+    fetchUserData_SUCCESS,
+    fetchUserData_FAILURE,
+    fetchOwnUserData_BEGIN,
+    fetchOwnUserData_SUCCESS,
+    fetchOwnUserData_FAILURE,
     setVerificationCookie
 } from '../slices/userSlice'
 import { getOwnUserData } from '../helper/httpHelper'
@@ -97,11 +104,56 @@ export function getProjectByName(projectName) {
     }
 }
 
+//TODO: Change to username on server
+export function getUserByName(username) {
+    console.log("By Name! Name: " + username)
+    return function (dispatch) {
+        const options = {
+            method: 'GET',
+            url: '/api/get/user',
+            params: {
+                username: username
+            }
+        }
+
+        dispatch(fetchUserData_BEGIN())
+
+        axios(options)
+            .then(response => dispatch(fetchUserData_SUCCESS({ userData: response.data })))
+            .catch(err => dispatch(fetchUserData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+
+    }
+}
+
+export function getUserByToken(token) {
+    console.log("By token! Token: " + token)
+    return function (dispatch) {
+        const options = {
+            method: 'GET',
+            headers: { Authorization: token },
+            url: '/api/get/user',
+        }
+        console.log("HOLA!")
+        dispatch(fetchOwnUserData_BEGIN())
+
+        axios(options)
+            .then(response => dispatch(fetchOwnUserData_SUCCESS({ userData: response.data })))
+            .catch(err => dispatch(fetchOwnUserData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+    }
+}
+
 export function setVerificationCookieAndProfileImageInStore(token) {
     return function (dispatch) {
+        const options = {
+            method: 'GET',
+            headers: { Authorization: token },
+            url: '/api/get/user/'
+        }
+
         dispatch(setVerificationCookie({ cookie: token }))
-        getOwnUserData()
-            .then(user => dispatch(fetchProfilePicture_SUCCESS({ profilePicture: user.profilePicture.data.data })))
-            .catch(err => dispatch(fetchProjectByName_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+
+        axios(options)
+            .then(response => dispatch(fetchProfilePicture_SUCCESS({ profilePicture: response.data.profilePicture.data.data })))
+            .catch(err => dispatch(fetchProfilePicture_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }
