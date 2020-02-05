@@ -62,7 +62,9 @@ class ECHFilterBar extends Component {
                     onChange={(event) => this._onFilterChanged(event, "organization", this.props.currentFilters.organization)}
                     style={{ paddingRight: '50px' }}
                 />
-                <ECHIconButton tooltipText="Reset filters" icon={<DeleteSweepIcon />} onClick={this.props.resetFilters} />
+                <span>
+                    <ECHIconButton tooltipText="Reset filters" icon={<DeleteSweepIcon />} onClick={this.props.resetFilters} />
+                </span>
             </div>
         </div >
     }

@@ -19,7 +19,7 @@ class ECHIconButton extends Component {
         }
 
         return <Tooltip title={this.props.tooltipText}>
-            <IconButton onClick={this.props.onClick} style={buttonStyle}>
+            <IconButton width="1px" height="1px" onClick={this.props.onClick} style={buttonStyle}>
                 {linkIcon}
             </IconButton>
         </Tooltip >

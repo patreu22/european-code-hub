@@ -95,7 +95,7 @@ function Header(props) {
             // eslint-disable-next-line jsx-a11y/anchor-is-valid
             : <a>{menuEntry.icon}</a>
 
-        const button = <IconButton className={classes.headerLink} onClick={menuEntry.onClickHandler} edge="end" key={index}>
+        const button = <IconButton width="1px" height="1px" className={classes.headerLink} onClick={menuEntry.onClickHandler} edge="end" key={index}>
             {linkIcon}
         </IconButton>
 
