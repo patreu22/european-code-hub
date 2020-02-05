@@ -6,7 +6,7 @@ import { HOME } from '../routes'
 
 class NotFound extends Component {
 
-    illustration = <img height="10%" src={NotFoundIllustration} alt="logo" style={{
+    illustration = <img src={NotFoundIllustration} alt="logo" style={{
         height: '100%',
         width: '100%'
     }} />

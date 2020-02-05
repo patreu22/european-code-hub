@@ -3,6 +3,7 @@ import { List } from '@material-ui/core'
 import InfiniteScroll from 'react-infinite-scroller';
 import ECHLoadingIndicator from './ECHLoadingIndicator'
 import ProjectListItem from './ProjectListItem';
+import NoDataIllustration from '../assets/no_data.svg'
 
 class ECHInfiniteList extends Component {
     render() {
@@ -21,6 +22,11 @@ class ECHInfiniteList extends Component {
         </InfiniteScroll>
     }
 
+    illustration = <img src={NoDataIllustration} alt="No data" style={{
+        height: '100%',
+        width: '100%'
+    }} />
+
     renderProjectList = () => {
         const flexContainer = {
             display: 'flex',
@@ -38,7 +44,12 @@ class ECHInfiniteList extends Component {
 
         //TODO: No data placeholder
         if (this.props.projects.length === 0) {
-            return <div>No data!</div>
+            return <div>
+                <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >
+                    {this.illustration}
+                </div>
+                <div style={{ textAlign: 'center' }}>Alter your search to find amazing projects.</div>
+            </div>
         } else {
             return <List style={flexContainer}>
                 {projects}
