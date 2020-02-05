@@ -4,7 +4,7 @@ import Footer from './Footer';
 import { Box } from '@material-ui/core';
 import Sticky from 'react-sticky-el';
 import ECHIconButton from '../components/ECHIconButton'
-import { NavigateBefore as NavigateBeforeIcon } from '@material-ui/icons';
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { withLastLocation } from 'react-router-last-location';
 
 class PageWrapper extends React.Component {
@@ -33,16 +33,15 @@ class PageWrapper extends React.Component {
 
     _renderBackButton(backLink) {
         const backButtonStyle = {
-            backgroundColor: '#1675E0',
             position: 'absolute',
-            left: '10px',
+            left: '4vh',
             top: "50%",
             transform: "translateY(-50%)",
         }
 
         return <ECHIconButton
             tooltipText="Go back"
-            icon={<NavigateBeforeIcon />}
+            icon={<ArrowBackIosIcon style={{ color: 'white' }} />}
             link={backLink}
             style={backButtonStyle} />
     }

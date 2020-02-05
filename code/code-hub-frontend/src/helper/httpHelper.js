@@ -1,5 +1,4 @@
 import * as axios from 'axios';
-import store from '../store'
 
 export function registerUser(username, password, mail, position, profileImageFile) {
     var formData = new FormData();
