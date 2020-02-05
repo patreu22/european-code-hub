@@ -1,17 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const defaultState = {
+    projects: [],
+    isLoading: false,
+    error: {
+        code: null,
+        message: null
+    },
+    currentFilters: {},
+    moreChunkToLoad: true,
+}
+
 const projectOverviewSlice = createSlice({
     name: "projectOverview",
-    initialState: {
-        projects: [],
-        isLoading: false,
-        error: {
-            code: null,
-            message: null
-        },
-        currentFilters: {},
-        moreChunkToLoad: true,
-    },
+    initialState: defaultState,
     reducers: {
         addFilter: (state, action) => {
             const payload = action.payload;
@@ -68,6 +70,9 @@ const projectOverviewSlice = createSlice({
                 }
             }
         },
+        resetToDefaultState: (state) => {
+            return defaultState
+        }
     }
 })
 
@@ -77,7 +82,8 @@ export const {
     loadFilteredData_FAILURE,
     addFilter,
     removeFilter,
-    resetFilters
+    resetFilters,
+    resetToDefaultState
 } = projectOverviewSlice.actions
 
 export default projectOverviewSlice;

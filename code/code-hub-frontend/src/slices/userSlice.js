@@ -1,14 +1,20 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const resetUserDataDefault = {
+    isLoading: false,
+    currentUserData: {},
+    ownUserData: {}
+}
+
+const defaultState = {
+    cookie: '',
+    profilePicture: '',
+    ...resetUserDataDefault
+}
+
 const userSlice = createSlice({
     name: "user",
-    initialState: {
-        cookie: '',
-        profilePicture: '',
-        isLoading: false,
-        currentUserData: {},
-        ownUserData: {}
-    },
+    initialState: defaultState,
     reducers: {
         setVerificationCookie: (state, action) => {
             const payload = action.payload
@@ -94,7 +100,15 @@ const userSlice = createSlice({
                 }
             }
         },
-
+        resetUserData: (state) => {
+            return {
+                ...state,
+                ...resetUserDataDefault
+            }
+        },
+        resetToDefault: (state) => {
+            return defaultState
+        }
     }
 })
 
@@ -103,12 +117,13 @@ export const {
     fetchProfilePicture_SUCCESS,
     fetchProfilePicture_FAILURE,
     resetUserData,
+    resetToDefault,
     fetchUserData_BEGIN,
     fetchUserData_SUCCESS,
     fetchUserData_FAILURE,
     fetchOwnUserData_BEGIN,
     fetchOwnUserData_SUCCESS,
-    fetchOwnUserData_FAILURE
+    fetchOwnUserData_FAILURE,
 } = userSlice.actions
 
 export default userSlice;

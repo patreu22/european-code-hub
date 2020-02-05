@@ -31,7 +31,6 @@ import {
     fetchOwnUserData_FAILURE,
     setVerificationCookie
 } from '../slices/userSlice'
-import { getOwnUserData } from '../helper/httpHelper'
 
 
 export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
@@ -106,7 +105,6 @@ export function getProjectByName(projectName) {
 
 //TODO: Change to username on server
 export function getUserByName(username) {
-    console.log("By Name! Name: " + username)
     return function (dispatch) {
         const options = {
             method: 'GET',
@@ -126,14 +124,13 @@ export function getUserByName(username) {
 }
 
 export function getUserByToken(token) {
-    console.log("By token! Token: " + token)
     return function (dispatch) {
         const options = {
             method: 'GET',
             headers: { Authorization: token },
             url: '/api/get/user',
         }
-        console.log("HOLA!")
+
         dispatch(fetchOwnUserData_BEGIN())
 
         axios(options)

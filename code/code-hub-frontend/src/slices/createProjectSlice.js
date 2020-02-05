@@ -7,16 +7,18 @@ const defaultAddProjectPageContent = {
 
 const defaultAddProjectCurrentStep = 0
 
+const defaultState = {
+    projectData: {},
+    addProjectCurrentStep: defaultAddProjectCurrentStep,
+    addProjectPageContent: defaultAddProjectPageContent,
+    isLoading: false,
+    successfullySubmitted: false
+
+}
+
 const createProjectSlice = createSlice({
     name: "createProject",
-    initialState: {
-        projectData: {},
-        addProjectCurrentStep: defaultAddProjectCurrentStep,
-        addProjectPageContent: defaultAddProjectPageContent,
-        isLoading: false,
-        successfullySubmitted: false
-
-    },
+    initialState: defaultState,
     reducers: {
         setProjectData: (state, action) => {
             const payload = action.payload;
@@ -94,6 +96,9 @@ const createProjectSlice = createSlice({
                 }
             }
         },
+        resetToDefaultState: () => {
+            return defaultState
+        }
     }
 })
 
@@ -106,7 +111,8 @@ export const {
     resetAddProjectPage,
     sendProject_BEGIN,
     sendProject_SUCCESS,
-    sendProject_FAILURE
+    sendProject_FAILURE,
+    resetToDefaultState
 
 } = createProjectSlice.actions
 

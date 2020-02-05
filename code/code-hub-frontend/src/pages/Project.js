@@ -8,7 +8,7 @@ import ECHCopyBox from '../components/ECHCopyBox'
 import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { getProjectByName } from '../actions/httpActions'
-import { resetCurrentProject } from '../slices/currentProjectSlice'
+import { resetToDefaultState } from '../slices/currentProjectSlice'
 import { objectExists } from '../helper/objectHelper'
 import {
     DeveloperMode as DeveloperModeIcon,
@@ -49,7 +49,7 @@ class Project extends Component {
     }
 
     componentWillUnmount() {
-        this.props.resetCurrentProject()
+        this.props.resetToDefaultState()
     }
 
     _renderContent() {
@@ -242,6 +242,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getProjectByName, resetCurrentProject }
+const mapDispatchToProps = { getProjectByName, resetToDefaultState }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Project));

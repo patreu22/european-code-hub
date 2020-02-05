@@ -7,6 +7,7 @@ import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { objectExists } from '../helper/objectHelper'
+import { resetUserData } from '../slices/userSlice'
 
 class Profile extends Component {
 
@@ -14,6 +15,13 @@ class Profile extends Component {
         const userName = this.props.match.params.username;
         if (userName) {
             this.props.getUserByName(userName)
+        } else {
+            const username = this.props.match.params.username;
+            const cookie = this.props.cookie
+            const ownUserDataExists = objectExists(this.props.ownUserData)
+            if (!username && !ownUserDataExists && cookie) {
+                this.props.getUserByToken(cookie)
+            }
         }
     }
 
@@ -26,6 +34,10 @@ class Profile extends Component {
         }
     }
 
+    componentWillUnmount() {
+        this.props.resetUserData()
+    }
+
     render() {
         const error = this.props.error
         if (error) {
@@ -34,7 +46,6 @@ class Profile extends Component {
             }
         }
 
-        // if (!this.state.redirectToLogin) {
         const content = this.props.isLoading
             ? <ECHLoadingIndicator />
             : this.renderProfile()
@@ -102,6 +113,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getUserByName, getUserByToken }
+const mapDispatchToProps = { getUserByName, getUserByToken, resetUserData }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));

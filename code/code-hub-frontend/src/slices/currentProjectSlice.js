@@ -34,7 +34,7 @@ const currentProjectSlice = createSlice({
                 }
             }
         },
-        resetCurrentProject: (state) => {
+        resetToDefaultState: (state) => {
             return defaultState
         }
     }
@@ -44,7 +44,7 @@ export const {
     fetchProjectByName_BEGIN,
     fetchProjectByName_SUCCESS,
     fetchProjectByName_FAILURE,
-    resetCurrentProject
+    resetToDefaultState
 } = currentProjectSlice.actions
 
 export default currentProjectSlice;

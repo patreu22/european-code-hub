@@ -308,10 +308,10 @@ class ECHPaper extends Component {
             requestLoginToken(this.state.mail, this.state.password)
                 .then((token) => {
                     setVerificationToken(token);
-                    this.props.setVerificationCookieAndProfileImageInStore(token)
                     this.setState({
                         redirect: true
                     })
+                    this.props.setVerificationCookieAndProfileImageInStore(token)
                 }).catch((error) => {
                     console.log(error)
                     if (error.response.status === 400) {

@@ -7,6 +7,7 @@ import ECHFilterBar from '../components/ECHFilterBar'
 
 import { connect } from 'react-redux'
 import { getFilteredProjects } from '../actions/httpActions'
+import { resetToDefaultState } from '../slices/projectOverviewSlice'
 
 //TODO: Sources https://de.wikipedia.org/wiki/Datei:European_stars.svg
 
@@ -15,6 +16,10 @@ class Catalogue extends Component {
     constructor(props) {
         super(props)
         this.loadFunc = this.loadFunc.bind(this)
+    }
+
+    componentWillUnmount() {
+        this.props.resetToDefaultState()
     }
 
     render() {
@@ -46,6 +51,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getFilteredProjects }
+const mapDispatchToProps = { getFilteredProjects, resetToDefaultState }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Catalogue);

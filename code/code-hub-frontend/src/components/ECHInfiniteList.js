@@ -42,7 +42,6 @@ class ECHInfiniteList extends Component {
             <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
         ))
 
-        //TODO: No data placeholder
         if (this.props.projects.length === 0) {
             return <div>
                 <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >

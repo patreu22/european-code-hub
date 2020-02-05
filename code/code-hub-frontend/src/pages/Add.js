@@ -8,13 +8,13 @@ import ECHManuallyDialogue from '../components/addProjectDialogues/ECHManuallyDi
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 
 import { connect } from 'react-redux'
-import { resetAddProjectPage } from '../slices/createProjectSlice'
+import { resetToDefaultState } from '../slices/createProjectSlice'
 
 
 class Add extends Component {
 
     componentWillUnmount() {
-        this.props.resetAddProjectPage();
+        this.props.resetToDefaultState()
     }
 
     render() {
@@ -50,6 +50,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { resetAddProjectPage }
+const mapDispatchToProps = { resetToDefaultState }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Add);

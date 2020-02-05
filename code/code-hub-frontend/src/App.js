@@ -12,7 +12,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { setVerificationCookieAndProfileImageInStore } from './actions/httpActions'
 import { getVerificationToken } from './helper/cookieHelper'
-import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, NOTFOUND } from './routes'
+import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, PROFILE } from './routes'
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Add from './pages/Add';
@@ -38,7 +38,9 @@ class App extends React.Component {
 
   componentDidMount() {
     const token = getVerificationToken()
-    this.props.setVerificationCookieAndProfileImageInStore(token)
+    if (token) {
+      this.props.setVerificationCookieAndProfileImageInStore(token)
+    }
   }
 
   render() {
@@ -54,6 +56,7 @@ class App extends React.Component {
               <Route path={LOGIN} component={Login} />
               <Route path={REGISTER} component={Register} />
               <Route path={`${USER}/:username?`} component={Profile} />
+              <Route path={`${PROFILE}/:username?`} component={Profile} />
               <Route path={`${PROJECTS}/:projectname`} component={Project} />
               <Route path={PROJECTS} component={Catalogue} />
               <Route component={NotFound} />

@@ -1,16 +1,18 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const defaultState = {
+    projects: [],
+    isLoading: false,
+    error: {
+        code: null,
+        message: null
+    },
+    moreChunkToLoad: true,
+}
+
 const searchSlice = createSlice({
     name: "search",
-    initialState: {
-        projects: [],
-        isLoading: false,
-        error: {
-            code: null,
-            message: null
-        },
-        moreChunkToLoad: true,
-    },
+    initialState: defaultState,
     reducers: {
         getSearchResults_BEGIN: (state) => {
             return {
@@ -41,13 +43,17 @@ const searchSlice = createSlice({
                 }
             }
         },
+        resetToDefaultState: () => {
+            return defaultState
+        }
     }
 })
 
 export const {
     getSearchResults_BEGIN,
     getSearchResults_SUCCESS,
-    getSearchResults_FAILURE
+    getSearchResults_FAILURE,
+    resetToDefaultState
 } = searchSlice.actions
 
 export default searchSlice;

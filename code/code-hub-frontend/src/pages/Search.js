@@ -5,6 +5,7 @@ import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import ECHInfiniteList from '../components/ECHInfiniteList';
 import { connect } from 'react-redux'
 import { getSearchResults } from '../actions/httpActions'
+import { resetToDefaultState } from '../slices/searchSlice'
 
 class Search extends Component {
 
@@ -21,6 +22,10 @@ class Search extends Component {
         }
     }
 
+    componentWillUnmount() {
+        this.props.resetToDefaultState()
+    }
+
     componentDidUpdate(prevProps) {
         const previousSearchTerm = prevProps.match.params.searchterm;
         const currentSearchTerm = this.props.match.params.searchterm;
@@ -35,7 +40,7 @@ class Search extends Component {
             ? <ECHLoadingIndicator />
             : this._renderContent(searchTerm)
         return (
-            <PageWrapper headlineTitle="Search" showBackButton={true} showBackButton={true}>
+            <PageWrapper headlineTitle="Search" showBackButton={true} >
                 <ECHSearchHero type="catalogue" initialValue={searchTerm || ''} />
                 {content}
             </PageWrapper>
@@ -60,6 +65,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getSearchResults }
+const mapDispatchToProps = { getSearchResults, resetToDefaultState }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
