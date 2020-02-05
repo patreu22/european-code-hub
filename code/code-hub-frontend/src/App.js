@@ -5,14 +5,14 @@ import 'typeface-roboto';
 import {
   BrowserRouter as Router,
   Switch,
-  Route
+  Route,
 } from "react-router-dom";
 import { LastLocationProvider } from 'react-router-last-location';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { setVerificationCookieAndProfileImageInStore } from './actions/httpActions'
 import { getVerificationToken } from './helper/cookieHelper'
-import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS } from './routes'
+import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, NOTFOUND } from './routes'
 import Home from './pages/Home';
 import Search from './pages/Search';
 import Add from './pages/Add';
@@ -22,6 +22,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import Contribute from './pages/Contribute'
 import Profile from './pages/Profile'
+import NotFound from './pages/NotFound'
 
 const theme = createMuiTheme({
   palette: {
@@ -55,6 +56,7 @@ class App extends React.Component {
               <Route path={`${USER}/:username?`} component={Profile} />
               <Route path={`${PROJECTS}/:projectname`} component={Project} />
               <Route path={PROJECTS} component={Catalogue} />
+              <Route component={NotFound} />
             </Switch>
           </LastLocationProvider>
         </Router>

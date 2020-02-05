@@ -5,7 +5,7 @@ import { withRouter } from "react-router";
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import ECHPaper from '../components/ECHPaper'
 import ECHCopyBox from '../components/ECHCopyBox'
-
+import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { getProjectByName } from '../actions/httpActions'
 import { resetCurrentProject } from '../slices/currentProjectSlice'
@@ -33,11 +33,17 @@ class Project extends Component {
     }
 
     render() {
+        const error = this.props.error
+        if (error) {
+            if (error.code === 404) {
+                return <NotFound />
+            }
+        }
         const content = this.props.isLoading
             ? <ECHLoadingIndicator />
             : this._renderContent()
 
-        return <PageWrapper headlineTitle={this.props.match.params.projectname} showBackButton={true}>
+        return <PageWrapper headlineTitle={this.props.currentProject.projectName} showBackButton={true}>
             {content}
         </PageWrapper>
     }
@@ -231,7 +237,8 @@ class Project extends Component {
 const mapStateToProps = state => {
     return {
         currentProject: state.currentProject.currentProject,
-        isLoading: state.currentProject.isLoading
+        isLoading: state.currentProject.isLoading,
+        error: state.currentProject.error
     }
 }
 
