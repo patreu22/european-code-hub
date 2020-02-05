@@ -13,7 +13,7 @@ import EuropeanLogo from '../assets/europe_logo.png';
 import { Link, useHistory } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux'
-import { HOME, USER, LOGIN, CONTRIBUTE } from '../routes'
+import { USER, LOGIN, CONTRIBUTE } from '../routes'
 import { logoutUser } from '../actions/cookieActions'
 
 const useStyles = makeStyles(theme => ({
@@ -71,7 +71,6 @@ function Header(props) {
     const onLogoutClicked = () => {
         handleMenuClose();
         props.logoutUser()
-        history.push(HOME)
     }
 
     const menuId = 'primary-search-account-menu';
