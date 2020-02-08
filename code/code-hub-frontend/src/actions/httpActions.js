@@ -144,13 +144,22 @@ export function setVerificationCookieAndProfileImageInStore(token) {
         const options = {
             method: 'GET',
             headers: { Authorization: token },
-            url: '/api/get/user/'
+            url: '/api/get/user'
         }
 
         dispatch(setVerificationCookie({ cookie: token }))
 
         axios(options)
-            .then(response => dispatch(fetchProfilePicture_SUCCESS({ profilePicture: response.data.profilePicture.data.data })))
-            .catch(err => dispatch(fetchProfilePicture_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+            .then(response => {
+                if (response.data.profilePicture) {
+                    dispatch(fetchProfilePicture_SUCCESS({ profilePicture: response.data.profilePicture.data.data }))
+                } else {
+                    dispatch(fetchProfilePicture_SUCCESS({ profilePicture: null }))
+                }
+            })
+            .catch(err => {
+                console.log(err)
+                dispatch(fetchProfilePicture_FAILURE({ errorCode: err.response.status, errorMessage: err.message }))
+            })
     }
 }

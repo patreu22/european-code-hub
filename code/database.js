@@ -219,17 +219,32 @@ function updateProjectReadme(projectName, readmeText) {
 
 
 function saveUserToDB({ username, password, mail, organization, profileImagePath, lastSessionToken }) {
-    const newUser = models.USER_MODEL({
+    const profileImageData = io.getProfileImageOrDefaultData(profileImagePath)
+    const newUserWithProfileImage = models.USER_MODEL({
         username,
         password,
         mail,
         organization,
-        profilePicture: { data: io.getProfileImageOrDefaultData(profileImagePath), contentType: "image/png" },
+        profilePicture: { data: profileImageData, contentType: "image/png" },
         lastSessionToken
     });
+    const newUserWithoutProfileImage = models.USER_MODEL({
+        username,
+        password,
+        mail,
+        organization,
+        lastSessionToken
+    });
+
+    const userToCreate = profileImageData
+        ? newUserWithProfileImage
+        : newUserWithoutProfileImage
+
     return new Promise(function (resolve, reject) {
-        newUser.save(function (err, newUser) {
-            io.deleteProfileImageFromHardDrive(profileImagePath)
+        userToCreate.save(function (err, newUser) {
+            if (profileImageData) {
+                io.deleteProfileImageFromHardDrive(profileImagePath)
+            }
             if (err) {
                 console.log(err);
                 reject(err)

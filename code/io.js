@@ -17,9 +17,8 @@ function getUploadMiddleware() {
 }
 
 function getProfileImageOrDefaultData(profileImagePath) {
-    console.log(`ProfileImagePath: ${profileImagePath}`)
     if (profileImagePath == null) {
-        return fs.readFileSync("profile-placeholder.png")
+        return null
     } else {
         const imageFile = fs.readFileSync(profileImagePath);
         var encode_image = imageFile.toString('base64');
