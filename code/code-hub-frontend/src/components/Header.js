@@ -7,7 +7,7 @@ import {
     Build as BuildIcon,
     Search as SearchIcon,
     Home as HomeIcon,
-    Person as PersonIcon
+    AccountCircle as AccountCircleIcon
 } from '@material-ui/icons/';
 import EuropeanLogo from '../assets/europe_logo.png';
 import { Link, useHistory } from 'react-router-dom';
@@ -108,12 +108,11 @@ function Header(props) {
 
     const lastMenuEntry = props.verificationCookie
         ? {
-            icon: <Avatar src={profileImagePicture} alt="Profile Image" />,
+            icon: <Avatar src={profileImagePicture} alt="Profile Image Placeholder" style={{ height: "30px", width: "30px" }} />,
             onClickHandler: handleProfileMenuOpen,
-            edge: "end"
         }
         : {
-            icon: <PersonIcon />,
+            icon: <AccountCircleIcon />,
             link: LOGIN,
             tooltipText: "Login",
             edge: "end"
