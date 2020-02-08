@@ -6,9 +6,12 @@ const io = require('./io')
 
 var db;
 
-function userExists({ mail }) {
+function userExists({ mail, username }) {
+    const queryObject = mail
+        ? { mail }
+        : { username }
     return new Promise(function (resolve, reject) {
-        getUser({ mail: mail })
+        getUser(queryObject)
             .then((user) => {
                 const userFound = user ? true : false;
                 resolve(userFound)

@@ -433,10 +433,22 @@ class ECHPaper extends Component {
                 })
                 .catch((error) => {
                     if (error.response.status === 400) {
-                        this.setState({
-                            mailError: true,
-                            mailErrorMessage: 'Mail already registered.'
-                        })
+                        if (error.response.data.errorType === "mailExists") {
+                            this.setState({
+                                mailError: true,
+                                mailErrorMessage: 'Mail already registered.'
+                            })
+                        } else if (error.response.data.errorType === "usernameExists") {
+                            this.setState({
+                                usernameError: true,
+                                usernameErrorMessage: 'Username already exists.'
+                            })
+                        } else {
+                            this.setState({
+                                formError: true,
+                                formErrorText: "Un unexpected error ocurred."
+                            })
+                        }
                     } else {
                         console.log("Unknown error.")
                     }
@@ -452,6 +464,18 @@ class ECHPaper extends Component {
                 this.setState({
                     passwordError: true,
                     passwordErrorMessage: 'Not a valid password.'
+                })
+            }
+            if (!validUsername) {
+                this.setState({
+                    usernameError: true,
+                    usernameErrorMessage: 'Not a valid username.'
+                })
+            }
+            if (!validOrganization) {
+                this.setState({
+                    organizationError: true,
+                    organizationErrorMessage: 'Not a valid organization name.'
                 })
             }
         }

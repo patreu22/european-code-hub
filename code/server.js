@@ -58,29 +58,37 @@ app.post('/api/create/project', function (req, res) {
 app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, res) => {
     const user = req.body;
     database.userExists({ mail: user.mail })
-        .then(userExists => {
-            if (!userExists) {
-                const profileImagePath = req.file ? req.file.path : null;
-                const hash = authentication.getPasswordHash(user.password)
-                database.saveUserToDB({
-                    username: user.username,
-                    password: hash,
-                    mail: user.mail,
-                    organization: user.organization,
-                    profileImagePath: profileImagePath,
-                }).then(savedUser => {
-                    if (savedUser) {
-                        res.sendStatus(200);
-                    } else {
-                        res.sendStatus(500);
-                    }
-                }).catch(err => {
-                    res.sendStatus(500)
-                });
+        .then(userMailExists => {
+            if (!userMailExists) {
+                database.userExists({ username: user.username })
+                    .then(userNameExists => {
+                        if (!userNameExists) {
+                            const profileImagePath = req.file ? req.file.path : null;
+                            const hash = authentication.getPasswordHash(user.password)
+                            database.saveUserToDB({
+                                username: user.username,
+                                password: hash,
+                                mail: user.mail,
+                                organization: user.organization,
+                                profileImagePath: profileImagePath,
+                            }).then(savedUser => {
+                                if (savedUser) {
+                                    res.sendStatus(200);
+                                } else {
+                                    res.sendStatus(500);
+                                }
+                            }).catch(err => {
+                                console.log(err)
+                                res.sendStatus(500)
+                            });
+                        } else {
+                            return res.status(400).send({ errorType: "usernameExists" });
+                        }
+                    })
             } else {
                 //400: Bad Request
                 //TODO: Handle to show error message
-                return res.sendStatus(400);
+                return res.status(400).send({ errorType: "mailExists" });
             }
         });
 });
