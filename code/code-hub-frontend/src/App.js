@@ -10,7 +10,7 @@ import {
 import { LastLocationProvider } from 'react-router-last-location';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
-import { setVerificationCookieAndProfileImageInStore } from './actions/httpActions'
+import { setVerificationCookieAndProfileImageAndUserNameInStore } from './actions/httpActions'
 import { getVerificationToken } from './helper/cookieHelper'
 import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, PROFILE } from './routes'
 import Home from './pages/Home';
@@ -39,7 +39,7 @@ class App extends React.Component {
   componentDidMount() {
     const token = getVerificationToken()
     if (token) {
-      this.props.setVerificationCookieAndProfileImageInStore(token)
+      this.props.setVerificationCookieAndProfileImageAndUserNameInStore(token)
     }
   }
 
@@ -72,7 +72,7 @@ const mapStateToProps = state => {
   return {}
 }
 
-const mapDispatchToProps = { setVerificationCookieAndProfileImageInStore }
+const mapDispatchToProps = { setVerificationCookieAndProfileImageAndUserNameInStore }
 
 export default connect(mapStateToProps, mapDispatchToProps)(App);
 

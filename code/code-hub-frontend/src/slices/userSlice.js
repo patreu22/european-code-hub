@@ -9,6 +9,7 @@ const resetUserDataDefault = {
 const defaultState = {
     cookie: '',
     profilePicture: '',
+    username: '',
     ...resetUserDataDefault
 }
 
@@ -23,14 +24,15 @@ const userSlice = createSlice({
                 cookie: payload.cookie
             }
         },
-        fetchProfilePicture_SUCCESS: (state, action) => {
+        fetchProfilePictureAndUsername_SUCCESS: (state, action) => {
             const payload = action.payload
             return {
                 ...state,
-                profilePicture: payload.profilePicture
+                profilePicture: payload.profilePicture,
+                username: payload.username
             }
         },
-        fetchProfilePicture_FAILURE: (state, action) => {
+        fetchProfilePictureAndUsername_FAILURE: (state, action) => {
             const payload = action.payload
             return {
                 ...state,
@@ -114,8 +116,8 @@ const userSlice = createSlice({
 
 export const {
     setVerificationCookie,
-    fetchProfilePicture_SUCCESS,
-    fetchProfilePicture_FAILURE,
+    fetchProfilePictureAndUsername_SUCCESS,
+    fetchProfilePictureAndUsername_FAILURE,
     resetUserData,
     resetToDefault,
     fetchUserData_BEGIN,

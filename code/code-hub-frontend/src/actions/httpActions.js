@@ -21,15 +21,15 @@ import {
     getSearchResults_FAILURE
 } from '../slices/searchSlice'
 import {
-    fetchProfilePicture_SUCCESS,
-    fetchProfilePicture_FAILURE,
+    fetchProfilePictureAndUsername_SUCCESS,
+    fetchProfilePictureAndUsername_FAILURE,
     fetchUserData_BEGIN,
     fetchUserData_SUCCESS,
     fetchUserData_FAILURE,
     fetchOwnUserData_BEGIN,
     fetchOwnUserData_SUCCESS,
     fetchOwnUserData_FAILURE,
-    setVerificationCookie
+    setVerificationCookie,
 } from '../slices/userSlice'
 
 
@@ -139,7 +139,7 @@ export function getUserByToken(token) {
     }
 }
 
-export function setVerificationCookieAndProfileImageInStore(token) {
+export function setVerificationCookieAndProfileImageAndUserNameInStore(token) {
     return function (dispatch) {
         const options = {
             method: 'GET',
@@ -150,16 +150,9 @@ export function setVerificationCookieAndProfileImageInStore(token) {
         dispatch(setVerificationCookie({ cookie: token }))
 
         axios(options)
-            .then(response => {
-                if (response.data.profilePicture) {
-                    dispatch(fetchProfilePicture_SUCCESS({ profilePicture: response.data.profilePicture.data.data }))
-                } else {
-                    dispatch(fetchProfilePicture_SUCCESS({ profilePicture: null }))
-                }
-            })
-            .catch(err => {
-                console.log(err)
-                dispatch(fetchProfilePicture_FAILURE({ errorCode: err.response.status, errorMessage: err.message }))
-            })
+            .then(response => response.data.profilePicture
+                ? dispatch(fetchProfilePictureAndUsername_SUCCESS({ profilePicture: response.data.profilePicture.data.data, username: response.data.username }))
+                : dispatch(fetchProfilePictureAndUsername_SUCCESS({ profilePicture: null, username: response.data.username })))
+            .catch(err => dispatch(fetchProfilePictureAndUsername_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }

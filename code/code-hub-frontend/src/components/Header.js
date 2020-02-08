@@ -84,7 +84,7 @@ function Header(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={onProfileLinkClicked}>Profile</MenuItem>
+            <MenuItem onClick={onProfileLinkClicked}>Your profile</MenuItem>
             <MenuItem onClick={onLogoutClicked}>Logout</MenuItem>
         </Menu>
     );
@@ -108,7 +108,7 @@ function Header(props) {
 
     const lastMenuEntry = props.verificationCookie
         ? {
-            icon: <Avatar src={profileImagePicture} alt="Profile Image Placeholder" style={{ height: "30px", width: "30px" }} />,
+            icon: <Avatar src={profileImagePicture} alt={props.username} style={{ height: "30px", width: "30px" }} />,
             onClickHandler: handleProfileMenuOpen,
         }
         : {
@@ -173,7 +173,8 @@ function Header(props) {
 const mapStateToProps = state => {
     return {
         verificationCookie: state.user.cookie,
-        profilePicture: state.user.profilePicture
+        profilePicture: state.user.profilePicture,
+        username: state.user.username
     }
 }
 

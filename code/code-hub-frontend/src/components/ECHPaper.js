@@ -14,7 +14,7 @@ import { objectExists } from '../helper/objectHelper'
 import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
 import { LOGIN } from '../routes'
-import { setVerificationCookieAndProfileImageInStore } from '../actions/httpActions'
+import { setVerificationCookieAndProfileImageAndUserNameInStore } from '../actions/httpActions'
 
 class ECHPaper extends Component {
 
@@ -377,7 +377,7 @@ class ECHPaper extends Component {
                     this.setState({
                         redirect: true
                     })
-                    this.props.setVerificationCookieAndProfileImageInStore(token)
+                    this.props.setVerificationCookieAndProfileImageAndUserNameInStore(token)
                 }).catch((error) => {
                     console.log(error)
                     if (error.response.status === 400) {
@@ -531,6 +531,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { incrementSteps, setVerificationCookieAndProfileImageInStore }
+const mapDispatchToProps = { incrementSteps, setVerificationCookieAndProfileImageAndUserNameInStore }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHPaper);
