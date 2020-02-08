@@ -153,7 +153,7 @@ function Header(props) {
         <AppBar position="static">
             <Toolbar className={classes.headerToolbar}>
                 <Link className={classes.headerLink} to="/">
-                    <img width={45} height={45} src={EuropeanLogo} alt="logo" />
+                    <img width={30} height={30} src={EuropeanLogo} alt="logo" />
                 </Link>
                 <Link className={classes.headerLink} to="/">
                     <Typography className={classes.title} variant="h6" noWrap>
