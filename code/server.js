@@ -66,7 +66,7 @@ app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, 
                     username: user.username,
                     password: hash,
                     mail: user.mail,
-                    position: user.position,
+                    organization: user.organization,
                     profileImagePath: profileImagePath,
                 }).then(savedUser => {
                     if (savedUser) {

@@ -6,7 +6,7 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { incrementSteps } from '../slices/createProjectSlice'
 import { registerUser } from '../helper/httpHelper'
-import { isValidEmail, isValidPassword, isValidUrl } from '../helper/validationHelper'
+import { isValidEmail, isValidPassword, isValidUrl, isValidText } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
 import { setVerificationToken } from '../helper/cookieHelper'
 import ImageUploader from 'react-images-upload';
@@ -23,12 +23,18 @@ class ECHPaper extends Component {
         this.state = {
             mail: '',
             password: '',
+            username: '',
+            organization: '',
             profileImage: null,
             secondsLeft: 10,
             mailError: false,
             mailErrorMessage: "",
             passwordError: false,
             passwordErrorMessage: "",
+            usernameError: false,
+            usernameErrorMessage: "",
+            organizationError: false,
+            organizationErrorMessage: "",
             formError: false,
             formErrorText: "",
             redirect: false,
@@ -127,8 +133,10 @@ class ECHPaper extends Component {
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
+                    {this._renderUserNameField()}
                     {this._renderEmailField()}
                     {this._renderPasswordField()}
+                    {this._renderOrganizationField()}
                     <div style={dropzoneWrapperStyle}>
                         <ImageUploader
                             withIcon={true}
@@ -183,6 +191,28 @@ class ECHPaper extends Component {
 
     _renderFormHelperText() {
         return <FormHelperText error={this.state.formError}>{this.state.formErrorText}</FormHelperText>
+    }
+
+    _renderUserNameField() {
+        return <ECHTextfield
+            label="Username"
+            onChange={(event) => this.onUsernameChanged(event)}
+            onBlur={(event) => this.onUsernameFieldBlurred(event)}
+            error={this.state.usernameError}
+            helperText={this.state.usernameErrorMessage}
+            onKeyDown={(e) => this._handleKeyDown(e, this.props)}
+        />
+    }
+
+    _renderOrganizationField() {
+        return <ECHTextfield
+            label="Organization"
+            onChange={(event) => this.onOrganizationChanged(event)}
+            onBlur={(event) => this.onOrganizationFieldBlurred(event)}
+            error={this.state.organizationError}
+            helperText={this.state.organizationErrorMessage}
+            onKeyDown={(e) => this._handleKeyDown(e, this.props)}
+        />
     }
 
     _renderEmailField() {
@@ -254,6 +284,26 @@ class ECHPaper extends Component {
         })
     }
 
+    onUsernameChanged(event) {
+        this.setState({
+            username: event.target.value,
+            usernameError: false,
+            usernameErrorMessage: "",
+            formError: false,
+            formErrorText: ''
+        })
+    }
+
+    onOrganizationChanged(event) {
+        this.setState({
+            organization: event.target.value,
+            organizationError: false,
+            organizationErrorMessage: "",
+            formError: false,
+            formErrorText: ''
+        })
+    }
+
     onUrlChanged(event) {
         this.setState({
             gitUrl: event.target.value,
@@ -270,6 +320,22 @@ class ECHPaper extends Component {
         this.setState({
             mailError: !isValid,
             mailErrorMessage: isValid ? "" : "Invalid Email address"
+        })
+    }
+
+    onUsernameFieldBlurred(event) {
+        const isValid = isValidText(event.target.value)
+        this.setState({
+            usernameError: !isValid,
+            usernameErrorMessage: isValid ? "" : "Invalid username."
+        })
+    }
+
+    onOrganizationFieldBlurred(event) {
+        const isValid = isValidText(event.target.value)
+        this.setState({
+            organizationError: !isValid,
+            organizationErrorMessage: isValid ? "" : "Invalid username."
         })
     }
 
@@ -357,8 +423,10 @@ class ECHPaper extends Component {
         //TODO: Data validation, Email check and long password check
         const validMail = isValidEmail(this.state.mail)
         const validPassword = isValidPassword(this.state.password)
-        if (validMail && validPassword) {
-            registerUser(`user-${this.state.mail}`, this.state.password, this.state.mail, "novice", this.state.profileImage)
+        const validUsername = isValidText(this.state.username)
+        const validOrganization = isValidText(this.state.organization)
+        if (validMail && validPassword && validUsername && validOrganization) {
+            registerUser(this.state.username, this.state.password, this.state.mail, this.state.organization, this.state.profileImage)
                 .then((response) => {
                     this.props.onRegistrationDone();
                     this._startCountdown();

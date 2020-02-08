@@ -176,7 +176,7 @@ function getUser({ token, mail, username, stripData = true }) {
 
     var findUserRequest = User.findOne({ [key]: value });
     if (stripData) {
-        findUserRequest = findUserRequest.select("username mail position profilePicture");
+        findUserRequest = findUserRequest.select("username mail organization profilePicture");
     }
 
     return new Promise(function (resolve, reject) {
@@ -215,21 +215,21 @@ function updateProjectReadme(projectName, readmeText) {
 }
 
 
-function saveUserToDB({ username, password, mail, position, profileImagePath, lastSessionToken }) {
+function saveUserToDB({ username, password, mail, organization, profileImagePath, lastSessionToken }) {
     const newUser = models.USER_MODEL({
-        username: username,
-        password: password,
-        mail: mail,
-        position: position,
+        username,
+        password,
+        mail,
+        organization,
         profilePicture: { data: io.getProfileImageOrDefaultData(profileImagePath), contentType: "image/png" },
-        lastSessionToken: lastSessionToken
+        lastSessionToken
     });
     return new Promise(function (resolve, reject) {
         newUser.save(function (err, newUser) {
             io.deleteProfileImageFromHardDrive(profileImagePath)
             if (err) {
                 console.log(err);
-                reject(error)
+                reject(err)
 
             } else {
                 console.log(newUser);

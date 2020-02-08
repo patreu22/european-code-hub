@@ -1,12 +1,12 @@
 import * as axios from 'axios';
 
-export function registerUser(username, password, mail, position, profileImageFile) {
+export function registerUser(username, password, mail, organization, profileImageFile) {
     var formData = new FormData();
     formData.append("profileImageFile", profileImageFile);
     formData.append("username", username);
     formData.append("password", password);
     formData.append("mail", mail);
-    formData.append("position", position);
+    formData.append("organization", organization);
 
     const options = {
         method: 'POST',

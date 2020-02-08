@@ -95,7 +95,7 @@ class Profile extends Component {
                 <div style={profileTextStyle}>
                     <h2>Username: {currentData.username}</h2>
                     <h2>Mail: {currentData.mail}</h2>
-                    <h2>Position: {currentData.position}</h2>
+                    <h2>Organization: {currentData.organization}</h2>
                 </div>
             </div>
         </div>
