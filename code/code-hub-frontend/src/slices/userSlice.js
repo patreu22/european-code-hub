@@ -108,7 +108,7 @@ const userSlice = createSlice({
                 ...resetUserDataDefault
             }
         },
-        resetToDefault: (state) => {
+        resetToDefault: () => {
             return defaultState
         }
     }
