@@ -8,7 +8,7 @@ import ECHPaper from '../ECHPaper'
 class ECHChooseDialogue extends Component {
 
     render() {
-        return <Box flexDirection="row" flex="1" display="flex">
+        return <Box style={{ flexDirection: "row", display: 'flex' }}>
             <ECHPaper title="Do you use a Github repository?" buttonTitle="Add project via git link" onButtonClickHandler={this.onGitClick}>
                 <div>
                     Amazing, we can do nearly all the work for you!

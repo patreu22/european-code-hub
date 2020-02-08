@@ -68,7 +68,7 @@ class ECHPaper extends Component {
             backgroundColor: 'F5F5F5',
             minWidth: this.props.minWidth ?? this.props.width ?? '29vw',
             maxWidth: this.props.maxWidth ?? this.props.width ?? '100vw',
-            alignSelf: 'baseline'
+            alignSelf: 'stretch',
         }
 
         if (this.state.secondsLeft > 0 && !this.state.redirect) {
