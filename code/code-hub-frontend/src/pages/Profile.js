@@ -91,7 +91,7 @@ class Profile extends Component {
 
         return <div style={contentWrapperStyle}>
             <div style={rowStyle}>
-                {currentData.profilePicture && <Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />}
+                {<Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />}
                 <div style={profileTextStyle}>
                     <h2>Username: {currentData.username}</h2>
                     <h2>Mail: {currentData.mail}</h2>
