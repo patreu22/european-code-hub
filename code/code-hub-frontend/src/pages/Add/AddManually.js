@@ -1,19 +1,19 @@
 import React, { Component, } from 'react';
 import { connect } from 'react-redux'
 import { Divider } from '@material-ui/core'
-import ECHPaper from '../ECHPaper'
-import ECHBackButton from './ECHBackButton'
-import ECHButton from '../ECHButton'
-import ECHTextfield from '../ECHTextfield'
-import ECHMultipleSelect from '../ECHMultipleSelect'
+import PageWrapper from '../../components/PageWrapper'
+import ECHPaper from '../../components/ECHPaper'
+import ECHButton from '../../components/ECHButton'
+import ECHTextfield from '../../components/ECHTextfield'
+import ECHMultipleSelect from '../../components/ECHMultipleSelect'
 import { objectExists } from '../../helper/objectHelper'
 import { isValidText, isValidUrl } from '../../helper/validationHelper'
-import { formParagraphStyle } from './dialogueStyles'
+import { formParagraphStyle } from '../../components/addProjectDialogues/dialogueStyles'
 
 import { updateProjectDataAttribute } from '../../slices/createProjectSlice'
 import { sendNewProjectToBackend } from '../../actions/httpActions'
 
-class ECHManuallyDialogue extends Component {
+class AddManually extends Component {
 
     constructor(props) {
         super(props)
@@ -50,7 +50,7 @@ class ECHManuallyDialogue extends Component {
     render() {
         //TODO: This should not be here, but the componentDidUpdate method is not triggered, so well well..
         if (this.props.error) {
-            if (this.props.theError.code === 409 && !this.state.projectNameErrorMessage) {
+            if (this.props.code === 409 && !this.state.projectNameErrorMessage) {
                 this.setState({
                     projectNameErrorMessage: "A project with this name already exists"
                 })
@@ -58,10 +58,11 @@ class ECHManuallyDialogue extends Component {
             }
         }
         const title = objectExists(this.props.projectData) ? "Check data" : "Enter data"
-        return <div>
-            <ECHPaper width={"40vw"} title={title}>{this._renderContentField()}</ECHPaper>
-            <ECHBackButton />
-        </div>
+        return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
+            <div>
+                <ECHPaper width={"40vw"} title={title}>{this._renderContentField()}</ECHPaper>
+            </div>
+        </PageWrapper >
     }
 
     _renderContentField() {
@@ -245,4 +246,4 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = { updateProjectDataAttribute, sendNewProjectToBackend }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ECHManuallyDialogue);
+export default connect(mapStateToProps, mapDispatchToProps)(AddManually);

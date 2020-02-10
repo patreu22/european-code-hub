@@ -1,19 +1,19 @@
 import React, { Component, } from 'react';
 import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import { Divider, FormHelperText } from '@material-ui/core'
-import ECHPaper from '../ECHPaper'
-import ECHButton from '../ECHButton'
-import ECHBackButton from './ECHBackButton'
-import ECHManuallyDialogue from './ECHManuallyDialogue'
+import PageWrapper from '../../components/PageWrapper'
+import ECHPaper from '../../components/ECHPaper'
+import ECHButton from '../../components/ECHButton'
 import { parseToJsonObject } from '../../helper/fileHelper'
 import { objectExists } from '../../helper/objectHelper'
+import { ADD_MANUALLY } from '../../routes'
 
 import { processJson } from '../../actions/jsonActions'
 
-import { formParagraphStyle, dropzoneWrapperStyle } from './dialogueStyles'
 import ImageUploader from 'react-images-upload';
 
-class ECHJsonDialogue extends Component {
+class AddViaJson extends Component {
 
     constructor(props) {
         super(props);
@@ -31,26 +31,39 @@ class ECHJsonDialogue extends Component {
     }
 
     render() {
+        var content;
         switch (this.props.currentStep) {
+            case 0:
+                content = this._renderFirstStep();
+                break
             case 1:
-                console.log("Step 1")
-                return this._renderFirstStep();
-            case 2:
-                console.log("Step 2")
-                return <ECHManuallyDialogue />
+                return <Redirect to={ADD_MANUALLY} />
             default:
-                console.log("Default step")
-                return this._renderFirstStep();
+                content = this._renderFirstStep();
         }
+        return <PageWrapper headlineTitle={"Add project via Code.json file"} showBackButton={true}>{content}</PageWrapper>
     }
 
     _renderFirstStep = () => <div>
         <ECHPaper title="Upload file">{this._renderContentField()}</ECHPaper>
-        <ECHBackButton />
     </div>
 
     ///TODO: Create file preview for JSON files*/
     _renderContentField = () => {
+        const formParagraphStyle = {
+            textAlign: 'center',
+            padding: '2vH 1vw 2vH 1vw',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+        }
+
+        const dropzoneWrapperStyle = {
+            maxWidth: '80%',
+            paddingBottom: '1vw',
+        }
+
+
         return <div>
             {this.props.title ? <Divider /> : null}
             <form style={formParagraphStyle}>
@@ -144,4 +157,4 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = { processJson }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ECHJsonDialogue);
+export default connect(mapStateToProps, mapDispatchToProps)(AddViaJson);

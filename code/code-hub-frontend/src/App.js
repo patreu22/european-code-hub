@@ -12,10 +12,13 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { setVerificationCookieAndProfileImageAndUserNameInStore } from './actions/httpActions'
 import { getVerificationToken } from './helper/cookieHelper'
-import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, PROFILE } from './routes'
+import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, PROFILE, ADD_VIA_GITHUB, ADD_VIA_JSON, ADD_MANUALLY } from './routes'
 import Home from './pages/Home';
 import Search from './pages/Search';
-import Add from './pages/Add';
+import AddDefault from './pages/Add/AddDefault';
+import AddViaGithub from './pages/Add/AddViaGithub'
+import AddViaJson from './pages/Add/AddViaJson'
+import AddManually from './pages/Add/AddManually'
 import Catalogue from './pages/Catalogue'
 import Project from './pages/Project'
 import Login from './pages/Login'
@@ -50,7 +53,10 @@ class App extends React.Component {
           <LastLocationProvider>
             <Switch>
               <Route exact path={HOME} component={Home} />
-              <Route path={ADD} component={Add} />
+              <Route path={ADD_VIA_JSON} component={AddViaJson} />
+              <Route path={ADD_VIA_GITHUB} component={AddViaGithub} />
+              <Route path={ADD_MANUALLY} component={AddManually} />
+              <Route path={ADD} component={AddDefault} />
               <Route path={CONTRIBUTE} component={Contribute} />
               <Route path={`${SEARCH}/:searchterm?`} component={Search} />
               <Route path={LOGIN} component={Login} />

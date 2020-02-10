@@ -1,5 +1,8 @@
 export const HOME = "/";
 export const ADD = "/add"
+export const ADD_VIA_GITHUB = ADD + "/github"
+export const ADD_VIA_JSON = ADD + "/json"
+export const ADD_MANUALLY = ADD + "/manually"
 export const CONTRIBUTE = "/contribute"
 export const SEARCH = "/search"
 export const LOGIN = "/login"
