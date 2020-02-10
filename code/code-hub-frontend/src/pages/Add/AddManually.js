@@ -8,7 +8,6 @@ import ECHTextfield from '../../components/ECHTextfield'
 import ECHMultipleSelect from '../../components/ECHMultipleSelect'
 import { objectExists } from '../../helper/objectHelper'
 import { isValidText, isValidUrl } from '../../helper/validationHelper'
-import { formParagraphStyle } from '../../components/addProjectDialogues/dialogueStyles'
 
 import { updateProjectDataAttribute } from '../../slices/createProjectSlice'
 import { sendNewProjectToBackend } from '../../actions/httpActions'
@@ -76,6 +75,14 @@ class AddManually extends Component {
         const contactName = this.props.projectData.contact ? this.props.projectData.contact.name : null
         const contactMail = this.props.projectData.contact ? this.props.projectData.contact.email : null
         const status = this.props.projectData ? this.props.projectData.status ?? [] : []
+
+        const formParagraphStyle = {
+            textAlign: 'center',
+            padding: '2vH 1vw 2vH 1vw',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+        }
 
         return <form style={formParagraphStyle}>
             {this._renderField({

@@ -11,7 +11,7 @@ import { ADD_MANUALLY } from '../../routes'
 
 import { processJson } from '../../actions/jsonActions'
 
-import ImageUploader from 'react-images-upload';
+import ImageUploader from 'react-images-upload-json-extension';
 
 class AddViaJson extends Component {
 
