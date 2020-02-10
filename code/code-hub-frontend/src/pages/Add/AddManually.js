@@ -9,7 +9,7 @@ import ECHMultipleSelect from '../../components/ECHMultipleSelect'
 import { objectExists } from '../../helper/objectHelper'
 import { isValidText, isValidUrl } from '../../helper/validationHelper'
 
-import { updateProjectDataAttribute } from '../../slices/createProjectSlice'
+import { updateProjectDataAttribute, resetError } from '../../slices/createProjectSlice'
 import { sendNewProjectToBackend } from '../../actions/httpActions'
 
 class AddManually extends Component {
@@ -18,6 +18,7 @@ class AddManually extends Component {
         super(props)
         this.state = {
             projectNameErrorMessage: '',
+            showRemoteError: true,
             projectDescriptionErrorMessage: '',
             organizationErrorMessage: '',
             repoUrlErrorMessage: '',
@@ -35,31 +36,22 @@ class AddManually extends Component {
         this.performManuallyHandling = this.performManuallyHandling.bind(this)
     }
 
-    // componentDidUpdate(prevProps) {
-    //     if (this.props.error) {
-    //         if (this.props.error.code === 409 && !this.state.projectNameErrorMessage) {
-    //             this.setState({
-    //                 projectNameErrorMessage: "A project with this name already exists"
-    //             })
-    //             window.scrollTo(0, 0)
-    //         }
-    //     }
-    // }
-
-    render() {
-        //TODO: This should not be here, but the componentDidUpdate method is not triggered, so well well..
-        if (this.props.error) {
-            if (this.props.code === 409 && !this.state.projectNameErrorMessage) {
+    componentDidUpdate(prevProps) {
+        const errorMessage = "A project with this name already exists"
+        if (this.props.error && this.state.showRemoteError && this.state.projectNameErrorMessage !== errorMessage) {
+            if (this.props.error.code === 409) {
                 this.setState({
-                    projectNameErrorMessage: "A project with this name already exists"
+                    projectNameErrorMessage: errorMessage
                 })
-                window.scrollTo(0, 0)
+                window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
             }
         }
-        const title = objectExists(this.props.projectData) ? "Check data" : "Enter data"
+    }
+
+    render() {
         return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
             <div>
-                <ECHPaper width={"40vw"} title={title}>{this._renderContentField()}</ECHPaper>
+                <ECHPaper width={"40vw"} title="Information dialogue">{this._renderContentField()}</ECHPaper>
             </div>
         </PageWrapper >
     }
@@ -224,11 +216,19 @@ class AddManually extends Component {
     }
 
     onTextfieldChanged(jsonKey, event) {
+        if (jsonKey === "projectName") {
+            this.setState({
+                projectNameErrorMessage: '',
+                showRemoteError: false
+            })
+        }
         this.props.updateProjectDataAttribute({ key: jsonKey, value: event.target.value })
     }
 
     performManuallyHandling() {
         if (objectExists(this.props.projectData)) {
+            this.props.resetError()
+            this.setState({ showRemoteError: true })
             this.props.sendNewProjectToBackend(this.props.projectData)
         } else {
             //TODO: Handle review process
@@ -251,6 +251,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { updateProjectDataAttribute, sendNewProjectToBackend }
+const mapDispatchToProps = { updateProjectDataAttribute, sendNewProjectToBackend, resetError }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddManually);

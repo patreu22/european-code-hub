@@ -31,9 +31,6 @@ app.post('/api/create/project', function (req, res) {
         database.projectExists({ projectName: projectData.projectName })
             .then(projectExists => {
                 if (projectExists) {
-                    //TODO: Don't accept it and send error
-                    //TODO: Handle on frontend
-                    //TODO: Check Git link
                     return res.status(409).send({ errorType: "projectNameExists" })
                 } else {
                     database.saveProjectToDB(projectData)
@@ -57,7 +54,12 @@ app.post('/api/create/project', function (req, res) {
                                     )
                                     .catch((err) => {
                                         console.log(err)
-                                        res.status(err.code || 400).send(err.error || "Undefined Error")
+                                        if (err.code === 404) {
+                                            //Means the Readme file was not found/provided, but project was saved anyway
+                                            res.sendStatus(200)
+                                        } else {
+                                            res.status(err.code || 400).send(err.error || "Undefined Error")
+                                        }
                                     })
                             } else {
                                 //202: Accepted but could not be processed

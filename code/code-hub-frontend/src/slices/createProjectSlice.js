@@ -7,7 +7,6 @@ const defaultState = {
     addProjectCurrentStep: defaultAddProjectCurrentStep,
     isLoading: false,
     successfullySubmitted: false
-
 }
 
 const createProjectSlice = createSlice({
@@ -98,6 +97,12 @@ const createProjectSlice = createSlice({
                 }
             }
         },
+        resetError: (state) => {
+            return {
+                ...state,
+                error: {}
+            }
+        },
         resetToDefaultState: () => {
             return defaultState
         }
@@ -114,8 +119,8 @@ export const {
     sendProject_BEGIN,
     sendProject_SUCCESS,
     sendProject_FAILURE,
-    resetToDefaultState
-
+    resetToDefaultState,
+    resetError
 } = createProjectSlice.actions
 
 export default createProjectSlice;
