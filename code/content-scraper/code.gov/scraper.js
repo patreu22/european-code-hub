@@ -26,7 +26,6 @@ function scrapeCodeGov() {
         .then((response) => {
             const repos = response.data.repos;
             repos.forEach(repo => {
-                //TODO do an API call
                 registerProject({ projectData: transformRepoToProjectData(repo) })
             });
         })

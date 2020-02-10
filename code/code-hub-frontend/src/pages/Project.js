@@ -72,10 +72,7 @@ class Project extends Component {
                 </div>
                 {this._renderReadme()}
             </div>
-        } else {
-            //TODO: No data Placeholder
-            return <div></div>
-        }
+        } else return <div />
     }
 
     _renderDescriptionBox() {

@@ -379,7 +379,6 @@ class ECHPaper extends Component {
     }
 
     _performLogin() {
-        //TODO: Loading indicator
         const validMail = isValidEmail(this.state.mail)
         const validPassword = isValidPassword(this.state.password)
         if (validMail && validPassword) {
@@ -421,8 +420,8 @@ class ECHPaper extends Component {
     }
 
 
+    //TODO: Git fetch
     _performGitFetch() {
-        console.log("Hello?")
         const validUrl = isValidUrl(this.state.gitUrl)
         if (!validUrl) {
             this.setState({

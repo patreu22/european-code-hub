@@ -2,8 +2,6 @@ import Cookies from 'js-cookie'
 
 export function setVerificationToken(token) {
     Cookies.set("token", token);
-    //TODO: Redux store?
-    console.log("- Token set -")
 }
 
 export function removeVerificationToken() {

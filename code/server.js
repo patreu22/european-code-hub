@@ -118,7 +118,7 @@ app.get('/api/get/project', function (req, res) {
     const projectName = req.query.projectName;
     database.getProjectByName(projectName)
         .then(projects => res.status(200).send(projects))
-        .catch((err) => res.sendStatus(err.code))
+        .catch((err) => { res.sendStatus(err.response.status) })
 });
 
 app.get('/api/get/projects/', function (req, res) {

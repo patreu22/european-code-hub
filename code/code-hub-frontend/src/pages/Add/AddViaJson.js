@@ -48,7 +48,6 @@ class AddViaJson extends Component {
         <ECHPaper title="Upload file">{this._renderContentField()}</ECHPaper>
     </div>
 
-    ///TODO: Create file preview for JSON files*/
     _renderContentField = () => {
         const formParagraphStyle = {
             textAlign: 'center',

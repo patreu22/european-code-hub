@@ -91,7 +91,6 @@ class AddManually extends Component {
                 errorMessage: this.state.projectNameErrorMessage,
                 validationType: "text",
             })}
-            {/*TODO: Transform into Textbox instead Textfield*/}
             {this._renderField({
                 label: "Project description",
                 jsonKey: "projectDescription",
