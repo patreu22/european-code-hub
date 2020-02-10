@@ -1,5 +1,4 @@
 import * as axios from 'axios';
-import { getVerificationToken } from '../helper/cookieHelper'
 import {
     loadFilteredData_BEGIN,
     loadFilteredData_SUCCESS,
@@ -87,13 +86,11 @@ export function sendNewProjectToBackend(projectData) {
     }
 }
 
-//TODO: Remove all getVerificationToken() functions and use Redux
 export function getProjectByName(projectName) {
     return function (dispatch) {
         dispatch(fetchProjectByName_BEGIN())
         const options = {
             method: 'GET',
-            headers: { Authorization: getVerificationToken() },
             url: '/api/get/project',
             params: { projectName }
         }
@@ -104,14 +101,13 @@ export function getProjectByName(projectName) {
     }
 }
 
-//TODO: Change to username on server
 export function getUserByName(username) {
     return function (dispatch) {
         const options = {
             method: 'GET',
             url: '/api/get/user',
             params: {
-                username: username
+                username
             }
         }
 

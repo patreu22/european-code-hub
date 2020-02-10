@@ -64,7 +64,7 @@ app.post('/api/create/project', function (req, res) {
                                     })
                             } else {
                                 //202: Accepted but could not be processed
-                                //TODO: Handle that in frontend
+                                //TODO: Handle that in frontend - Show error
                                 res.sendStatus(202)
                             }
                         }).catch(err => {
@@ -162,9 +162,8 @@ app.get('/api/get/user', function (req, res) {
     if (!username && !authHeader) {
         return res.status(404).send({ msg: "Neither username nor auth token provided" });
     } else {
-        //TODO: Change mail to username when username system is established
         const request = username
-            ? database.getUser({ mail: username, stripData: true })
+            ? database.getUser({ username, stripData: true })
             : database.getUser({ token: authHeader, stripData: true })
 
         request

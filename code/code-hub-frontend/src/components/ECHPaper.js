@@ -15,6 +15,7 @@ import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
 import { LOGIN } from '../routes'
 import { setVerificationCookieAndProfileImageAndUserNameInStore } from '../actions/httpActions'
+import ECHLoadingIndicator from './ECHLoadingIndicator';
 
 class ECHPaper extends Component {
 
@@ -41,6 +42,8 @@ class ECHPaper extends Component {
             gitUrl: "",
             gitUrlError: false,
             gitUrlErrorMessage: "",
+            loginLoading: false,
+            loginHeight: 0
         };
         this.timer = 0;
         this._performLogin = this._performLogin.bind(this)
@@ -52,6 +55,13 @@ class ECHPaper extends Component {
 
     componentWillUnmount() {
         clearInterval(this.timer);
+    }
+
+    componentDidMount() {
+        if (this.props.type === "login") {
+            const height = document.getElementById("loginContainer").clientHeight;
+            this.setState({ loginHeight: height })
+        }
     }
 
     render() {
@@ -119,7 +129,10 @@ class ECHPaper extends Component {
 
         const paragraphStyle = this.props.buttonTitle ? textWhenButtonVisible : textWhenButtonInvisible
         if (this.props.type === "login") {
-            return <div>
+            if (this.state.loginLoading) {
+                return <div style={{ height: this.state.loginHeight, display: 'flex', justifyContent: 'center' }}><ECHLoadingIndicator /></div>
+            }
+            return <div id="loginContainer">
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
                     {this._renderEmailField()}
@@ -370,11 +383,13 @@ class ECHPaper extends Component {
         const validMail = isValidEmail(this.state.mail)
         const validPassword = isValidPassword(this.state.password)
         if (validMail && validPassword) {
+            this.setState({ loginLoading: true })
             requestLoginToken(this.state.mail, this.state.password)
                 .then((token) => {
                     setVerificationToken(token);
                     this.setState({
-                        redirect: true
+                        redirect: true,
+                        loginLoading: false
                     })
                     this.props.setVerificationCookieAndProfileImageAndUserNameInStore(token)
                 }).catch((error) => {
@@ -382,7 +397,8 @@ class ECHPaper extends Component {
                     if (error.response.status === 400) {
                         this.setState({
                             formError: true,
-                            formErrorText: 'Credentials do not match.'
+                            formErrorText: 'Credentials do not match.',
+                            loginLoading: false
                         })
                     } else {
                         console.log("Unknown error.")
@@ -526,7 +542,7 @@ ECHPaper.defaultProps = {
 const mapStateToProps = state => {
     return {
         projectData: state.createProject.projectData,
-        step: state.createProject.step
+        step: state.createProject.step,
     }
 }
 

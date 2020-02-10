@@ -270,7 +270,6 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
     });
 }
 
-//TODO: Handle duplicates "Project already registered"
 function saveProjectToDB(projectData, creatorName) {
     return new Promise(function (resolve, reject) {
 
