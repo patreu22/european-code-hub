@@ -40,13 +40,18 @@ app.post('/api/create/project', function (req, res) {
                                     res.sendStatus(400);
                                 }
                             })
-                            .catch((err) => res.sendStatus(400))
+                            .catch((err) => {
+                                console.log(err)
+                                res.status(err.code || 400).send(err.error || "Undefined Error")
+                            })
                     )
                     .catch((err) => {
-                        res.sendStatus(400)
+                        console.log(err)
+                        res.status(err.code || 400).send(err.error || "Undefined Error")
                     })
             } else {
                 //202: Accepted but could not be processed
+                //TODO: Handle that in frontend
                 res.sendStatus(202)
             }
         }).catch(error => {

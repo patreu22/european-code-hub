@@ -30,14 +30,34 @@ const createProjectSlice = createSlice({
         },
         updateProjectDataAttribute: (state, action) => {
             const payload = action.payload;
-            const updated = {
-                ...state,
-                projectData: {
-                    ...state.projectData,
-                    [payload.key]: payload.value
+            const key = payload.key
+            const keyPair = key.split(".")
+            if (keyPair.length === 1) {
+                const updated = {
+                    ...state,
+                    projectData: {
+                        ...state.projectData,
+                        [payload.key]: payload.value
+                    }
                 }
+                return updated;
+            } else if (keyPair.length === 2) {
+                const outerKey = keyPair[0]
+                const innerKey = keyPair[1]
+                const updated = {
+                    ...state,
+                    projectData: {
+                        ...state.projectData,
+                        [outerKey]: {
+                            ...state.projectData[outerKey],
+                            [innerKey]: payload.value
+                        }
+                    }
+                }
+                return updated;
+            } else {
+                return state
             }
-            return updated;
         },
         incrementSteps: (state) => {
             const updated = {
