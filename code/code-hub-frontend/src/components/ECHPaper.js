@@ -54,7 +54,6 @@ class ECHPaper extends Component {
         clearInterval(this.timer);
     }
 
-
     render() {
         const catalogueBoxStyle = {
             alignContent: 'center',

@@ -36,7 +36,27 @@ class ECHManuallyDialogue extends Component {
         this.performManuallyHandling = this.performManuallyHandling.bind(this)
     }
 
+    // componentDidUpdate(prevProps) {
+    //     if (this.props.error) {
+    //         if (this.props.error.code === 409 && !this.state.projectNameErrorMessage) {
+    //             this.setState({
+    //                 projectNameErrorMessage: "A project with this name already exists"
+    //             })
+    //             window.scrollTo(0, 0)
+    //         }
+    //     }
+    // }
+
     render() {
+        //TODO: This should not be here, but the componentDidUpdate method is not triggered, so well well..
+        if (this.props.error) {
+            if (this.props.theError.code === 409 && !this.state.projectNameErrorMessage) {
+                this.setState({
+                    projectNameErrorMessage: "A project with this name already exists"
+                })
+                window.scrollTo(0, 0)
+            }
+        }
         const title = objectExists(this.props.projectData) ? "Check data" : "Enter data"
         return <div>
             <ECHPaper width={"40vw"} title={title}>{this._renderContentField()}</ECHPaper>
@@ -219,6 +239,7 @@ class ECHManuallyDialogue extends Component {
 const mapStateToProps = state => {
     return {
         projectData: state.createProject.projectData,
+        error: state.createProject.error
     }
 }
 

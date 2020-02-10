@@ -22,6 +22,18 @@ function userExists({ mail, username }) {
     });
 }
 
+function projectExists({ projectName }) {
+    return new Promise(function (resolve) {
+        getProjectByName(projectName)
+            .then((project) => {
+                const projectFound = project ? true : false;
+                resolve(projectFound)
+            })
+            .catch(() => resolve(false))
+    });
+}
+
+
 function connectToDb(db_url) {
     mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true });
     db = mongoose.connection;
@@ -260,14 +272,16 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
 
 //TODO: Handle duplicates "Project already registered"
 function saveProjectToDB(projectData) {
-    const newProject = models.PROJECT_MODEL({
-        ...projectData,
-        date: {
-            created: projectData.dateCreated,
-            lastModified: projectData.dateLastModified
-        }
-    })
     return new Promise(function (resolve, reject) {
+
+        //TODO: This does not look very Code.json compliant - Check it!
+        const newProject = models.PROJECT_MODEL({
+            ...projectData,
+            date: {
+                created: projectData.dateCreated,
+                lastModified: projectData.dateLastModified
+            }
+        })
         newProject.save(function (err, newProject) {
             if (err) {
                 console.log(err);
@@ -393,6 +407,7 @@ module.exports = {
     updateSessionToken: updateSessionToken,
     getUser: getUser,
     getProjectByName: getProjectByName,
+    projectExists: projectExists,
     updateProjectReadme: updateProjectReadme,
     getProjectChunk: getProjectChunk,
     indexProjects: indexProjects,

@@ -20,44 +20,57 @@ app.get('/', function (req, res) {
 });
 
 app.get('/ping', function (req, res) {
-    database.indexProjects();
+    // database.indexProjects();
     return res.send('pong');
 });
 
 app.post('/api/create/project', function (req, res) {
     const projectData = req.body.projectData;
-    database.saveProjectToDB(projectData)
-        .then(response => {
-            if (response.saved) {
-                io.getRemoteMarkdownFileAsDataString(projectData.repoUrl)
-                    .then(
-                        (markdown) => database.updateProjectReadme(projectData.projectName, markdown)
-                            .then((response) => {
-                                if (response === true) {
-                                    //200: Accepted
-                                    res.sendStatus(200);
-                                } else {
-                                    res.sendStatus(400);
-                                }
-                            })
-                            .catch((err) => {
-                                console.log(err)
-                                res.status(err.code || 400).send(err.error || "Undefined Error")
-                            })
-                    )
-                    .catch((err) => {
-                        console.log(err)
-                        res.status(err.code || 400).send(err.error || "Undefined Error")
-                    })
-            } else {
-                //202: Accepted but could not be processed
-                //TODO: Handle that in frontend
-                res.sendStatus(202)
-            }
-        }).catch(error => {
-            //500: Internal Server error
-            res.sendStatus(500);
-        })
+
+    if (projectData.projectName) {
+        database.projectExists({ projectName: projectData.projectName })
+            .then(projectExists => {
+                if (projectExists) {
+                    //TODO: Don't accept it and send error
+                    //TODO: Handle on frontend
+                    //TODO: Check Git link
+                    return res.status(409).send({ errorType: "projectNameExists" })
+                } else {
+                    database.saveProjectToDB(projectData)
+                        .then(response => {
+                            if (response.saved) {
+                                io.getRemoteMarkdownFileAsDataString(projectData.repoUrl)
+                                    .then(
+                                        (markdown) => database.updateProjectReadme(projectData.projectName, markdown)
+                                            .then((response) => {
+                                                if (response === true) {
+                                                    //200: Accepted
+                                                    res.sendStatus(200);
+                                                } else {
+                                                    res.sendStatus(400);
+                                                }
+                                            })
+                                            .catch((err) => {
+                                                console.log(err)
+                                                res.status(err.code || 400).send(err.error || "Undefined Error")
+                                            })
+                                    )
+                                    .catch((err) => {
+                                        console.log(err)
+                                        res.status(err.code || 400).send(err.error || "Undefined Error")
+                                    })
+                            } else {
+                                //202: Accepted but could not be processed
+                                //TODO: Handle that in frontend
+                                res.sendStatus(202)
+                            }
+                        }).catch(err => {
+                            //500: Internal Server error
+                            res.status(err.code || 500).send(err.error || "Internal Server Error");
+                        })
+                }
+            })
+    }
 })
 
 app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, res) => {
