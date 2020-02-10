@@ -8,6 +8,8 @@ import ECHTextfield from '../../components/ECHTextfield'
 import ECHMultipleSelect from '../../components/ECHMultipleSelect'
 import { objectExists } from '../../helper/objectHelper'
 import { isValidText, isValidUrl } from '../../helper/validationHelper'
+import { Redirect } from 'react-router-dom'
+import { PROJECTS } from '../../routes'
 
 import { updateProjectDataAttribute, resetError } from '../../slices/createProjectSlice'
 import { sendNewProjectToBackend } from '../../actions/httpActions'
@@ -49,11 +51,15 @@ class AddManually extends Component {
     }
 
     render() {
-        return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
-            <div>
-                <ECHPaper width={"40vw"} title="Information dialogue">{this._renderContentField()}</ECHPaper>
-            </div>
-        </PageWrapper >
+        if (this.props.successfullySubmitted) {
+            return <Redirect to={`${PROJECTS}/${this.props.projectData.projectName}`} />
+        } else {
+            return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
+                <div>
+                    <ECHPaper width={"40vw"} title="Information dialogue">{this._renderContentField()}</ECHPaper>
+                </div>
+            </PageWrapper >
+        }
     }
 
     _renderContentField() {
@@ -247,7 +253,8 @@ class AddManually extends Component {
 const mapStateToProps = state => {
     return {
         projectData: state.createProject.projectData,
-        error: state.createProject.error
+        error: state.createProject.error,
+        successfullySubmitted: state.createProject.successfullySubmitted
     }
 }
 

@@ -271,7 +271,7 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
 }
 
 //TODO: Handle duplicates "Project already registered"
-function saveProjectToDB(projectData) {
+function saveProjectToDB(projectData, creatorName) {
     return new Promise(function (resolve, reject) {
 
         //TODO: This does not look very Code.json compliant - Check it!
@@ -280,7 +280,8 @@ function saveProjectToDB(projectData) {
             date: {
                 created: projectData.dateCreated,
                 lastModified: projectData.dateLastModified
-            }
+            },
+            creatorName: creatorName || "generated"
         })
         newProject.save(function (err, newProject) {
             if (err) {

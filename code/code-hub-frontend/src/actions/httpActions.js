@@ -31,6 +31,7 @@ import {
     fetchOwnUserData_FAILURE,
     setVerificationCookie,
 } from '../slices/userSlice'
+import store from '../store'
 
 
 export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
@@ -78,9 +79,9 @@ export function getSearchResults(searchTerm, currentPage, shouldConcatResults) {
 export function sendNewProjectToBackend(projectData) {
     return function (dispatch) {
         dispatch(sendProject_BEGIN())
-        //TODO: Redirect to new project page?
         //TODO: Handle Error 202 - Accepted but could not be processed
-        axios.post('/api/create/project', { projectData: projectData })
+        const redux = store.getState()
+        axios.post('/api/create/project', { projectData: projectData, creatorName: redux.user.username })
             .then(() => dispatch(sendProject_SUCCESS()))
             .catch((err) => dispatch(sendProject_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
