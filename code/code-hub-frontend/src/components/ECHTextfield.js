@@ -9,6 +9,7 @@ class ECHTextfield extends Component {
         }
         return <TextField
             type={this.props.type}
+            required={this.props.required || false}
             style={inputFieldStyle}
             label={this.props.label}
             onChange={this.props.onChange}

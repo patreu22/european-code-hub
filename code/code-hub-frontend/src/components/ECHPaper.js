@@ -208,6 +208,7 @@ class ECHPaper extends Component {
     _renderUserNameField() {
         return <ECHTextfield
             label="Username"
+            required={true}
             onChange={(event) => this.onUsernameChanged(event)}
             onBlur={(event) => this.onUsernameFieldBlurred(event)}
             error={this.state.usernameError}
@@ -219,6 +220,7 @@ class ECHPaper extends Component {
     _renderOrganizationField() {
         return <ECHTextfield
             label="Organization"
+            required={true}
             onChange={(event) => this.onOrganizationChanged(event)}
             onBlur={(event) => this.onOrganizationFieldBlurred(event)}
             error={this.state.organizationError}
@@ -230,6 +232,7 @@ class ECHPaper extends Component {
     _renderEmailField() {
         return <ECHTextfield
             label="Email"
+            required={true}
             onChange={(event) => this.onMailChanged(event)}
             onBlur={(event) => this.onMailFieldBlurred(event)}
             error={this.state.mailError}
@@ -241,6 +244,7 @@ class ECHPaper extends Component {
     _renderUrlField() {
         return <ECHTextfield
             label="URL"
+            required={true}
             onChange={(event) => this.onUrlChanged(event)}
             onBlur={(event) => this.onUrlFieldBlurred(event)}
             error={this.state.gitUrlError}
@@ -252,6 +256,7 @@ class ECHPaper extends Component {
         return <ECHTextfield
             label="Password"
             type="password"
+            required={true}
             error={this.state.passwordError}
             helperText={this.state.passwordErrorMessage}
             autoComplete="current-password"
