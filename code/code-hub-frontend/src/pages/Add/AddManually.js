@@ -11,7 +11,7 @@ import { isValidText, isValidUrl } from '../../helper/validationHelper'
 import { Redirect } from 'react-router-dom'
 import { PROJECTS } from '../../routes'
 
-import { updateProjectDataAttribute, resetError } from '../../slices/createProjectSlice'
+import { updateProjectDataAttribute, resetError, resetToDefaultState } from '../../slices/createProjectSlice'
 import { sendNewProjectToBackend } from '../../actions/httpActions'
 
 class AddManually extends Component {
@@ -36,6 +36,10 @@ class AddManually extends Component {
 
         this.statusChanged = this.statusChanged.bind(this)
         this.performManuallyHandling = this.performManuallyHandling.bind(this)
+    }
+
+    componentWillUnmount() {
+        this.props.resetToDefaultState()
     }
 
     componentDidUpdate(prevProps) {
@@ -86,6 +90,7 @@ class AddManually extends Component {
             {this._renderField({
                 label: "Project name",
                 jsonKey: "projectName",
+                required: true,
                 value: this.props.projectData.projectName,
                 errorMessageName: "projectNameErrorMessage",
                 errorMessage: this.state.projectNameErrorMessage,
@@ -94,6 +99,7 @@ class AddManually extends Component {
             {this._renderField({
                 label: "Project description",
                 jsonKey: "projectDescription",
+                required: true,
                 value: this.props.projectData.projectDescription,
                 errorMessageName: "projectDescriptionErrorMessage",
                 errorMessage: this.state.projectDescriptionErrorMessage,
@@ -102,6 +108,7 @@ class AddManually extends Component {
             {this._renderField({
                 label: "Organization",
                 jsonKey: "organization",
+                required: true,
                 value: this.props.projectData.organization,
                 errorMessageName: "organizationErrorMessage",
                 errorMessage: this.state.organizationErrorMessage,
@@ -110,6 +117,7 @@ class AddManually extends Component {
             {this._renderField({
                 label: "Repository URL",
                 jsonKey: "repoUrl",
+                required: true,
                 value: this.props.projectData.repoUrl,
                 errorMessageName: "repoUrlErrorMessage",
                 errorMessage: this.state.repoUrlErrorMessage,
@@ -192,12 +200,13 @@ class AddManually extends Component {
         this.props.updateProjectDataAttribute({ key: "status", value: newValue })
     }
 
-    _renderField({ label, jsonKey, value, errorMessageName, errorMessage, validationType }) {
+    _renderField({ label, jsonKey, required, value, errorMessageName, errorMessage, validationType }) {
         const showError = errorMessage ? true : false
         var makeMultiline = jsonKey === "projectDescription";
         return <ECHTextfield
             label={label}
-            value={value ?? ""}
+            required={required || false}
+            value={value || ""}
             onChange={(event) => this.onTextfieldChanged(jsonKey, event)}
             onBlur={(event) => this.onTextfieldBlurred(errorMessageName, validationType, event)}
             error={showError}
@@ -257,6 +266,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { updateProjectDataAttribute, sendNewProjectToBackend, resetError }
+const mapDispatchToProps = { updateProjectDataAttribute, sendNewProjectToBackend, resetError, resetToDefaultState }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddManually);
