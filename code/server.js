@@ -27,52 +27,57 @@ app.get('/ping', function (req, res) {
 app.post('/api/create/project', function (req, res) {
     const projectData = req.body.projectData;
     const creatorName = req.body.creatorName;
-
-    if (projectData.projectName) {
-        database.projectExists({ projectName: projectData.projectName })
-            .then(projectExists => {
-                if (projectExists) {
-                    return res.status(409).send({ errorType: "projectNameExists" })
-                } else {
-                    database.saveProjectToDB(projectData, creatorName)
-                        .then(response => {
-                            if (response.saved) {
-                                io.getRemoteMarkdownFileAsDataString(projectData.repoUrl)
-                                    .then(
-                                        (markdown) => database.updateProjectReadme(projectData.projectName, markdown)
-                                            .then((response) => {
-                                                if (response === true) {
-                                                    //200: Accepted
-                                                    res.sendStatus(200);
-                                                } else {
-                                                    res.sendStatus(400);
-                                                }
-                                            })
-                                            .catch((err) => {
-                                                console.log(err)
+    if (projectData) {
+        if (projectData.projectName) {
+            database.projectExists({ projectName: projectData.projectName })
+                .then(projectExists => {
+                    if (projectExists) {
+                        return res.status(409).send({ errorType: "projectNameExists" })
+                    } else {
+                        database.saveProjectToDB(projectData, creatorName)
+                            .then(response => {
+                                if (response.saved) {
+                                    io.getRemoteMarkdownFileAsDataString(projectData.repoUrl)
+                                        .then(
+                                            (markdown) => database.updateProjectReadme(projectData.projectName, markdown)
+                                                .then((response) => {
+                                                    if (response === true) {
+                                                        //200: Accepted
+                                                        res.sendStatus(200);
+                                                    } else {
+                                                        res.sendStatus(400);
+                                                    }
+                                                })
+                                                .catch((err) => {
+                                                    console.log(err)
+                                                    res.status(err.code || 400).send(err.error || "Undefined Error")
+                                                })
+                                        )
+                                        .catch((err) => {
+                                            console.log(err)
+                                            if (err.code === 404) {
+                                                //Means the Readme file was not found/provided, but project was saved anyway
+                                                res.sendStatus(200)
+                                            } else {
                                                 res.status(err.code || 400).send(err.error || "Undefined Error")
-                                            })
-                                    )
-                                    .catch((err) => {
-                                        console.log(err)
-                                        if (err.code === 404) {
-                                            //Means the Readme file was not found/provided, but project was saved anyway
-                                            res.sendStatus(200)
-                                        } else {
-                                            res.status(err.code || 400).send(err.error || "Undefined Error")
-                                        }
-                                    })
-                            } else {
-                                //202: Accepted but could not be processed
-                                //TODO: Handle that in frontend - Show error
-                                res.sendStatus(202)
-                            }
-                        }).catch(err => {
-                            //500: Internal Server error
-                            res.status(err.code || 500).send(err.error || "Internal Server Error");
-                        })
-                }
-            })
+                                            }
+                                        })
+                                } else {
+                                    //202: Accepted but could not be processed
+                                    //TODO: Handle that in frontend - Show error
+                                    res.sendStatus(202)
+                                }
+                            }).catch(err => {
+                                //500: Internal Server error
+                                res.status(err.code || 500).send(err.error || "Internal Server Error");
+                            })
+                    }
+                })
+        } else {
+            res.status(422).send("Not all required fields were processed")
+        }
+    } else {
+        res.status(422).send("Not all required fields were processed")
     }
 })
 

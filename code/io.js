@@ -67,7 +67,7 @@ function _requestReadme(resolve, reject, repoLink, readmeFileName) {
                 console.error(err)
             })
     } else {
-        reject({ code: 404, error: "No Url provided" })
+        reject({ code: 404, error: "No valid Readme Url provided" })
     }
 }
 

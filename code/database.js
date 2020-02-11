@@ -272,27 +272,34 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
 
 function saveProjectToDB(projectData, creatorName) {
     return new Promise(function (resolve, reject) {
-
-        //TODO: This does not look very Code.json compliant - Check it!
-        const newProject = models.PROJECT_MODEL({
-            ...projectData,
-            date: {
-                created: projectData.dateCreated,
-                lastModified: projectData.dateLastModified
-            },
-            creatorName: creatorName || "generated"
-        })
-        newProject.save(function (err, newProject) {
-            if (err) {
-                console.log(err);
-                reject(err)
-            } else {
-                console.log(newProject);
-                console.log("Saved to DB");
-                resolve({ newProject, saved: true })
-            }
-        });
+        if (mandatoryFieldsExist(projectData)) {
+            //TODO: This does not look very Code.json compliant - Check it!
+            const newProject = models.PROJECT_MODEL({
+                ...projectData,
+                date: {
+                    created: projectData.dateCreated,
+                    lastModified: projectData.dateLastModified
+                },
+                creatorName: creatorName || "generated"
+            })
+            newProject.save(function (err, newProject) {
+                if (err) {
+                    console.log(err);
+                    reject(err)
+                } else {
+                    console.log(newProject);
+                    console.log("Saved to DB");
+                    resolve({ newProject, saved: true })
+                }
+            });
+        } else {
+            reject({ code: 423, error: "Not all required fields were processed" })
+        }
     });
+}
+
+function mandatoryFieldsExist(projectData) {
+    return projectData.projectName && projectData.projectDescription && projectData.organization && projectData.repoUrl
 }
 
 function mapProjects() {
