@@ -24,7 +24,7 @@ app.get('/ping', function (req, res) {
     return res.send('pong');
 });
 
-app.post('/api/create/project', function (req, res) {
+app.post('/api/create/project', authentication.isAuthorized, function (req, res) {
     const projectData = req.body.projectData;
     const creatorName = req.body.creatorName;
     if (projectData) {
@@ -197,16 +197,6 @@ app.post('/api/create/token', function (req, res) {
             return res.sendStatus(400);
         }
     })
-});
-
-app.get('/api/get/user/profileImage', function (req, res) {
-    const authHeader = req.headers.authorization
-    database.getUser({ token: authHeader })
-        .then((user) => res.status(200).contentType(user.profilePicture.contentType).send(user.profilePicture.data))
-        .catch(() => {
-            console.log("No user found");
-            return res.sendStatus(404)
-        });
 });
 
 app.listen(process.env.PORT || 5000, function () {

@@ -293,13 +293,33 @@ function saveProjectToDB(projectData, creatorName) {
                 }
             });
         } else {
-            reject({ code: 423, error: "Not all required fields were processed" })
+            reject({ code: 423, error: "Not all required fields were processed: " + getMissingFields(projectData) })
         }
     });
 }
 
 function mandatoryFieldsExist(projectData) {
-    return projectData.projectName && projectData.projectDescription && projectData.organization && projectData.repoUrl
+    return projectData.projectName && projectData.projectDescription && projectData.organization && projectData.repoUrl && projectData.creatorName
+}
+
+function getMissingFields(projectData) {
+    var missing = []
+    if (!projectData.projectName) {
+        missing.push("projectName")
+    }
+    if (!projectData.projectDescription) {
+        missing.push("projectDescription")
+    }
+    if (!projectData.organization) {
+        missing.push("organization")
+    }
+    if (!projectData.repoUrl) {
+        missing.push("repoUrl")
+    }
+    if (!projectData.creatorName) {
+        missing.push("creatorName")
+    }
+    return missing
 }
 
 function mapProjects() {
