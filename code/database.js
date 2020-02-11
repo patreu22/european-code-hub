@@ -293,7 +293,7 @@ function saveProjectToDB(projectData, creatorName) {
                 }
             });
         } else {
-            reject({ code: 423, error: "Not all required fields were processed: " + getMissingFields(projectData) })
+            reject({ code: 422, error: "Not all required fields were processed: " + getMissingFields(projectData) })
         }
     });
 }

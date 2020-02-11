@@ -5,7 +5,7 @@ require('dotenv').config()
 
 const BASE_URL = "https://api.code.gov/repos";
 const API_KEY = process.env.CODE_GOV_API_KEY;
-const NUMBER_OF_PROJECTS_TO_FETCH = 1000
+const NUMBER_OF_PROJECTS_TO_FETCH = 50
 
 
 function main() {
@@ -69,11 +69,20 @@ function transformRepoToProjectData(repo) {
 }
 
 function registerProject({ projectData }) {
-    axios.post('http://localhost:5000/api/create/project', { projectData: projectData })
+    const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODE0MzU4MzF9.bORYCtlt1StA0qdK4zVr3G9_uVso3VWL5cnMDdkrysA"
+    options = {
+        method: 'POST',
+        url: 'http://localhost:5000/api/create/project',
+        headers: {
+            Authorization: token
+        },
+        data: { projectData: { ...projectData, creatorName: 'scraper' } }
+    }
+    axios(options)
         .then(function (response) {
             // console.log(response);
         }).catch(function (error) {
-            // console.log(error);
+            console.log(error.response.status + ": " + error.response.data);
         });
 }
 
