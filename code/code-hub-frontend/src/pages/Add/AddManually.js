@@ -44,13 +44,11 @@ class AddManually extends Component {
         this.props.resetToDefaultState()
     }
 
-    componentDidUpdate(prevProps) {
+    componentDidUpdate() {
         const errorMessage = "A project with this name already exists"
         if (this.props.error && this.state.showRemoteError && this.state.projectNameErrorMessage !== errorMessage) {
             if (this.props.error.code === 409) {
-                this.setState({
-                    projectNameErrorMessage: errorMessage
-                })
+                this.setState({ projectNameErrorMessage: errorMessage })
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
             }
         }
@@ -271,10 +269,39 @@ class AddManually extends Component {
         if (objectExists(this.props.projectData)) {
             this.props.resetError()
             this.setState({ showRemoteError: true })
-            this.props.sendNewProjectToBackend(this.props.projectData)
+            if (this.allRequiredFieldsAvailable()) {
+                this.props.sendNewProjectToBackend(this.props.projectData)
+            }
+            //TODO: Handle manual review double check (Sth like a review window)
         } else {
-            //TODO: Handle review process
-            console.log("Handle review process of manual submission")
+            this.allRequiredFieldsAvailable()
+        }
+    }
+
+    scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop)
+
+    allRequiredFieldsAvailable() {
+        var newState = {}
+        if (!this.props.projectData.projectName) {
+            newState["projectNameErrorMessage"] = "Invalid project name"
+        }
+        if (!this.props.projectData.projectDescription) {
+            newState["projectDescriptionErrorMessage"] = "Invalid project description"
+        }
+        if (!this.props.projectData.organization) {
+            this.setState({ organizationErrorMessage: "Invalid organization" })
+        }
+        if (!this.props.projectData.repoUrl) {
+            this.setState({ repoUrlErrorMessage: "Invalid URL" })
+        }
+
+        this.setState(newState)
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        if (Object.entries(newState).length === 0 && newState.constructor === Object) {
+            return true
+        } else {
+            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+            return false
         }
     }
 
