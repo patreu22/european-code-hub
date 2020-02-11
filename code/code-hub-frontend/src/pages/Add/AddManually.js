@@ -1,6 +1,8 @@
 import React, { Component, } from 'react';
+import moment from 'moment'
 import { connect } from 'react-redux'
 import { Divider } from '@material-ui/core'
+import { DatePicker } from '@material-ui/pickers'
 import PageWrapper from '../../components/PageWrapper'
 import ECHPaper from '../../components/ECHPaper'
 import ECHButton from '../../components/ECHButton'
@@ -155,23 +157,19 @@ class AddManually extends Component {
                 errorMessage: this.state.contactEmailErrorMessage,
                 validationType: "text",
             })}
-            {/*TODO: Date Picker*/}
-            {this._renderField({
+            {this._renderDatepicker({
                 label: "Date of project creation",
-                jsonKey: "dateCreated",
                 value: this.props.projectData.dateCreated,
                 errorMessageName: "dateCreatedErrorMessage",
                 errorMessage: this.state.dateCreatedErrorMessage,
-                validationType: "text",
+                jsonKey: "dateCreated",
             })}
-            {/*TODO: Date Picker*/}
-            {this._renderField({
+            {this._renderDatepicker({
                 label: "Date of last modification",
-                jsonKey: "dateLastModified",
                 value: this.props.projectData.dateLastModified,
                 errorMessageName: "dateLastModifiedErrorMessage",
                 errorMessage: this.state.dateLastModifiedErrorMessage,
-                validationType: "text",
+                jsonKey: "dateLastModified",
             })}
             {/*TODO: Multiselect Dropdown*/}
             {this._renderField({
@@ -198,6 +196,27 @@ class AddManually extends Component {
     statusChanged(event) {
         const newValue = event.target.value;
         this.props.updateProjectDataAttribute({ key: "status", value: newValue })
+    }
+
+    _renderDatepicker({ label, value, jsonKey }) {
+        const datePickerStyle = {
+            width: '80%',
+            paddingBottom: '1.5vw'
+        }
+
+        const dateObject = value && value !== "Invalid date"
+            ? moment(value, "DD-MM-YYYY")
+            : null
+
+        return <DatePicker
+            style={datePickerStyle}
+            label={label}
+            clearable
+            disableFuture
+            value={dateObject}
+            format="dd. MMM yyy"
+            onChange={(date) => this.onDateChanged(jsonKey, date)}
+        />
     }
 
     _renderField({ label, jsonKey, required, value, errorMessageName, errorMessage, validationType }) {
@@ -237,6 +256,15 @@ class AddManually extends Component {
             })
         }
         this.props.updateProjectDataAttribute({ key: jsonKey, value: event.target.value })
+    }
+
+    onDateChanged(jsonKey, date) {
+        if (date) {
+            const convertedDate = moment(date).format("DD-MM-YYYY")
+            this.props.updateProjectDataAttribute({ key: jsonKey, value: convertedDate })
+        } else {
+            this.props.updateProjectDataAttribute({ key: jsonKey, value: "" })
+        }
     }
 
     performManuallyHandling() {

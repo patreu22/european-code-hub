@@ -8,6 +8,8 @@ import {
   Route,
 } from "react-router-dom";
 import { LastLocationProvider } from 'react-router-last-location';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { setVerificationCookieAndProfileImageAndUserNameInStore } from './actions/httpActions'
@@ -48,28 +50,30 @@ class App extends React.Component {
 
   render() {
     return (
-      <MuiThemeProvider theme={theme}>
-        <Router>
-          <LastLocationProvider>
-            <Switch>
-              <Route exact path={HOME} component={Home} />
-              <Route path={ADD_VIA_JSON} component={AddViaJson} />
-              <Route path={ADD_VIA_GITHUB} component={AddViaGithub} />
-              <Route path={ADD_MANUALLY} component={AddManually} />
-              <Route path={ADD} component={AddDefault} />
-              <Route path={CONTRIBUTE} component={Contribute} />
-              <Route path={`${SEARCH}/:searchterm?`} component={Search} />
-              <Route path={LOGIN} component={Login} />
-              <Route path={REGISTER} component={Register} />
-              <Route path={`${USER}/:username?`} component={Profile} />
-              <Route path={`${PROFILE}/:username?`} component={Profile} />
-              <Route path={`${PROJECTS}/:projectname`} component={Project} />
-              <Route path={PROJECTS} component={Catalogue} />
-              <Route component={NotFound} />
-            </Switch>
-          </LastLocationProvider>
-        </Router>
-      </MuiThemeProvider>
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <MuiThemeProvider theme={theme}>
+          <Router>
+            <LastLocationProvider>
+              <Switch>
+                <Route exact path={HOME} component={Home} />
+                <Route path={ADD_VIA_JSON} component={AddViaJson} />
+                <Route path={ADD_VIA_GITHUB} component={AddViaGithub} />
+                <Route path={ADD_MANUALLY} component={AddManually} />
+                <Route path={ADD} component={AddDefault} />
+                <Route path={CONTRIBUTE} component={Contribute} />
+                <Route path={`${SEARCH}/:searchterm?`} component={Search} />
+                <Route path={LOGIN} component={Login} />
+                <Route path={REGISTER} component={Register} />
+                <Route path={`${USER}/:username?`} component={Profile} />
+                <Route path={`${PROFILE}/:username?`} component={Profile} />
+                <Route path={`${PROJECTS}/:projectname`} component={Project} />
+                <Route path={PROJECTS} component={Catalogue} />
+                <Route component={NotFound} />
+              </Switch>
+            </LastLocationProvider>
+          </Router>
+        </MuiThemeProvider>
+      </MuiPickersUtilsProvider>
     );
   }
 }
