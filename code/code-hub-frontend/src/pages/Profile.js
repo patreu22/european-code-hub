@@ -2,14 +2,22 @@ import React, { Component, } from 'react';
 import { Avatar } from '@material-ui/core'
 import PageWrapper from '../components/PageWrapper'
 import { getUserByName, getUserByToken } from '../actions/httpActions'
-import { withRouter } from "react-router";
+import { withRouter, Redirect } from "react-router";
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { objectExists } from '../helper/objectHelper'
 import { resetUserData } from '../slices/userSlice'
+import { LOGIN, HOME } from '../routes';
 
 class Profile extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            shouldRedirectTo: ""
+        }
+    }
 
     componentDidMount() {
         const userName = this.props.match.params.username;
@@ -21,6 +29,8 @@ class Profile extends Component {
             const ownUserDataExists = objectExists(this.props.ownUserData)
             if (!username && !ownUserDataExists && cookie) {
                 this.props.getUserByToken(cookie)
+            } else if (!cookie) {
+                this.setState({ shouldRedirectTo: LOGIN })
             }
         }
     }
@@ -31,6 +41,8 @@ class Profile extends Component {
         const ownUserDataExists = objectExists(this.props.ownUserData)
         if (!username && !ownUserDataExists && cookie) {
             this.props.getUserByToken(cookie)
+        } else if (!username && !cookie) {
+            this.setState({ shouldRedirectTo: HOME })
         }
     }
 
@@ -44,6 +56,10 @@ class Profile extends Component {
             if (error.code === 404) {
                 return <NotFound />
             }
+        }
+
+        if (this.state.shouldRedirectTo) {
+            return <Redirect to={this.state.shouldRedirectTo} />
         }
 
         const content = this.props.isLoading
