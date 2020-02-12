@@ -24,7 +24,12 @@ class Profile extends Component {
         super(props)
         this.state = {
             shouldRedirectTo: "",
+            editMode: false
         }
+        this._onUpdateButtonClick = this._onUpdateButtonClick.bind(this)
+        this._renderButtonBar = this._renderButtonBar.bind(this)
+        this._onSavePressed = this._onSavePressed.bind(this)
+        this._onCancelPressed = this._onCancelPressed.bind(this)
     }
 
     componentDidMount() {
@@ -127,11 +132,41 @@ class Profile extends Component {
                         {this._renderDetails(currentData)}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        {this.props.ownUserData && <ECHButton>Update profile</ECHButton>}
+                        {this._renderButtonBar()}
                     </div>
                 </div>
             </ECHPaper>
         </div >
+    }
+
+    _renderButtonBar() {
+        if (this.props.ownUserData) {
+            if (this.state.editMode) {
+                return <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ display: 'inline-block', paddingRight: '20px' }}>
+                        <ECHButton onClick={this._onSavePressed}>Save changes</ECHButton>
+                    </div>
+                    <ECHButton onClick={this._onCancelPressed}>Cancel</ECHButton>
+                </div >
+            } else {
+                return <ECHButton onClick={this._onUpdateButtonClick}>Update profile</ECHButton>
+            }
+        } else {
+            return null
+        }
+    }
+
+    _onSavePressed() {
+        console.log("TODO: Save")
+        this.setState({ editMode: false })
+    }
+
+    _onCancelPressed() {
+        this.setState({ editMode: false })
+    }
+
+    _onUpdateButtonClick() {
+        this.setState({ editMode: true })
     }
 
     _renderDetails(currentData) {

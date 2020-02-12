@@ -13,7 +13,7 @@ import EuropeanLogo from '../assets/europe_logo.png';
 import { Link, useHistory } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { connect } from 'react-redux'
-import { USER, USER_UPDATE, LOGIN, CONTRIBUTE } from '../routes'
+import { USER, LOGIN, CONTRIBUTE } from '../routes'
 import { logoutUser } from '../actions/cookieActions'
 
 const useStyles = makeStyles(theme => ({
@@ -64,13 +64,9 @@ function Header(props) {
         setAnchorEl(null);
     };
 
-    const onProfileLinkClicked = (showInEditMode) => {
+    const onProfileLinkClicked = () => {
         handleMenuClose();
-        if (showInEditMode) {
-            history.push(USER_UPDATE)
-        } else {
-            history.push(USER);
-        }
+        history.push(USER);
     }
 
     const onLogoutClicked = () => {
@@ -89,8 +85,7 @@ function Header(props) {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={() => onProfileLinkClicked(false)}>Your profile</MenuItem>
-            <MenuItem onClick={() => onProfileLinkClicked(true)}>Update data</MenuItem>
+            <MenuItem onClick={onProfileLinkClicked}>Your profile</MenuItem>
             <MenuItem onClick={onLogoutClicked}>Logout</MenuItem>
         </Menu>
     );

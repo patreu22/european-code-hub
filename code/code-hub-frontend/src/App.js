@@ -14,7 +14,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { setVerificationCookieAndProfileImageAndUserNameInStore } from './actions/httpActions'
 import { getVerificationToken } from './helper/cookieHelper'
-import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, USER_UPDATE, PROJECTS, PROFILE_UPDATE, PROFILE, ADD_VIA_GITHUB, ADD_VIA_JSON, ADD_MANUALLY } from './routes'
+import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, PROFILE, ADD_VIA_GITHUB, ADD_VIA_JSON, ADD_MANUALLY } from './routes'
 import Home from './pages/Home';
 import Search from './pages/Search';
 import AddDefault from './pages/Add/AddDefault';
@@ -64,9 +64,7 @@ class App extends React.Component {
                 <Route path={`${SEARCH}/:searchterm?`} component={Search} />
                 <Route path={LOGIN} component={Login} />
                 <Route path={REGISTER} component={Register} />
-                <Route path={USER_UPDATE} component={Profile} />
                 <Route path={`${USER}/:username?`} component={Profile} />
-                <Route path={PROFILE_UPDATE} component={Profile} />
                 <Route path={`${PROFILE}/:username?`} component={Profile} />
                 <Route path={`${PROJECTS}/:projectname`} component={Project} />
                 <Route path={PROJECTS} component={Catalogue} />
