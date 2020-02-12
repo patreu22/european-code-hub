@@ -5,7 +5,7 @@ require('dotenv').config()
 
 const BASE_URL = "https://api.code.gov/repos";
 const API_KEY = process.env.CODE_GOV_API_KEY;
-const NUMBER_OF_PROJECTS_TO_FETCH = 50
+const NUMBER_OF_PROJECTS_TO_FETCH = 1000
 
 
 function main() {
@@ -82,7 +82,9 @@ function registerProject({ projectData }) {
         .then(function (response) {
             // console.log(response);
         }).catch(function (error) {
-            console.log(error.response.status + ": " + error.response.data);
+            if (error.response) {
+                console.log(error.response.status + ": " + error.response.data);
+            }
         });
 }
 

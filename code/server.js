@@ -20,7 +20,6 @@ app.get('/', function (req, res) {
 });
 
 app.get('/ping', function (req, res) {
-    // database.indexProjects();
     return res.send('pong');
 });
 
@@ -47,14 +46,17 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
                                                     } else {
                                                         res.sendStatus(400);
                                                     }
+                                                    database.indexProjects();
                                                 })
                                                 .catch((err) => {
+                                                    database.indexProjects();
                                                     console.log(err)
                                                     res.status(err.code || 400).send(err.error || "Undefined Error")
                                                 })
                                         )
                                         .catch((err) => {
                                             console.log(err)
+                                            database.indexProjects();
                                             if (err.code === 404) {
                                                 //Means the Readme file was not found/provided, but project was saved anyway
                                                 res.sendStatus(200)
