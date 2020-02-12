@@ -27,7 +27,7 @@ class Profile extends Component {
         super(props)
         this.state = {
             shouldRedirectTo: "",
-            editMode: true,
+            editMode: false,
             mailChange: '',
             mailError: false,
             mailErrorMessage: '',
