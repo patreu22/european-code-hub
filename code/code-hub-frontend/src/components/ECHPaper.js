@@ -290,7 +290,6 @@ class ECHPaper extends Component {
         }
     }
 
-    //value, error, errorMessage, formError, formErrorText
     onMailChanged(event) {
         this.setState({
             mail: event.target.value,

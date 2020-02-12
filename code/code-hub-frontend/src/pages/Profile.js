@@ -10,6 +10,7 @@ import { connect } from 'react-redux'
 import { objectExists } from '../helper/objectHelper'
 import { resetUserData } from '../slices/userSlice'
 import { HOME } from '../routes';
+import { isValidEmail, isValidText } from '../helper/validationHelper'
 import {
     Group as GroupIcon,
     Person as PersonIcon,
@@ -17,6 +18,7 @@ import {
 } from '@material-ui/icons'
 import ECHIconAndText from '../components/ECHIconAndText';
 import ECHButton from '../components/ECHButton';
+import ECHTextfield from '../components/ECHTextfield';
 
 class Profile extends Component {
 
@@ -24,12 +26,21 @@ class Profile extends Component {
         super(props)
         this.state = {
             shouldRedirectTo: "",
-            editMode: false
+            editMode: true,
+            mailChange: '',
+            mailError: false,
+            mailErrorMessage: '',
+            mailDefaultSet: false,
+            organizationChange: '',
+            organizationError: false,
+            organizationErrorMessage: '',
+            organizationDefaultSet: false
         }
         this._onUpdateButtonClick = this._onUpdateButtonClick.bind(this)
         this._renderButtonBar = this._renderButtonBar.bind(this)
         this._onSavePressed = this._onSavePressed.bind(this)
         this._onCancelPressed = this._onCancelPressed.bind(this)
+        this.onMailChanged = this.onMailChanged.bind(this)
     }
 
     componentDidMount() {
@@ -53,6 +64,16 @@ class Profile extends Component {
         const username = this.props.match.params.username;
         const cookie = this.props.cookie
         const ownUserDataExists = objectExists(this.props.ownUserData)
+
+        if (this.props.ownUserData && !this.state.mailChange && !this.state.mailDefaultSet) {
+            this.setState({ mailChange: this.props.ownUserData.mail, mailDefaultSet: true })
+        }
+
+        if (this.props.ownUserData && !this.state.organizationChange && !this.state.organizationDefaultSet) {
+            if (this.props.ownUserData.organization) {
+                this.setState({ organizationChange: this.props.ownUserData.organization, organizationDefaultSet: true })
+            }
+        }
 
         if (!username && !ownUserDataExists && cookie) {
             if (objectExists(this.props.currentUserData)) {
@@ -157,12 +178,24 @@ class Profile extends Component {
     }
 
     _onSavePressed() {
-        console.log("TODO: Save")
-        this.setState({ editMode: false })
+        if (!(this.state.mailError || this.state.organizationError)) {
+            console.log("TODO: Send to backend")
+            this.setState({ editMode: false })
+        }
     }
 
     _onCancelPressed() {
-        this.setState({ editMode: false })
+        this.setState({
+            editMode: false,
+            mailChange: '',
+            mailError: false,
+            mailErrorMessage: '',
+            mailDefaultSet: false,
+            organizationChange: '',
+            organizationError: false,
+            organizationErrorMessage: '',
+            organizationDefaultSet: false
+        })
     }
 
     _onUpdateButtonClick() {
@@ -170,29 +203,94 @@ class Profile extends Component {
     }
 
     _renderDetails(currentData) {
-        return <ECHPaper title="Details" width="70%">
-            <div>
-                <ECHIconAndText
-                    icon={<PersonIcon />}
-                    text={currentData.username}
-                    tooltipText="Username"
-                />
-                <ECHIconAndText
-                    icon={<EmailIcon />}
-                    text={currentData.mail}
-                    link={`mailto:${currentData.mail}`}
-                    tooltipText="Email"
-                />
-                <ECHIconAndText
-                    icon={<GroupIcon />}
-                    text={currentData.organization}
-                    tooltipText="Organization"
-                />
-            </div>
-        </ECHPaper>
+        if (this.state.editMode) {
+            return <ECHPaper title="Details" width="70%">
+                <div>
+                    <ECHIconAndText
+                        icon={<PersonIcon />}
+                        text={currentData.username}
+                        tooltipText="Username"
+                    />
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <div style={{ alignSelf: 'center', display: 'inline-block', paddingRight: '5px' }}><EmailIcon /></div>
+                        <ECHTextfield
+                            label="Email"
+                            onChange={(event) => this.onMailChanged(event)}
+                            onBlur={(event) => this.onMailFieldBlurred(event)}
+                            error={this.state.mailError}
+                            helperText={this.state.mailErrorMessage}
+                            value={this.state.mailChange}
+                        />
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <div style={{ alignSelf: 'center', display: 'inline-block', paddingRight: '5px' }}><EmailIcon /></div>
+                        <ECHTextfield
+                            label="Organization"
+                            onChange={(event) => this.onOrganizationChanged(event)}
+                            onBlur={(event) => this.onOrganizationFieldBlurred(event)}
+                            error={this.state.organizationError}
+                            helperText={this.state.organizationErrorMessage}
+                            value={this.state.organizationChange}
+                        />
+                    </div>
+                </div>
+            </ECHPaper>
+        } else {
+            return <ECHPaper title="Details" width="70%">
+                <div>
+                    <ECHIconAndText
+                        icon={<PersonIcon />}
+                        text={currentData.username}
+                        tooltipText="Username"
+                    />
+                    <ECHIconAndText
+                        icon={<EmailIcon />}
+                        text={currentData.mail}
+                        link={`mailto:${currentData.mail}`}
+                        tooltipText="Email"
+                    />
+                    <ECHIconAndText
+                        icon={<GroupIcon />}
+                        text={currentData.organization}
+                        tooltipText="Organization"
+                    />
+                </div>
+            </ECHPaper>
+        }
+    }
+
+    onMailChanged(event) {
+        this.setState({
+            mailChange: event.target.value,
+            mailError: false,
+            mailErrorMessage: "",
+        })
+    }
+
+    onMailFieldBlurred(event) {
+        const isValid = isValidEmail(event.target.value)
+        this.setState({
+            mailError: !isValid,
+            mailErrorMessage: isValid ? "" : "Invalid Email address"
+        })
+    }
+
+    onOrganizationChanged(event) {
+        this.setState({
+            organizationChange: event.target.value,
+            organizationError: false,
+            organizationErrorMessage: "",
+        })
+    }
+
+    onOrganizationFieldBlurred(event) {
+        const isValid = isValidText(event.target.value)
+        this.setState({
+            organizationError: !isValid,
+            organizationErrorMessage: isValid ? "" : "Invalid organization"
+        })
     }
 }
-
 
 const mapStateToProps = state => {
     return {
