@@ -9,20 +9,21 @@ import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { objectExists } from '../helper/objectHelper'
 import { resetUserData } from '../slices/userSlice'
-import { LOGIN, HOME } from '../routes';
+import { HOME } from '../routes';
 import {
     Group as GroupIcon,
     Person as PersonIcon,
     EmailOutlined as EmailIcon,
 } from '@material-ui/icons'
 import ECHIconAndText from '../components/ECHIconAndText';
+import ECHButton from '../components/ECHButton';
 
 class Profile extends Component {
 
     constructor(props) {
         super(props)
         this.state = {
-            shouldRedirectTo: ""
+            shouldRedirectTo: "",
         }
     }
 
@@ -31,30 +32,31 @@ class Profile extends Component {
         if (userName) {
             this.props.getUserByName(userName)
         } else {
-            const username = this.props.match.params.username;
-            const cookie = this.props.cookie
-            const ownUserDataExists = objectExists(this.props.ownUserData)
-            if (!username && !ownUserDataExists && cookie) {
-                this.props.getUserByToken(cookie)
-            } else if (!cookie) {
-                this.setState({ shouldRedirectTo: LOGIN })
-            }
+            this._handleDataFetch()
         }
     }
 
     componentDidUpdate() {
-        const username = this.props.match.params.username;
-        const cookie = this.props.cookie
-        const ownUserDataExists = objectExists(this.props.ownUserData)
-        if (!username && !ownUserDataExists && cookie) {
-            this.props.getUserByToken(cookie)
-        } else if (!username && !cookie) {
-            this.setState({ shouldRedirectTo: HOME })
-        }
+        this._handleDataFetch()
     }
 
     componentWillUnmount() {
         this.props.resetUserData()
+    }
+
+    _handleDataFetch() {
+        const username = this.props.match.params.username;
+        const cookie = this.props.cookie
+        const ownUserDataExists = objectExists(this.props.ownUserData)
+
+        if (!username && !ownUserDataExists && cookie) {
+            if (objectExists(this.props.currentUserData)) {
+                this.props.resetUserData()
+            }
+            this.props.getUserByToken(cookie)
+        } else if (!username && !cookie) {
+            this.setState({ shouldRedirectTo: HOME })
+        }
     }
 
     render() {
@@ -119,9 +121,14 @@ class Profile extends Component {
 
         return <div style={flexContainer}>
             <ECHPaper width="80%">
-                <div style={rowStyle}>
-                    {<Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />}
-                    {this._renderDetails(currentData)}
+                <div>
+                    <div style={rowStyle}>
+                        {<Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />}
+                        {this._renderDetails(currentData)}
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        {this.props.ownUserData && <ECHButton>Update profile</ECHButton>}
+                    </div>
                 </div>
             </ECHPaper>
         </div >
