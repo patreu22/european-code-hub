@@ -4,11 +4,18 @@ import PageWrapper from '../components/PageWrapper'
 import { getUserByName, getUserByToken } from '../actions/httpActions'
 import { withRouter, Redirect } from "react-router";
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
+import ECHPaper from '../components/ECHPaper'
 import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { objectExists } from '../helper/objectHelper'
 import { resetUserData } from '../slices/userSlice'
 import { LOGIN, HOME } from '../routes';
+import {
+    Group as GroupIcon,
+    Person as PersonIcon,
+    EmailOutlined as EmailIcon,
+} from '@material-ui/icons'
+import ECHIconAndText from '../components/ECHIconAndText';
 
 class Profile extends Component {
 
@@ -62,40 +69,45 @@ class Profile extends Component {
             return <Redirect to={this.state.shouldRedirectTo} />
         }
 
+        const currentData = objectExists(this.props.currentUserData)
+            ? this.props.currentUserData
+            : this.props.ownUserData
+
         const content = this.props.isLoading
             ? <ECHLoadingIndicator />
-            : this.renderProfile()
+            : this.renderProfile(currentData)
+
+        const displayName = currentData.username
+            ? `${currentData.username}'s`
+            : ""
 
         return (
-            <PageWrapper headlineTitle="Profile" showBackButton={true}>
+            <PageWrapper headlineTitle={`${displayName} Profile`} showBackButton={true}>
                 {content}
             </PageWrapper>
         );
     }
 
-    renderProfile() {
+    renderProfile(currentData) {
         const profilePictureStyle = {
-            height: '15vw',
-            width: '15vw'
-        }
-        const contentWrapperStyle = {
-            margin: '3vH 0 3vH 0',
-            textAlign: 'left',
-            width: '95vw'
+            width: '25%',
+            height: '70%'
         }
         const rowStyle = {
             display: 'flex',
-            flexDirection: 'row'
-        }
-        const profileTextStyle = {
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '0 3vw 0 3vw'
+            flexDirection: 'row',
+            justifyContent: 'space-between'
         }
 
-        const currentData = objectExists(this.props.currentUserData)
-            ? this.props.currentUserData
-            : this.props.ownUserData
+        const flexContainer = {
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            padding: 0,
+            width: '85vw',
+            marginTop: '1vh',
+            justifyContent: 'center'
+        };
 
         var profilePictureData = ""
         if (currentData.profilePicture) {
@@ -105,16 +117,37 @@ class Profile extends Component {
             return data + String.fromCharCode(byte);
         }, ''));
 
-        return <div style={contentWrapperStyle}>
-            <div style={rowStyle}>
-                {<Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />}
-                <div style={profileTextStyle}>
-                    <h2>Username: {currentData.username}</h2>
-                    <h2>Mail: {currentData.mail}</h2>
-                    <h2>Organization: {currentData.organization}</h2>
+        return <div style={flexContainer}>
+            <ECHPaper width="80%">
+                <div style={rowStyle}>
+                    {<Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />}
+                    {this._renderDetails(currentData)}
                 </div>
+            </ECHPaper>
+        </div >
+    }
+
+    _renderDetails(currentData) {
+        return <ECHPaper title="Details" width="70%">
+            <div>
+                <ECHIconAndText
+                    icon={<PersonIcon />}
+                    text={currentData.username}
+                    tooltipText="Username"
+                />
+                <ECHIconAndText
+                    icon={<EmailIcon />}
+                    text={currentData.mail}
+                    link={`mailto:${currentData.mail}`}
+                    tooltipText="Email"
+                />
+                <ECHIconAndText
+                    icon={<GroupIcon />}
+                    text={currentData.organization}
+                    tooltipText="Organization"
+                />
             </div>
-        </div>
+        </ECHPaper>
     }
 }
 

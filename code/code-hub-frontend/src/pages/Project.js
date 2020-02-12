@@ -5,6 +5,7 @@ import { withRouter } from "react-router";
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import ECHPaper from '../components/ECHPaper'
 import ECHCopyBox from '../components/ECHCopyBox'
+import ECHIconAndText from '../components/ECHIconAndText'
 import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { getProjectByName } from '../actions/httpActions'
@@ -23,7 +24,7 @@ import {
     WorkOff as WorkOffIcon,
 } from '@material-ui/icons/';
 import MarkdownGithub from 'react-markdown-github';
-import { Divider, Tooltip } from '@material-ui/core';
+import { Divider } from '@material-ui/core';
 
 class Project extends Component {
 
@@ -170,38 +171,12 @@ class Project extends Component {
     }
 
     _renderIconAndText({ icon, text, tooltipText, link }) {
-        const textLineStyle = {
-            display: 'flex',
-            alignItems: 'flex-start',
-            justifyContent: 'flex-start',
-            textAlign: 'left',
-            paddingBottom: '3px'
-        }
-        const iconStyle = {
-            paddingRight: '5px'
-        }
-
-        const textElement = link
-            ? <a href={link}>{text}</a>
-            : <span>{text}</span>
-
-        if (typeof text === 'undefined') { return null }
-
-        if (tooltipText) {
-            return <div style={textLineStyle}>
-                <span style={iconStyle}>
-                    <Tooltip title={tooltipText}>
-                        {icon}
-                    </Tooltip>
-                </span> {textElement}
-            </div>
-        } else {
-            return <div style={textLineStyle}>
-                <span style={iconStyle}>
-                    {icon}
-                </span> {textElement}
-            </div>
-        }
+        return <ECHIconAndText
+            icon={icon}
+            text={text}
+            tooltipText={tooltipText}
+            link={link}
+        />
     }
 
     _renderCodeBox() {
