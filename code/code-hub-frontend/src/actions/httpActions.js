@@ -33,11 +33,11 @@ import {
 import store from '../store'
 
 
-export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
+export function getFilteredProjects(filters, currentPage, shouldConcatResults, isInitialLoadDone) {
     return function (dispatch) {
         const itemsPerLoad = 20
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
-        dispatch(loadFilteredData_BEGIN())
+        dispatch(loadFilteredData_BEGIN({ isInitialLoad: !isInitialLoadDone }))
         const options = {
             method: 'GET',
             url: '/api/get/projects',

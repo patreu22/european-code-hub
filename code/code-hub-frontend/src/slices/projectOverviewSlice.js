@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const defaultState = {
     projects: [],
     isLoading: false,
+    initialLoading: false,
     error: {
         code: null,
         message: null
@@ -41,10 +42,18 @@ const projectOverviewSlice = createSlice({
                 currentFilters: {}
             }
         },
-        loadFilteredData_BEGIN: (state) => {
-            return {
-                ...state,
-                isLoading: true
+        loadFilteredData_BEGIN: (state, action) => {
+            const payload = action.payload
+            if (payload.isInitialLoad) {
+                return {
+                    ...state,
+                    initialLoading: true
+                }
+            } else {
+                return {
+                    ...state,
+                    isLoading: true
+                }
             }
         },
         loadFilteredData_SUCCESS: (state, action) => {
@@ -55,6 +64,7 @@ const projectOverviewSlice = createSlice({
                 ...state,
                 projects: shouldConcat ? state.projects.concat(payload.projects) : payload.projects,
                 isLoading: false,
+                initialLoading: false,
                 moreChunkToLoad: moreToLoad
             }
             return updated
@@ -64,6 +74,7 @@ const projectOverviewSlice = createSlice({
             return {
                 ...state,
                 isLoading: false,
+                initialLoading: false,
                 error: {
                     code: payload.errorCode,
                     message: payload.errorMessage

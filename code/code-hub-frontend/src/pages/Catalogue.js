@@ -15,6 +15,9 @@ class Catalogue extends Component {
 
     constructor(props) {
         super(props)
+        this.state = {
+            initialLoadingDone: false
+        }
         this.loadFunc = this.loadFunc.bind(this)
     }
 
@@ -23,30 +26,39 @@ class Catalogue extends Component {
     }
 
     render() {
-        var contentBox = this.props.isLoading
-            ? <ECHLoadingIndicator />
-            : <ECHInfiniteList
-                projects={this.props.projects}
-                hasMore={this.props.moreChunkToLoad}
-                loadMore={this.loadFunc}
-            />
-
-        return (
-            < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
-                <ECHFilterBar />
-                {contentBox}
-            </PageWrapper >
-        );
+        if (this.props.isLoading) {
+            return < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
+                <ECHLoadingIndicator />
+            </PageWrapper>
+        } else {
+            return (
+                < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
+                    <ECHFilterBar />
+                    <ECHInfiniteList
+                        projects={this.props.projects}
+                        hasMore={this.props.moreChunkToLoad}
+                        loadMore={this.loadFunc}
+                    />
+                </PageWrapper >
+            );
+        }
     }
 
-    loadFunc = (page) => this.props.getFilteredProjects(this.props.currentFilters, page, true)
+    loadFunc = (page) => {
+        if (!this.state.initialLoadingDone) {
+            this.props.getFilteredProjects(this.props.currentFilters, page, true, false)
+            this.setState({ initialLoadingDone: true })
+        } else {
+            this.props.getFilteredProjects(this.props.currentFilters, page, true, true)
+        }
+    }
 
 }
 
 const mapStateToProps = state => {
     return {
         projects: state.projectOverview.projects,
-        isLoading: state.projectOverview.isLoading,
+        initialLoading: state.projectOverview.initialLoading,
         moreChunkToLoad: state.projectOverview.moreChunkToLoad,
     }
 }

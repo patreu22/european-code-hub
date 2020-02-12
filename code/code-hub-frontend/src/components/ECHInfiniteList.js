@@ -38,10 +38,6 @@ class ECHInfiniteList extends Component {
             justifyContent: 'flex-start'
         };
 
-        const projects = this.props.projects.map((project, index) => (
-            <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
-        ))
-
         if (this.props.projects.length === 0) {
             return <div>
                 <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >
@@ -50,6 +46,9 @@ class ECHInfiniteList extends Component {
                 <div style={{ textAlign: 'center' }}>Alter your search to find amazing projects.</div>
             </div>
         } else {
+            const projects = this.props.projects.map((project, index) => (
+                <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
+            ))
             return <List style={flexContainer}>
                 {projects}
             </List>
