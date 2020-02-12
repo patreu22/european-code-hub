@@ -208,6 +208,32 @@ function getUser({ token, mail, username, stripData = true }) {
     });
 }
 
+function updateUser(token, fieldsToUpdate) {
+    return new Promise((resolve, reject) => {
+        console.log(fieldsToUpdate)
+        if (!fieldsToUpdate) {
+            resolve(true)
+        } else {
+            getUser({ token }).then((user) => {
+                if (fieldsToUpdate.mail) {
+                    user.mail = fieldsToUpdate.mail
+                }
+                if (fieldsToUpdate.organization) {
+                    user.organization = fieldsToUpdate.organization
+                }
+                user.save(function (err) {
+                    if (err) {
+                        console.log(err)
+                        reject(false)
+                    }
+                });
+                resolve(true)
+            })
+        }
+    })
+}
+
+
 function updateProjectReadme(projectName, readmeText) {
     return new Promise(function (resolve, reject) {
         models.PROJECT_MODEL.findOne({ projectName }, function (err, projectData) {
@@ -425,19 +451,20 @@ function indexProjects() {
 
 
 module.exports = {
-    userExists: userExists,
-    getAllProjects: getAllProjects,
-    userAndHashExistInDB: userAndHashExistInDB,
-    saveUserToDB: saveUserToDB,
-    saveProjectToDB: saveProjectToDB,
-    connectToDb: connectToDb,
-    updateSessionToken: updateSessionToken,
-    getUser: getUser,
-    getProjectByName: getProjectByName,
-    projectExists: projectExists,
-    updateProjectReadme: updateProjectReadme,
-    getProjectChunk: getProjectChunk,
-    indexProjects: indexProjects,
-    getSuggestionList: getSuggestionList,
-    getSearchResults: getSearchResults
+    userExists,
+    getAllProjects,
+    userAndHashExistInDB,
+    saveUserToDB,
+    saveProjectToDB,
+    connectToDb,
+    updateSessionToken,
+    getUser,
+    getProjectByName,
+    projectExists,
+    updateProjectReadme,
+    getProjectChunk,
+    indexProjects,
+    getSuggestionList,
+    getSearchResults,
+    updateUser
 }

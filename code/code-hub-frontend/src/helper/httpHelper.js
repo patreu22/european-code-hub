@@ -24,6 +24,25 @@ export function registerUser(username, password, mail, organization, profileImag
     });
 }
 
+export function updateUser(token, fieldsToUpdate) {
+    return new Promise((resolve, reject) => {
+        const options = {
+            method: 'PUT',
+            url: '/api/update/user',
+            headers: { Authorization: token },
+            data: { fieldsToUpdate }
+        }
+
+        axios(options)
+            .then(response => {
+                if (response.status === 200) {
+                    resolve(true)
+                } else { resolve(false) }
+            })
+            .catch(err => console.log(err))
+    })
+}
+
 export function requestLoginToken(mail, password) {
     return new Promise((resolve, reject) => {
         axios.post('/api/create/token', {

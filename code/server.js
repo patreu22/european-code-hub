@@ -83,6 +83,23 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
     }
 })
 
+app.put('/api/update/user', authentication.isAuthorized, function (req, res) {
+    const authHeader = req.headers.authorization
+    const fieldsToUpdate = req.body.fieldsToUpdate;
+    database.updateUser(authHeader, fieldsToUpdate)
+        .then((saved) => {
+            if (saved) {
+                res.sendStatus(200)
+            } else {
+                res.sendStatus(204)
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            res.sendStatus(500)
+        })
+})
+
 app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, res) => {
     const user = req.body;
     database.userExists({ mail: user.mail })

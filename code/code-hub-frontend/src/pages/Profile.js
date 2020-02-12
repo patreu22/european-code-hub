@@ -8,7 +8,8 @@ import ECHPaper from '../components/ECHPaper'
 import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { objectExists } from '../helper/objectHelper'
-import { resetUserData } from '../slices/userSlice'
+import { updateUser } from '../helper/httpHelper'
+import { resetUserData, updateUserData_BEGIN, updateUserData_SUCCESS, updateUserData_FAILURE } from '../slices/userSlice'
 import { HOME } from '../routes';
 import { isValidEmail, isValidText } from '../helper/validationHelper'
 import {
@@ -179,8 +180,24 @@ class Profile extends Component {
 
     _onSavePressed() {
         if (!(this.state.mailError || this.state.organizationError)) {
-            console.log("TODO: Send to backend")
-            this.setState({ editMode: false })
+            var fieldsToUpdate = {}
+            if (this.state.mailChange !== this.props.ownUserData.mail) {
+                fieldsToUpdate["mail"] = this.state.mailChange
+            }
+            if (this.state.organizationChange !== this.props.ownUserData.organization) {
+                fieldsToUpdate["organization"] = this.state.organizationChange
+            }
+            if (objectExists(fieldsToUpdate)) {
+                updateUser(this.props.cookie, fieldsToUpdate)
+                    .then((updated) => {
+                        updated ? this.props.getUserByToken(this.props.cookie) : this.props.updateUserData_FAILURE()
+                        this.setState({ editMode: false })
+                    })
+                    .catch(err => {
+                        this.props.updateUserData_FAILURE()
+                        this.setState({ editMode: false })
+                    })
+            }
         }
     }
 
@@ -302,6 +319,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getUserByName, getUserByToken, resetUserData }
+const mapDispatchToProps = { getUserByName, getUserByToken, resetUserData, updateUserData_BEGIN, updateUserData_FAILURE, updateUserData_SUCCESS }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));
