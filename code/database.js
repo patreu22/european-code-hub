@@ -327,7 +327,7 @@ function mapProjects() {
     var document = this;
 
     // You need to expand this according to your needs
-    var stopwords = ["the", "this", "and", "or"];
+    var stopwords = ["the", "this", "and", "or", "#", "\`"];
 
     for (var prop in document) {
         // We are only interested in strings and explicitly not in _id
