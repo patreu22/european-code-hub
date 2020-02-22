@@ -22,7 +22,7 @@ class Catalogue extends Component {
     }
 
     componentWillUnmount() {
-        this.props.resetToDefaultState()
+        // this.props.resetToDefaultState()
     }
 
     render() {
@@ -44,6 +44,7 @@ class Catalogue extends Component {
         }
     }
 
+    //TODO: Loading Hänger!
     loadFunc = (page) => {
         if (!this.state.initialLoadingDone) {
             this.props.getFilteredProjects(this.props.currentFilters, page, true, false)

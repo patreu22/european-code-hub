@@ -20,6 +20,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/ping', function (req, res) {
+    database.indexProjects();
     return res.send('pong');
 });
 
@@ -83,10 +84,13 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
     }
 })
 
-app.put('/api/update/user', authentication.isAuthorized, function (req, res) {
+app.put('/api/update/user', [authentication.isAuthorized, uploadMiddleware.single('profileImageFile')], function (req, res) {
     const authHeader = req.headers.authorization
-    const fieldsToUpdate = req.body.fieldsToUpdate;
-    database.updateUser(authHeader, fieldsToUpdate)
+    const mailChange = req.body.mail
+    const organizationChange = req.body.organization
+    const profileImagePath = req.file ? req.file.path : null;
+    console.log("- Incoming update -")
+    database.updateUser(authHeader, { mailChange, organizationChange, profileImagePath })
         .then((saved) => {
             if (saved) {
                 res.sendStatus(200)

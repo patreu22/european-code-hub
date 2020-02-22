@@ -23,7 +23,7 @@ class Search extends Component {
     }
 
     componentWillUnmount() {
-        this.props.resetToDefaultState()
+        // this.props.resetToDefaultState()
     }
 
     componentDidUpdate(prevProps) {

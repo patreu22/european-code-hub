@@ -208,18 +208,24 @@ function getUser({ token, mail, username, stripData = true }) {
     });
 }
 
-function updateUser(token, fieldsToUpdate) {
+function updateUser(token, { mailChange, organizationChange, profileImagePath }) {
     return new Promise((resolve, reject) => {
-        console.log(fieldsToUpdate)
-        if (!fieldsToUpdate) {
+        if (!mailChange && !organizationChange && !profileImagePath) {
             resolve(true)
         } else {
             getUser({ token }).then((user) => {
-                if (fieldsToUpdate.mail) {
-                    user.mail = fieldsToUpdate.mail
+                if (mailChange) {
+                    user.mail = mailChange
                 }
-                if (fieldsToUpdate.organization) {
-                    user.organization = fieldsToUpdate.organization
+                if (organizationChange) {
+                    user.organization = organizationChange
+                }
+                if (profileImagePath) {
+                    const profileImageData = io.getProfileImageOrDefaultData(profileImagePath)
+                    user.profilePicture = {
+                        data: profileImageData,
+                        contentType: "image/png"
+                    }
                 }
                 user.save(function (err) {
                     if (err) {
@@ -353,7 +359,7 @@ function mapProjects() {
     var document = this;
 
     // You need to expand this according to your needs
-    var stopwords = ["the", "this", "and", "or", "#", "\`"];
+    var stopwords = ["the", "this", "and", "or", "#", "\`", "\""];
 
     for (var prop in document) {
         // We are only interested in strings and explicitly not in _id

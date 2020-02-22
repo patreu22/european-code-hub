@@ -18,7 +18,7 @@ class PageWrapper extends React.Component {
         };
 
         return (
-            <span>
+            <div>
                 <Sticky style={{ zIndex: 1000 }}>
                     <Header />
                 </Sticky>
@@ -27,7 +27,7 @@ class PageWrapper extends React.Component {
                     {this.props.children}
                 </div>
                 <Footer />
-            </span >
+            </div>
         );
     }
 

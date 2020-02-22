@@ -3,12 +3,14 @@ import { Avatar } from '@material-ui/core'
 import PageWrapper from '../components/PageWrapper'
 import { getUserByName, getUserByToken } from '../actions/httpActions'
 import { withRouter, Redirect } from "react-router";
+import ImageUploader from 'react-images-upload';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import ECHPaper from '../components/ECHPaper'
 import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { objectExists } from '../helper/objectHelper'
 import { updateUser } from '../helper/httpHelper'
+import { setVerificationCookieAndProfileImageAndUserNameInStore } from '../actions/httpActions'
 import { resetUserData, updateUserData_BEGIN, updateUserData_SUCCESS, updateUserData_FAILURE } from '../slices/userSlice'
 import { HOME } from '../routes';
 import { isValidEmail, isValidText } from '../helper/validationHelper'
@@ -27,7 +29,7 @@ class Profile extends Component {
         super(props)
         this.state = {
             shouldRedirectTo: "",
-            editMode: false,
+            editMode: true,
             mailChange: '',
             mailError: false,
             mailErrorMessage: '',
@@ -35,13 +37,15 @@ class Profile extends Component {
             organizationChange: '',
             organizationError: false,
             organizationErrorMessage: '',
-            organizationDefaultSet: false
+            organizationDefaultSet: false,
+            profileImageChange: undefined
         }
         this._onUpdateButtonClick = this._onUpdateButtonClick.bind(this)
         this._renderButtonBar = this._renderButtonBar.bind(this)
         this._onSavePressed = this._onSavePressed.bind(this)
         this._onCancelPressed = this._onCancelPressed.bind(this)
         this.onMailChanged = this.onMailChanged.bind(this)
+        this.onImageDrop = this.onImageDrop.bind(this)
     }
 
     componentDidMount() {
@@ -118,10 +122,7 @@ class Profile extends Component {
     }
 
     renderProfile(currentData) {
-        const profilePictureStyle = {
-            width: '25%',
-            height: '70%'
-        }
+
         const rowStyle = {
             display: 'flex',
             flexDirection: 'row',
@@ -138,19 +139,11 @@ class Profile extends Component {
             justifyContent: 'center'
         };
 
-        var profilePictureData = ""
-        if (currentData.profilePicture) {
-            profilePictureData = currentData.profilePicture.data.data
-        }
-        const profilePictureBaseString = "data:image/png;base64," + btoa(new Uint8Array(profilePictureData).reduce(function (data, byte) {
-            return data + String.fromCharCode(byte);
-        }, ''));
-
         return <div style={flexContainer}>
             <ECHPaper width="80%">
                 <div>
                     <div style={rowStyle}>
-                        {<Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />}
+                        {this._renderProfileImage(currentData)}
                         {this._renderDetails(currentData)}
                     </div>
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -159,6 +152,24 @@ class Profile extends Component {
                 </div>
             </ECHPaper>
         </div >
+    }
+
+    _renderProfileImage(currentData) {
+        const profilePictureStyle = {
+            width: '30%',
+            height: '50%'
+        }
+
+        var profilePictureData = ""
+        if (currentData.profilePicture) {
+            profilePictureData = currentData.profilePicture.data.data
+        }
+
+        const profilePictureBaseString = "data:image/png;base64," + btoa(new Uint8Array(profilePictureData).reduce(function (data, byte) {
+            return data + String.fromCharCode(byte);
+        }, ''));
+
+        return <Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />
     }
 
     _renderButtonBar() {
@@ -187,10 +198,14 @@ class Profile extends Component {
             if (this.state.organizationChange !== this.props.ownUserData.organization) {
                 fieldsToUpdate["organization"] = this.state.organizationChange
             }
+            if (this.state.profileImageChange) {
+                fieldsToUpdate["profileImageFile"] = this.state.profileImageChange
+            }
             if (objectExists(fieldsToUpdate)) {
                 updateUser(this.props.cookie, fieldsToUpdate)
                     .then((updated) => {
                         updated ? this.props.getUserByToken(this.props.cookie) : this.props.updateUserData_FAILURE()
+                        this.props.setVerificationCookieAndProfileImageAndUserNameInStore(this.props.cookie)
                         this.setState({ editMode: false })
                     })
                     .catch(err => {
@@ -240,7 +255,7 @@ class Profile extends Component {
                         />
                     </div>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
-                        <div style={{ alignSelf: 'center', display: 'inline-block', paddingRight: '5px' }}><EmailIcon /></div>
+                        <div style={{ alignSelf: 'center', display: 'inline-block', paddingRight: '5px' }}><GroupIcon /></div>
                         <ECHTextfield
                             label="Organization"
                             onChange={(event) => this.onOrganizationChanged(event)}
@@ -250,6 +265,18 @@ class Profile extends Component {
                             value={this.state.organizationChange}
                         />
                     </div>
+                    <ImageUploader
+                        withIcon={true}
+                        buttonText='Choose your profile picture'
+                        withPreview
+                        label="You can update your profile picture here"
+                        onChange={this.onImageDrop}
+                        accept="accept=image/*"
+                        singleImage={true}
+                        maxFileSize={5242880}
+                        disable={this.state.profileImage}
+                        buttonStyles={{ display: this.state.profileImage ? 'none' : 'block' }}
+                    />
                 </div>
             </ECHPaper>
         } else {
@@ -274,6 +301,12 @@ class Profile extends Component {
                 </div>
             </ECHPaper>
         }
+    }
+
+    onImageDrop(pictureFiles) {
+        this.setState({
+            profileImageChange: pictureFiles[0],
+        });
     }
 
     onMailChanged(event) {
@@ -319,6 +352,6 @@ const mapStateToProps = state => {
     }
 }
 
-const mapDispatchToProps = { getUserByName, getUserByToken, resetUserData, updateUserData_BEGIN, updateUserData_FAILURE, updateUserData_SUCCESS }
+const mapDispatchToProps = { setVerificationCookieAndProfileImageAndUserNameInStore, getUserByName, getUserByToken, resetUserData, updateUserData_BEGIN, updateUserData_FAILURE, updateUserData_SUCCESS }
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));

@@ -26,11 +26,19 @@ export function registerUser(username, password, mail, organization, profileImag
 
 export function updateUser(token, fieldsToUpdate) {
     return new Promise((resolve, reject) => {
+        var formData = new FormData();
+        for (let key in fieldsToUpdate) {
+            formData.append(key, fieldsToUpdate[key]);
+        }
+
         const options = {
             method: 'PUT',
             url: '/api/update/user',
-            headers: { Authorization: token },
-            data: { fieldsToUpdate }
+            headers: {
+                'Authorization': token,
+                'content-type': 'application/x-www-form-urlencoded'
+            },
+            data: formData
         }
 
         axios(options)
