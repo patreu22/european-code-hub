@@ -56,10 +56,6 @@ function Header(props) {
         setAnchorEl(event.currentTarget);
     };
 
-    const profileImagePicture = "data:image/png;base64," + btoa(new Uint8Array(props.profilePicture).reduce(function (data, byte) {
-        return data + String.fromCharCode(byte);
-    }, ''));
-
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
@@ -109,7 +105,7 @@ function Header(props) {
 
     const lastMenuEntry = props.verificationCookie
         ? {
-            icon: <Avatar src={profileImagePicture} alt={props.username} style={{ height: "30px", width: "30px" }} />,
+            icon: <Avatar src={props.profilePicture} alt={props.username} style={{ height: "30px", width: "30px" }} />,
             onClickHandler: handleProfileMenuOpen,
         }
         : {

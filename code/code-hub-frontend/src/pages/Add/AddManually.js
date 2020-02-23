@@ -41,7 +41,7 @@ class AddManually extends Component {
     }
 
     componentWillUnmount() {
-        // this.props.resetToDefaultState()
+        this.props.resetToDefaultState()
     }
 
     componentDidUpdate() {

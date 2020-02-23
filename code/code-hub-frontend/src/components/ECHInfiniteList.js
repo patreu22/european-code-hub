@@ -12,14 +12,19 @@ class ECHInfiniteList extends Component {
         }
 
         return <InfiniteScroll
-            pageStart={0}
+            pageStart={1}
             loadMore={this.props.loadMore}
             hasMore={this.props.hasMore}
             style={infiniteScrollStyle}
+            initialLoad={false}
             loader={<div style={{ paddingTop: '10px', paddingBottom: '10px', textAlign: 'center' }} className="loader" key={0}><ECHLoadingIndicator /></div>}
         >
             {this.renderProjectList()}
         </InfiniteScroll>
+    }
+
+    componentDidMount() {
+        this.props.loadMore(1)
     }
 
     illustration = <img src={NoDataIllustration} alt="No data" style={{
@@ -38,7 +43,7 @@ class ECHInfiniteList extends Component {
             justifyContent: 'flex-start'
         };
 
-        if (this.props.projects.length === 0) {
+        if (this.props.projects.length === 0 && !this.props.loadMore) {
             return <div>
                 <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >
                     {this.illustration}

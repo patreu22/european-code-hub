@@ -160,16 +160,7 @@ class Profile extends Component {
             height: '50%'
         }
 
-        var profilePictureData = ""
-        if (currentData.profilePicture) {
-            profilePictureData = currentData.profilePicture.data.data
-        }
-
-        const profilePictureBaseString = "data:image/png;base64," + btoa(new Uint8Array(profilePictureData).reduce(function (data, byte) {
-            return data + String.fromCharCode(byte);
-        }, ''));
-
-        return <Avatar src={profilePictureBaseString} alt={currentData.username} style={profilePictureStyle} />
+        return <Avatar src={currentData.profilePicture} alt={currentData.username} style={profilePictureStyle} />
     }
 
     _renderButtonBar() {

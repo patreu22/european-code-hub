@@ -50,7 +50,7 @@ class Project extends Component {
     }
 
     componentWillUnmount() {
-        // this.props.resetToDefaultState()
+        this.props.resetToDefaultState()
     }
 
     _renderContent() {

@@ -35,11 +35,11 @@ import store from '../store'
 import { removeVerificationToken } from '../helper/cookieHelper'
 
 
-export function getFilteredProjects(filters, currentPage, shouldConcatResults, isInitialLoadDone) {
+export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
     return function (dispatch) {
-        const itemsPerLoad = 30
+        const itemsPerLoad = 80
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
-        dispatch(loadFilteredData_BEGIN({ isInitialLoad: !isInitialLoadDone }))
+        dispatch(loadFilteredData_BEGIN())
         const options = {
             method: 'GET',
             url: '/api/get/projects',
@@ -133,7 +133,21 @@ export function getUserByToken(token) {
         dispatch(fetchOwnUserData_BEGIN())
 
         axios(options)
-            .then(response => dispatch(fetchOwnUserData_SUCCESS({ userData: response.data })))
+            .then(response => {
+                if (response.data.profilePicture) {
+                    const profileImagePicture = "data:image/png;base64," + btoa(new Uint8Array(response.data.profilePicture.data.data).reduce(function (data, byte) {
+                        return data + String.fromCharCode(byte);
+                    }, ''));
+                    b64toBlob(profileImagePicture)
+                        .then((blob) => {
+                            const url = window.URL.createObjectURL(blob)
+                            const userData = { ...response.data, profilePicture: url }
+                            dispatch(fetchOwnUserData_SUCCESS({ userData: userData }))
+                        })
+                } else {
+                    dispatch(fetchOwnUserData_SUCCESS({ userData: response.data }))
+                }
+            })
             .catch(err => dispatch(fetchOwnUserData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }
@@ -149,16 +163,35 @@ export function setVerificationCookieAndProfileImageAndUserNameInStore(token) {
         dispatch(setVerificationCookie({ cookie: token }))
 
         axios(options)
-            .then(response => response.data.profilePicture
-                ? dispatch(fetchProfilePictureAndUsername_SUCCESS({ profilePicture: response.data.profilePicture.data.data, username: response.data.username }))
-                : dispatch(fetchProfilePictureAndUsername_SUCCESS({ profilePicture: null, username: response.data.username })))
+            .then(response => {
+                if (response.data.profilePicture) {
+                    const profileImagePicture = "data:image/png;base64," + btoa(new Uint8Array(response.data.profilePicture.data.data).reduce(function (data, byte) {
+                        return data + String.fromCharCode(byte);
+                    }, ''));
+                    b64toBlob(profileImagePicture)
+                        .then((blob) => {
+                            const url = window.URL.createObjectURL(blob)
+                            dispatch(fetchProfilePictureAndUsername_SUCCESS({ profilePicture: url, username: response.data.username }))
+                        })
+                } else {
+                    dispatch(fetchProfilePictureAndUsername_SUCCESS({ profilePicture: null, username: response.data.username }))
+                }
+            })
             .catch(err => {
                 //User-Token outdated: Reset it in Redux and in Browser
-                if (err.response.status === 404) {
-                    removeVerificationToken()
-                    dispatch(resetVerificationCookie())
+                if (err.response) {
+                    if (err.response.status === 404) {
+                        removeVerificationToken()
+                        dispatch(resetVerificationCookie())
+                    }
+                    dispatch(fetchProfilePictureAndUsername_FAILURE({ errorCode: err.response.status, errorMessage: err.message }))
+                } else {
+                    console.log("ERROR!")
+                    console.log(err)
                 }
-                dispatch(fetchProfilePictureAndUsername_FAILURE({ errorCode: err.response.status, errorMessage: err.message }))
             })
     }
 }
+
+const b64toBlob = (base64, type = 'application/octet-stream') =>
+    fetch(`${base64}`).then(res => res.blob())

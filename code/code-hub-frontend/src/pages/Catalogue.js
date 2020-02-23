@@ -15,51 +15,32 @@ class Catalogue extends Component {
 
     constructor(props) {
         super(props)
-        this.state = {
-            initialLoadingDone: false
-        }
         this.loadFunc = this.loadFunc.bind(this)
     }
 
     componentWillUnmount() {
-        // this.props.resetToDefaultState()
+        this.props.resetToDefaultState()
     }
 
     render() {
-        if (this.props.isLoading) {
-            return < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
-                <ECHLoadingIndicator />
-            </PageWrapper>
-        } else {
-            return (
-                < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
-                    <ECHFilterBar />
-                    <ECHInfiniteList
-                        projects={this.props.projects}
-                        hasMore={this.props.moreChunkToLoad}
-                        loadMore={this.loadFunc}
-                    />
-                </PageWrapper >
-            );
-        }
+        return < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
+            <ECHFilterBar />
+            <ECHInfiniteList
+                projects={this.props.projects}
+                hasMore={this.props.moreChunkToLoad}
+                loadMore={this.loadFunc}
+            />
+        </PageWrapper >
     }
 
     //TODO: Loading Hänger!
-    loadFunc = (page) => {
-        if (!this.state.initialLoadingDone) {
-            this.props.getFilteredProjects(this.props.currentFilters, page, true, false)
-            this.setState({ initialLoadingDone: true })
-        } else {
-            this.props.getFilteredProjects(this.props.currentFilters, page, true, true)
-        }
-    }
+    loadFunc = (page) => this.props.getFilteredProjects(this.props.currentFilters, page, true)
 
 }
 
 const mapStateToProps = state => {
     return {
         projects: state.projectOverview.projects,
-        initialLoading: state.projectOverview.initialLoading,
         moreChunkToLoad: state.projectOverview.moreChunkToLoad,
     }
 }
