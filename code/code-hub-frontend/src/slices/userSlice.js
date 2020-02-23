@@ -138,6 +138,7 @@ export const {
     fetchProfilePictureAndUsername_FAILURE,
     resetUserData,
     resetToDefault,
+    resetVerificationCookie,
     fetchUserData_BEGIN,
     fetchUserData_SUCCESS,
     fetchUserData_FAILURE,

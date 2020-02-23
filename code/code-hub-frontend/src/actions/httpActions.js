@@ -29,13 +29,15 @@ import {
     fetchOwnUserData_SUCCESS,
     fetchOwnUserData_FAILURE,
     setVerificationCookie,
+    resetVerificationCookie
 } from '../slices/userSlice'
 import store from '../store'
+import { removeVerificationToken } from '../helper/cookieHelper'
 
 
 export function getFilteredProjects(filters, currentPage, shouldConcatResults, isInitialLoadDone) {
     return function (dispatch) {
-        const itemsPerLoad = 20
+        const itemsPerLoad = 30
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
         dispatch(loadFilteredData_BEGIN({ isInitialLoad: !isInitialLoadDone }))
         const options = {
@@ -150,6 +152,13 @@ export function setVerificationCookieAndProfileImageAndUserNameInStore(token) {
             .then(response => response.data.profilePicture
                 ? dispatch(fetchProfilePictureAndUsername_SUCCESS({ profilePicture: response.data.profilePicture.data.data, username: response.data.username }))
                 : dispatch(fetchProfilePictureAndUsername_SUCCESS({ profilePicture: null, username: response.data.username })))
-            .catch(err => dispatch(fetchProfilePictureAndUsername_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+            .catch(err => {
+                //User-Token outdated: Reset it in Redux and in Browser
+                if (err.response.status === 404) {
+                    removeVerificationToken()
+                    dispatch(resetVerificationCookie())
+                }
+                dispatch(fetchProfilePictureAndUsername_FAILURE({ errorCode: err.response.status, errorMessage: err.message }))
+            })
     }
 }
