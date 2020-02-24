@@ -70,7 +70,7 @@ class Profile extends Component {
         const cookie = this.props.cookie
         const ownUserDataExists = objectExists(this.props.ownUserData)
 
-        if (this.props.ownUserData && !this.state.mailChange && !this.state.mailDefaultSet) {
+        if (ownUserDataExists && !this.state.mailChange && !this.state.mailDefaultSet) {
             this.setState({ mailChange: this.props.ownUserData.mail, mailDefaultSet: true })
         }
 
