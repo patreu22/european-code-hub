@@ -26,7 +26,6 @@ app.get('/ping', function (req, res) {
 
 app.post('/api/create/project', authentication.isAuthorized, function (req, res) {
     const projectData = req.body.projectData;
-    const creatorName = req.body.creatorName;
     if (projectData) {
         if (projectData.projectName) {
             database.projectExists({ projectName: projectData.projectName })
@@ -34,7 +33,7 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
                     if (projectExists) {
                         return res.status(409).send({ errorType: "projectNameExists" })
                     } else {
-                        database.saveProjectToDB(projectData, creatorName)
+                        database.saveProjectToDB(projectData)
                             .then(response => {
                                 if (response.saved) {
                                     io.getRemoteMarkdownFileAsDataString(projectData.repoUrl)

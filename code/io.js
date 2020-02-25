@@ -56,7 +56,7 @@ function _requestReadme(resolve, reject, repoLink, readmeFileName) {
                             const nextReadmeName = possibleReadmeFileNames[index + 1]
                             _requestReadme(resolve, reject, repoLink, nextReadmeName)
                         } else {
-                            reject({ error: "Could not find any Readme" })
+                            reject({ code: 404, error: "Could not find any Readme" })
                         }
                     }
                 } else {

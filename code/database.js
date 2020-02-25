@@ -302,7 +302,7 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
     });
 }
 
-function saveProjectToDB(projectData, creatorName) {
+function saveProjectToDB(projectData) {
     return new Promise(function (resolve, reject) {
         if (mandatoryFieldsExist(projectData)) {
             //TODO: This does not look very Code.json compliant - Check it!
@@ -312,7 +312,7 @@ function saveProjectToDB(projectData, creatorName) {
                     created: projectData.dateCreated,
                     lastModified: projectData.dateLastModified
                 },
-                creatorName: creatorName || "generated"
+                creatorName: projectData.creatorName || "scraped-by-robo"
             })
             newProject.save(function (err, newProject) {
                 if (err) {
