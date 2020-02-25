@@ -9,7 +9,7 @@ class Contribute extends Component {
         return (
             <PageWrapper headlineTitle="Contribute to this project" showBackButton={true}>
                 <Box style={{ flexDirection: "row", display: 'flex' }}>
-                    <ECHPaper title="Great you are here!" buttonTitle="Github project" buttonLink="https://github.com/patreu22/european-code-hub">
+                    <ECHPaper title="Great you are here!" buttonTitle="Github project" href="https://github.com/patreu22/european-code-hub">
                         <div>
                             We are really excited that you want to join us. The best way would be to connect with us on Github. You can either create your own
                             Pull Request and suggest some new features or simply checkout our open issues and problems. We could really need a helping hand.
