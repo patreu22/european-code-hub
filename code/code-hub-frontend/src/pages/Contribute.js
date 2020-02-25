@@ -18,6 +18,7 @@ class Contribute extends Component {
                     <ECHPaper title="More about this project?" buttonTitle="TU IKM Website" buttonLink="https://www.ikm.tu-berlin.de/menue/fachgebiet_iuk_management/parameter/en/">
                         <div>
                             This is the Master thesis project of a student of TU Berlin in the subject of Information Systems Management.Big thanks go to Jakob Korbel who supported this project as a supervisor.
+                            The professor in charge is Prof. Dr. Rüdiger Zarnekow.
                         </div>
                     </ECHPaper>
                 </Box>

@@ -52,7 +52,7 @@ export default function Modal(props) {
                         This is the Master thesis project of a student
                         of TU Berlin in the subject of Information Systems Management.<br />
                         Big thanks go to Jakob Korbel who supported
-                            this project as a supervisor.<br />
+                            this project as a supervisor and to Prof. Rüdiger Zarnekow who is the professor in charge of this thesis.<br />
                     </Typography>
                 </DialogContent>
             </Dialog>
