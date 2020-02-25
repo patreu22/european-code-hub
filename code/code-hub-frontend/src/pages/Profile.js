@@ -161,11 +161,26 @@ class Profile extends Component {
             height: '200px',
         }
 
-        return <Avatar src={currentData.profilePicture} alt={currentData.username} style={profilePictureStyle} />
+        if (currentData.profilePicture) {
+            if (currentData.profilePicture.data) {
+                const profileImagePicture = "data:image/png;base64," + btoa(new Uint8Array(currentData.profilePicture.data.data).reduce(function (data, byte) {
+                    return data + String.fromCharCode(byte);
+                }, ''));
+                return <Avatar src={profileImagePicture} alt={currentData.username} style={profilePictureStyle} />
+            } else {
+                return <Avatar src={currentData.profilePicture} alt={currentData.username} style={profilePictureStyle} />
+            }
+        } else {
+            return <Avatar src={currentData.profilePicture} alt={currentData.username} style={profilePictureStyle} />
+        }
     }
 
     _renderButtonBar() {
-        if (this.props.ownUserData) {
+        const currentUserDataExists = objectExists(this.props.currentUserData)
+        const currentUserIsLoggedInUser = currentUserDataExists
+            ? this.props.currentUserData.username === this.props.username
+            : false
+        if (objectExists(this.props.ownUserData) || currentUserIsLoggedInUser) {
             if (this.state.editMode) {
                 return <div style={{ display: 'flex', flexDirection: 'row' }}>
                     <div style={{ display: 'inline-block', paddingRight: '20px' }}>
@@ -342,6 +357,7 @@ const mapStateToProps = state => {
         cookie: state.user.cookie,
         currentUserData: state.user.currentUserData,
         ownUserData: state.user.ownUserData,
+        username: state.user.username,
         error: state.user.error
     }
 }
