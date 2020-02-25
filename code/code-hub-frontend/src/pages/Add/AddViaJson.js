@@ -7,7 +7,7 @@ import ECHPaper from '../../components/ECHPaper'
 import ECHButton from '../../components/ECHButton'
 import { parseToJsonObject } from '../../helper/fileHelper'
 import { objectExists } from '../../helper/objectHelper'
-import { ADD_MANUALLY } from '../../routes'
+import { ADD_MANUALLY, LOGIN } from '../../routes'
 
 import { processJson } from '../../actions/jsonActions'
 
@@ -31,17 +31,21 @@ class AddViaJson extends Component {
     }
 
     render() {
-        var content;
-        switch (this.props.currentStep) {
-            case 0:
-                content = this._renderFirstStep();
-                break
-            case 1:
-                return <Redirect to={ADD_MANUALLY} />
-            default:
-                content = this._renderFirstStep();
+        if (this.props.cookie) {
+            var content;
+            switch (this.props.currentStep) {
+                case 0:
+                    content = this._renderFirstStep();
+                    break
+                case 1:
+                    return <Redirect to={ADD_MANUALLY} />
+                default:
+                    content = this._renderFirstStep();
+            }
+            return <PageWrapper headlineTitle={"Add project via Code.json file"} showBackButton={true}>{content}</PageWrapper>
+        } else {
+            return <Redirect to={LOGIN} />
         }
-        return <PageWrapper headlineTitle={"Add project via Code.json file"} showBackButton={true}>{content}</PageWrapper>
     }
 
     _renderFirstStep = () => <div>
@@ -150,7 +154,8 @@ class AddViaJson extends Component {
 
 const mapStateToProps = state => {
     return {
-        currentStep: state.createProject.addProjectCurrentStep
+        currentStep: state.createProject.addProjectCurrentStep,
+        cookie: state.user.cookie
     }
 }
 

@@ -11,7 +11,7 @@ import ECHMultipleSelect from '../../components/ECHMultipleSelect'
 import { objectExists } from '../../helper/objectHelper'
 import { isValidText, isValidUrl } from '../../helper/validationHelper'
 import { Redirect } from 'react-router-dom'
-import { PROJECTS } from '../../routes'
+import { PROJECTS, LOGIN } from '../../routes'
 
 import { updateProjectDataAttribute, resetError, resetToDefaultState } from '../../slices/createProjectSlice'
 import { sendNewProjectToBackend } from '../../actions/httpActions'
@@ -55,14 +55,18 @@ class AddManually extends Component {
     }
 
     render() {
-        if (this.props.successfullySubmitted) {
-            return <Redirect to={`${PROJECTS}/${this.props.projectData.projectName}`} />
+        if (this.props.cookie) {
+            if (this.props.successfullySubmitted) {
+                return <Redirect to={`${PROJECTS}/${this.props.projectData.projectName}`} />
+            } else {
+                return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
+                    <div>
+                        <ECHPaper width={"40vw"} title="Information dialogue">{this._renderContentField()}</ECHPaper>
+                    </div>
+                </PageWrapper >
+            }
         } else {
-            return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
-                <div>
-                    <ECHPaper width={"40vw"} title="Information dialogue">{this._renderContentField()}</ECHPaper>
-                </div>
-            </PageWrapper >
+            return <Redirect to={LOGIN} />
         }
     }
 
@@ -317,7 +321,8 @@ const mapStateToProps = state => {
     return {
         projectData: state.createProject.projectData,
         error: state.createProject.error,
-        successfullySubmitted: state.createProject.successfullySubmitted
+        successfullySubmitted: state.createProject.successfullySubmitted,
+        cookie: state.user.cookie
     }
 }
 
