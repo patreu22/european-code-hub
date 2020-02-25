@@ -157,8 +157,8 @@ class Profile extends Component {
 
     _renderProfileImage(currentData) {
         const profilePictureStyle = {
-            width: '20%',
-            height: '30%',
+            width: '200px',
+            height: '200px',
         }
 
         return <Avatar src={currentData.profilePicture} alt={currentData.username} style={profilePictureStyle} />
