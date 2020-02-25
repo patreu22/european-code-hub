@@ -157,8 +157,8 @@ class Profile extends Component {
 
     _renderProfileImage(currentData) {
         const profilePictureStyle = {
-            width: '30%',
-            height: '50%'
+            width: '20%',
+            height: '30%',
         }
 
         return <Avatar src={currentData.profilePicture} alt={currentData.username} style={profilePictureStyle} />
@@ -204,6 +204,8 @@ class Profile extends Component {
                         this.props.updateUserData_FAILURE()
                         this.setState({ editMode: false })
                     })
+            } else {
+                this.setState({ editMode: false })
             }
         }
     }
@@ -228,7 +230,7 @@ class Profile extends Component {
 
     _renderDetails(currentData) {
         if (this.state.editMode) {
-            return <ECHPaper title="Details" width="70%">
+            return <ECHPaper title="Details" width="73%">
                 <div>
                     <ECHIconAndText
                         icon={<PersonIcon />}
@@ -272,7 +274,7 @@ class Profile extends Component {
                 </div>
             </ECHPaper>
         } else {
-            return <ECHPaper title="Details" width="70%">
+            return <ECHPaper title="Details" width="73%">
                 <div>
                     <ECHIconAndText
                         icon={<PersonIcon />}
