@@ -152,6 +152,9 @@ class Profile extends Component {
                     </div>
                 </div>
             </ECHPaper>
+            <ECHPaper title="Projects added" width="80%">
+                <div>This is a list of all projects...</div>
+            </ECHPaper>
         </div >
     }
 
