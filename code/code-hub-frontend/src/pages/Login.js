@@ -7,12 +7,17 @@ import { connect } from 'react-redux'
 import { USER } from '../routes'
 
 class Login extends Component {
+
     render() {
-        console.log(this.props.cookie)
-        const contentToRender = this.props.cookie
-            ? <Redirect to={USER} />
-            : this.pageContent()
-        return contentToRender
+        const pathToRedirect = this.props.lastLocation ? this.props.lastLocation.pathname : "/"
+        if (this.props.cookie && pathToRedirect) {
+            return <Redirect to={pathToRedirect} />
+        } else {
+            const contentToRender = this.props.cookie
+                ? <Redirect to={USER} />
+                : this.pageContent()
+            return contentToRender
+        }
     }
 
     pageContent = () => {

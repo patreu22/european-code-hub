@@ -19,6 +19,7 @@ import {
     Person as PersonIcon,
     EmailOutlined as EmailIcon,
 } from '@material-ui/icons'
+import { getVerificationToken } from '../helper/cookieHelper'
 import ECHIconAndText from '../components/ECHIconAndText';
 import ECHButton from '../components/ECHButton';
 import ECHTextfield from '../components/ECHTextfield';
@@ -85,7 +86,7 @@ class Profile extends Component {
                 this.props.resetUserData()
             }
             this.props.getUserByToken(cookie)
-        } else if (!username && !cookie) {
+        } else if (!username && !getVerificationToken()) {
             this.setState({ shouldRedirectTo: HOME })
         }
     }
