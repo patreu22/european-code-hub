@@ -274,7 +274,7 @@ class AddManually extends Component {
             this.props.resetError()
             this.setState({ showRemoteError: true })
             if (this.allRequiredFieldsAvailable()) {
-                this.props.sendNewProjectToBackend(this.props.projectData)
+                this.props.sendNewProjectToBackend(this.props.projectData, this.props.cookie)
             }
             //TODO: Handle manual review double check (Sth like a review window)
         } else {

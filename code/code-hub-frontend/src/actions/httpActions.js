@@ -77,12 +77,24 @@ export function getSearchResults(searchTerm, currentPage, shouldConcatResults) {
     }
 }
 
-export function sendNewProjectToBackend(projectData) {
+export function sendNewProjectToBackend(projectData, token) {
     return function (dispatch) {
         dispatch(sendProject_BEGIN())
         //TODO: Handle Error 202 - Accepted but could not be processed
         const redux = store.getState()
-        axios.post('/api/create/project', { projectData: projectData, creatorName: redux.user.username })
+        const options = {
+            method: 'POST',
+            headers: { Authorization: token },
+            url: '/api/create/project',
+            data: {
+                projectData: {
+                    ...projectData,
+                    creatorName: redux.user.username
+                }
+            }
+        }
+
+        axios(options)
             .then(() => dispatch(sendProject_SUCCESS()))
             .catch((err) => dispatch(sendProject_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }

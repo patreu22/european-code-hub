@@ -80,6 +80,7 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
             res.status(422).send("No project name provided")
         }
     } else {
+        console.log("No project data at all provided")
         res.status(422).send("No project data at all provided")
     }
 })

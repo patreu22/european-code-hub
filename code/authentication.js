@@ -42,11 +42,13 @@ const isAuthorized = (req, res, next) => {
         let privateKey = fs.readFileSync(privateKeyPath, 'utf8');
         jwt.verify(token, privateKey, { algorithm: "HS256" }, (err, user) => {
             if (err) {
+                console.log("Unauthorized request - token invalid")
                 res.status(500).json({ error: "Not Authorized" });
             }
             return next();
         });
     } else {
+        console.log("Unauthorized request - no token")
         res.status(500).json({ error: "Not Authorized" });
     }
 }
