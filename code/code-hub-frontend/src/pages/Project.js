@@ -25,6 +25,7 @@ import {
 } from '@material-ui/icons/';
 import MarkdownGithub from 'react-markdown-github';
 import { Divider } from '@material-ui/core';
+import { USER } from '../routes';
 
 class Project extends Component {
 
@@ -188,6 +189,19 @@ class Project extends Component {
 
     _renderContactBox() {
         const contactExists = objectExists(this.props.currentProject.contact)
+        const createItemObject = this.props.currentProject.creatorName === "scraped-by-robo" || this.props.currentProject.creatorName === "generated"
+            ? this.props.currentProject.creatorName && this._renderIconAndText({
+                icon: <CreateIcon />,
+                text: this.props.currentProject.creatorName,
+                tooltipText: "Created by"
+            })
+            : this.props.currentProject.creatorName && this._renderIconAndText({
+                icon: <CreateIcon />,
+                text: this.props.currentProject.creatorName,
+                link: `${USER}/${this.props.currentProject.creatorName}`,
+                tooltipText: "Created by"
+            })
+
         return (contactExists || this.props.currentProject.creatorName) && <ECHPaper title="Contact details">
             <div>
                 {contactExists && this._renderIconAndText({
@@ -201,11 +215,7 @@ class Project extends Component {
                     link: `mailto:${this.props.currentProject.contact.email}`,
                     tooltipText: "Contact mail"
                 })}
-                {this.props.currentProject.creatorName && this._renderIconAndText({
-                    icon: <CreateIcon />,
-                    text: this.props.currentProject.creatorName,
-                    tooltipText: "Created by"
-                })}
+                {createItemObject}
             </div>
         </ECHPaper >
     }
