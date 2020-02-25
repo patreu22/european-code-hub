@@ -200,6 +200,11 @@ class Project extends Component {
                     link: `mailto:${this.props.currentProject.contact.email}`,
                     tooltipText: "Contact mail"
                 })}
+                {this._renderIconAndText({
+                    icon: <CreateIcon />,
+                    text: this.props.currentProject.creatorName,
+                    tooltipText: "Created by"
+                })}
             </div>
         </ECHPaper >
     }
