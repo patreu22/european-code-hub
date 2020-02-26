@@ -29,7 +29,10 @@ import {
     fetchOwnUserData_SUCCESS,
     fetchOwnUserData_FAILURE,
     setVerificationCookie,
-    resetVerificationCookie
+    resetVerificationCookie,
+    fetchUserProjects_BEGIN,
+    fetchUserProjects__SUCCESS,
+    fetchUserProjects_FAILURE,
 } from '../slices/userSlice'
 import store from '../store'
 import { removeVerificationToken } from '../helper/cookieHelper'
@@ -134,6 +137,24 @@ export function getUserByName(username) {
     }
 }
 
+export function getUserProjectsByName(username) {
+    return function (dispatch) {
+        const options = {
+            method: 'GET',
+            url: '/api/get/projects',
+            params: {
+                username
+            }
+        }
+
+        dispatch(fetchUserProjects_BEGIN())
+
+        axios(options)
+            .then(response => dispatch(fetchUserProjects__SUCCESS({ userProjects: response.data })))
+            .catch(err => dispatch(fetchUserProjects_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+    }
+}
+
 export function getUserByToken(token) {
     return function (dispatch) {
         const options = {
@@ -205,5 +226,5 @@ export function setVerificationCookieAndProfileImageAndUserNameInStore(token) {
     }
 }
 
-const b64toBlob = (base64, type = 'application/octet-stream') =>
+const b64toBlob = (base64) =>
     fetch(`${base64}`).then(res => res.blob())

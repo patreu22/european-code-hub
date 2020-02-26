@@ -1,5 +1,5 @@
 import React, { Component, } from 'react';
-import { Avatar } from '@material-ui/core'
+import { Avatar, ListItem, List } from '@material-ui/core'
 import PageWrapper from '../components/PageWrapper'
 import { getUserByName, getUserByToken } from '../actions/httpActions'
 import { withRouter, Redirect } from "react-router";
@@ -10,7 +10,7 @@ import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { objectExists } from '../helper/objectHelper'
 import { updateUser } from '../helper/httpHelper'
-import { setVerificationCookieAndProfileImageAndUserNameInStore } from '../actions/httpActions'
+import { setVerificationCookieAndProfileImageAndUserNameInStore, getUserProjectsByName } from '../actions/httpActions'
 import { resetUserData, updateUserData_BEGIN, updateUserData_SUCCESS, updateUserData_FAILURE } from '../slices/userSlice'
 import { HOME } from '../routes';
 import { isValidEmail, isValidText } from '../helper/validationHelper'
@@ -23,6 +23,7 @@ import { getVerificationToken } from '../helper/cookieHelper'
 import ECHIconAndText from '../components/ECHIconAndText';
 import ECHButton from '../components/ECHButton';
 import ECHTextfield from '../components/ECHTextfield';
+import { PROJECTS } from '../routes'
 
 class Profile extends Component {
 
@@ -39,7 +40,9 @@ class Profile extends Component {
             organizationError: false,
             organizationErrorMessage: '',
             organizationDefaultSet: false,
-            profileImageChange: undefined
+            profileImageChange: undefined,
+            fetchedUserProjects: false,
+            checkedForUserProjects: false
         }
         this._onUpdateButtonClick = this._onUpdateButtonClick.bind(this)
         this._renderButtonBar = this._renderButtonBar.bind(this)
@@ -50,9 +53,11 @@ class Profile extends Component {
     }
 
     componentDidMount() {
-        const userName = this.props.match.params.username;
-        if (userName) {
-            this.props.getUserByName(userName)
+        const username = this.props.match.params.username;
+        if (username) {
+            this.props.getUserByName(username)
+            this.props.getUserProjectsByName(username)
+            this.setState({ checkedForUserProjects: true })
         } else {
             this._handleDataFetch()
         }
@@ -70,6 +75,7 @@ class Profile extends Component {
         const username = this.props.match.params.username;
         const cookie = this.props.cookie
         const ownUserDataExists = objectExists(this.props.ownUserData)
+        const userProjectsExist = this.props.userProjects.length > 0
 
         if (ownUserDataExists && !this.state.mailChange && !this.state.mailDefaultSet) {
             this.setState({ mailChange: this.props.ownUserData.mail, mailDefaultSet: true })
@@ -88,6 +94,17 @@ class Profile extends Component {
             this.props.getUserByToken(cookie)
         } else if (!username && !getVerificationToken()) {
             this.setState({ shouldRedirectTo: HOME })
+        }
+
+
+        if (!userProjectsExist && !this.state.checkedForUserProjects) {
+            if (username) {
+                this.props.getUserProjectsByName(username)
+                this.setState({ checkedForUserProjects: true })
+            } else if (this.props.username) {
+                this.props.getUserProjectsByName(this.props.username)
+                this.setState({ checkedForUserProjects: true })
+            }
         }
     }
 
@@ -152,10 +169,29 @@ class Profile extends Component {
                     </div>
                 </div>
             </ECHPaper>
-            <ECHPaper title="Projects added" width="80%">
-                <div>This is a list of all projects...</div>
-            </ECHPaper>
+            {this._renderProjectList()}
         </div >
+    }
+
+    _renderProjectList() {
+        if (this.props.userProjects.length > 0) {
+            const listElements = this.props.userProjects.map((project, index) => this.getListRow(project, index))
+            return <ECHPaper title="Projects added by this user" width="80%">
+                <List>{listElements}</List>
+            </ECHPaper>
+        } else {
+            return null
+        }
+    }
+
+    getListRow(project, index) {
+        return <ListItem key={index}>
+            <div>
+                <a href={`${PROJECTS}/${project.projectName}`}>
+                    {project.projectName}
+                </a>
+            </div>
+        </ListItem>
     }
 
     _renderProfileImage(currentData) {
@@ -214,7 +250,9 @@ class Profile extends Component {
             if (objectExists(fieldsToUpdate)) {
                 updateUser(this.props.cookie, fieldsToUpdate)
                     .then((updated) => {
-                        updated ? this.props.getUserByToken(this.props.cookie) : this.props.updateUserData_FAILURE()
+                        updated
+                            ? this.props.getUserByToken(this.props.cookie)
+                            : this.props.updateUserData_FAILURE()
                         this.props.setVerificationCookieAndProfileImageAndUserNameInStore(this.props.cookie)
                         this.setState({ editMode: false })
                     })
@@ -357,14 +395,25 @@ class Profile extends Component {
 const mapStateToProps = state => {
     return {
         isLoading: state.user.isLoading,
+        isLoadingProjects: state.user.isLoadingProjects,
         cookie: state.user.cookie,
         currentUserData: state.user.currentUserData,
         ownUserData: state.user.ownUserData,
         username: state.user.username,
-        error: state.user.error
+        error: state.user.error,
+        userProjects: state.user.userProjects
     }
 }
 
-const mapDispatchToProps = { setVerificationCookieAndProfileImageAndUserNameInStore, getUserByName, getUserByToken, resetUserData, updateUserData_BEGIN, updateUserData_FAILURE, updateUserData_SUCCESS }
+const mapDispatchToProps = {
+    setVerificationCookieAndProfileImageAndUserNameInStore,
+    getUserByName,
+    getUserByToken,
+    resetUserData,
+    updateUserData_BEGIN,
+    updateUserData_FAILURE,
+    updateUserData_SUCCESS,
+    getUserProjectsByName
+}
 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Profile));

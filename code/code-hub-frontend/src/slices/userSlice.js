@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 const resetUserDataDefault = {
     isLoading: false,
     currentUserData: {},
+    userProjects: [],
     ownUserData: {}
 }
 
@@ -88,7 +89,6 @@ const userSlice = createSlice({
                 isLoading: false,
                 ownUserData: payload.userData
             }
-
         },
         fetchOwnUserData_FAILURE: (state, action) => {
             const payload = action.payload;
@@ -96,6 +96,32 @@ const userSlice = createSlice({
                 ...state,
                 isLoading: false,
                 ownUserData: {},
+                error: {
+                    code: payload.errorCode,
+                    message: payload.errorMessage
+                }
+            }
+        },
+        fetchUserProjects_BEGIN: (state) => {
+            return {
+                ...state,
+                isLoadingProjects: true
+            }
+        },
+        fetchUserProjects__SUCCESS: (state, action) => {
+            const payload = action.payload;
+            return {
+                ...state,
+                isLoadingProjects: false,
+                userProjects: payload.userProjects
+            }
+        },
+        fetchUserProjects_FAILURE: (state, action) => {
+            const payload = action.payload;
+            return {
+                ...state,
+                isLoadingProjects: false,
+                userProjects: [],
                 error: {
                     code: payload.errorCode,
                     message: payload.errorMessage
@@ -145,6 +171,9 @@ export const {
     fetchOwnUserData_BEGIN,
     fetchOwnUserData_SUCCESS,
     fetchOwnUserData_FAILURE,
+    fetchUserProjects_BEGIN,
+    fetchUserProjects__SUCCESS,
+    fetchUserProjects_FAILURE,
     updateUserData_BEGIN,
     updateUserData_SUCCESS,
     updateUserData_FAILURE
