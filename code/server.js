@@ -152,13 +152,23 @@ app.get('/api/get/project', function (req, res) {
 app.get('/api/get/projects/', function (req, res) {
     const resultsToSkip = req.query.resultsToSkip;
     const itemsPerLoad = req.query.itemsPerLoad;
+    const username = req.query.username;
     const filters = req.query.filters;
-    database.getProjectChunk(JSON.parse(filters || '{}'), parseInt(resultsToSkip), parseInt(itemsPerLoad))
-        .then(projects => res.status(200).send(projects))
-        .catch((err) => {
-            console.log(err)
-            res.sendStatus(400)
-        })
+    if (username) {
+        database.getProjectsOfUser(username)
+            .then(projects => res.status(200).send(projects))
+            .catch((err) => {
+                console.log(err)
+                res.sendStatus(400)
+            })
+    } else {
+        database.getProjectChunk(JSON.parse(filters || '{}'), parseInt(resultsToSkip), parseInt(itemsPerLoad))
+            .then(projects => res.status(200).send(projects))
+            .catch((err) => {
+                console.log(err)
+                res.sendStatus(400)
+            })
+    }
 });
 
 app.get('/api/get/autocomplete', function (req, res) {

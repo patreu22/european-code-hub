@@ -61,6 +61,16 @@ function userAndHashExistInDB({ mail, password }) {
     });
 }
 
+function getProjectsOfUser(username) {
+    return new Promise(function (resolve, reject) {
+        models.PROJECT_MODEL.find({ creatorName: username })
+            .collation({ locale: "en" })
+            .sort("projectName")
+            .then((results) => resolve(results))
+            .catch((err) => reject(err))
+    })
+}
+
 function getAllProjects() {
     return new Promise(function (resolve, reject) {
         models.PROJECT_MODEL.find({})
@@ -466,6 +476,7 @@ module.exports = {
     updateSessionToken,
     getUser,
     getProjectByName,
+    getProjectsOfUser,
     projectExists,
     updateProjectReadme,
     getProjectChunk,
