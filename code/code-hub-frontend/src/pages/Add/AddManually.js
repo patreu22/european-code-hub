@@ -8,6 +8,7 @@ import ECHPaper from '../../components/ECHPaper'
 import ECHButton from '../../components/ECHButton'
 import ECHTextfield from '../../components/ECHTextfield'
 import ECHMultipleSelect from '../../components/ECHMultipleSelect'
+import ECHLoadingIndicator from '../../components/ECHLoadingIndicator'
 import { objectExists } from '../../helper/objectHelper'
 import { isValidText, isValidUrl } from '../../helper/validationHelper'
 import { Redirect } from 'react-router-dom'
@@ -56,6 +57,17 @@ class AddManually extends Component {
 
     render() {
         if (this.props.cookie) {
+            if (this.props.isLoading) {
+                return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
+                    <div>
+                        <ECHPaper width={"40vw"} title="Information dialogue">
+                            <div style={{ display: 'flex', alignItems: 'center' }}>
+                                <ECHLoadingIndicator />
+                            </div>
+                        </ECHPaper>
+                    </div>
+                </PageWrapper >
+            }
             if (this.props.successfullySubmitted) {
                 return <Redirect to={`${PROJECTS}/${this.props.projectData.projectName}`} />
             } else {
@@ -282,8 +294,6 @@ class AddManually extends Component {
         }
     }
 
-    scrollToRef = (ref) => window.scrollTo(0, ref.current.offsetTop)
-
     allRequiredFieldsAvailable() {
         var newState = {}
         if (!this.props.projectData.projectName) {
@@ -322,6 +332,7 @@ const mapStateToProps = state => {
         projectData: state.createProject.projectData,
         error: state.createProject.error,
         successfullySubmitted: state.createProject.successfullySubmitted,
+        isLoading: state.createProject.isLoading,
         cookie: state.user.cookie
     }
 }
