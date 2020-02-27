@@ -328,31 +328,29 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
 }
 
 function activateUser(activationToken) {
-    console.log(activationToken)
     return new Promise(function (resolve, reject) {
         getUser({ activationToken })
             .then((user) => {
                 if (user) {
                     if (user.activationToken === activationToken && !user.activated) {
-                        resolve(true)
-                        // user.activated = true
-                        // user.save(function (err) {
-                        //     if (err) {
-                        //         console.log(err)
-                        //         reject(err)
-                        //     } else {
-                        //         console.log(`Activated ${user.username}`)
-                        //         resolve(true)
-                        //     }
-                        // })
+                        user.activated = true
+                        user.activationToken = undefined
+                        user.save(function (err) {
+                            if (err) {
+                                console.log(err)
+                                reject(err)
+                            } else {
+                                resolve({ activated: true })
+                            }
+                        })
                     } else {
-                        reject({ response: { code: 404 }, message: "User was not found" })
+                        reject({ activated: false, response: { code: 401 }, message: "User was already activated" })
                     }
                 } else {
-                    reject({ response: { code: 404 }, message: "User was not found" })
+                    reject({ activated: false, response: { code: 404 }, message: "User was not found" })
                 }
             })
-            .catch(err => reject(err))
+            .catch(err => reject({ activated: false, response: { code: 404 }, message: "User was not found" }))
     })
 }
 

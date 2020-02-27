@@ -6,28 +6,28 @@ const defaultState = {
         code: null,
         message: null
     },
-    verified: false
+    activated: false
 }
 
-const searchSlice = createSlice({
-    name: "verify",
+const activateSlice = createSlice({
+    name: "activate",
     initialState: defaultState,
     reducers: {
-        verify_BEGIN: (state) => {
+        activate_BEGIN: (state) => {
             return {
                 ...state,
                 isLoading: true
             }
         },
-        verify_SUCCESS: (state) => {
+        activate_SUCCESS: (state) => {
             const updated = {
                 ...state,
                 isLoading: false,
-                verified: true
+                activated: true
             }
             return updated
         },
-        verify_FAILURE: (state, action) => {
+        activate_FAILURE: (state, action) => {
             const payload = action.payload;
             return {
                 ...state,
@@ -45,9 +45,10 @@ const searchSlice = createSlice({
 })
 
 export const {
-    verify_BEGIN,
-    verify_SUCCESS,
-    verify_FAILURE
-} = searchSlice.actions
+    activate_BEGIN,
+    activate_SUCCESS,
+    activate_FAILURE,
+    resetToDefaultState
+} = activateSlice.actions
 
-export default searchSlice;
+export default activateSlice;

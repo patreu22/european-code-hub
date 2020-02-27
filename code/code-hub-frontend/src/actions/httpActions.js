@@ -37,6 +37,11 @@ import {
     registerUser_SUCCESS,
     registerUser_FAILURE
 } from '../slices/userSlice'
+import {
+    activate_BEGIN,
+    activate_SUCCESS,
+    activate_FAILURE
+} from '../slices/activateSlice'
 import store from '../store'
 import { removeVerificationToken } from '../helper/cookieHelper'
 
@@ -216,6 +221,24 @@ export function registerUser(username, password, mail, organization, profileImag
                     reject(error)
                 });
         })
+    }
+}
+
+export function activateUser(activationToken) {
+    return function (dispatch) {
+        const options = {
+            method: 'GET',
+            url: '/api/activate/token',
+            params: {
+                activationToken
+            }
+        }
+
+        dispatch(activate_BEGIN())
+
+        axios(options)
+            .then(() => { dispatch(activate_SUCCESS()) })
+            .catch(error => dispatch(activate_FAILURE({ errorCode: error.response.status, errorMessage: error.response.data.message })))
     }
 }
 

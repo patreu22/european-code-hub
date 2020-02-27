@@ -149,16 +149,11 @@ app.get('/api/get/project', function (req, res) {
         .catch((err) => { res.sendStatus(err.response.status) })
 });
 
-app.get('/api/verify/token', function (req, res) {
+app.get('/api/activate/token', function (req, res) {
     const activationToken = req.query.activationToken;
     database.activateUser(activationToken)
-        .then((usedToken) => {
-            if (usedToken) {
-                res.sendStatus(200)
-            } else {
-                res.sendStatus(404)
-            }
-        })
+        .then(() => res.sendStatus(200))
+        .catch(err => { res.status(err.response.code).send(err) })
 })
 
 app.get('/api/get/projects/', function (req, res) {
