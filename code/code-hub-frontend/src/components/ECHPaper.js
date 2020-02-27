@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { incrementSteps } from '../slices/createProjectSlice'
-import { registerUser } from '../helper/httpHelper'
 import { isValidEmail, isValidPassword, isValidUrl, isValidText } from '../helper/validationHelper'
 import { requestLoginToken } from '../helper/httpHelper'
 import { setVerificationToken } from '../helper/cookieHelper'
@@ -14,7 +13,7 @@ import { objectExists } from '../helper/objectHelper'
 import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
 import { LOGIN } from '../routes'
-import { setVerificationCookieAndProfileImageAndUserNameInStore } from '../actions/httpActions'
+import { setVerificationCookieAndProfileImageAndUserNameInStore, registerUser } from '../actions/httpActions'
 import ECHLoadingIndicator from './ECHLoadingIndicator';
 
 class ECHPaper extends Component {
@@ -141,7 +140,7 @@ class ECHPaper extends Component {
                     {this._renderSubmitButton()}
                 </form>
             </div>
-        } else if (this.props.type === "register") {
+        } else if (this.props.type === "register" && !this.props.registrationIsLoading) {
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
@@ -165,6 +164,10 @@ class ECHPaper extends Component {
                     </div>
                     {this._renderSubmitButton()}
                 </form>
+            </div>
+        } else if (this.props.type === "register" && this.props.registrationIsLoading) {
+            return <div style={{ display: 'flex', alignItems: 'center' }}>
+                <ECHLoadingIndicator />
             </div>
         } else if (this.props.type === "registrationDone") {
             return <div>{this.props.title ? <Divider /> : null}
@@ -351,7 +354,7 @@ class ECHPaper extends Component {
         const isValid = isValidText(event.target.value)
         this.setState({
             organizationError: !isValid,
-            organizationErrorMessage: isValid ? "" : "Invalid username."
+            organizationErrorMessage: isValid ? "" : "Invalid organization."
         })
     }
 
@@ -444,7 +447,7 @@ class ECHPaper extends Component {
         const validUsername = isValidText(this.state.username)
         const validOrganization = isValidText(this.state.organization)
         if (validMail && validPassword && validUsername && validOrganization) {
-            registerUser(this.state.username, this.state.password, this.state.mail, this.state.organization, this.state.profileImage)
+            this.props.registerUser(this.state.username, this.state.password, this.state.mail, this.state.organization, this.state.profileImage)
                 .then((response) => {
                     this.props.onRegistrationDone();
                     this._startCountdown();
@@ -546,9 +549,10 @@ const mapStateToProps = state => {
     return {
         projectData: state.createProject.projectData,
         step: state.createProject.step,
+        registrationIsLoading: state.user.isLoading
     }
 }
 
-const mapDispatchToProps = { incrementSteps, setVerificationCookieAndProfileImageAndUserNameInStore }
+const mapDispatchToProps = { incrementSteps, setVerificationCookieAndProfileImageAndUserNameInStore, registerUser }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHPaper);

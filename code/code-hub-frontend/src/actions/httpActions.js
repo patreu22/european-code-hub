@@ -33,6 +33,9 @@ import {
     fetchUserProjects_BEGIN,
     fetchUserProjects__SUCCESS,
     fetchUserProjects_FAILURE,
+    registerUser_BEGIN,
+    registerUser_SUCCESS,
+    registerUser_FAILURE
 } from '../slices/userSlice'
 import store from '../store'
 import { removeVerificationToken } from '../helper/cookieHelper'
@@ -182,6 +185,37 @@ export function getUserByToken(token) {
                 }
             })
             .catch(err => dispatch(fetchOwnUserData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+    }
+}
+
+export function registerUser(username, password, mail, organization, profileImageFile) {
+    return function (dispatch) {
+        var formData = new FormData();
+        formData.append("profileImageFile", profileImageFile);
+        formData.append("username", username);
+        formData.append("password", password);
+        formData.append("mail", mail);
+        formData.append("organization", organization);
+
+        dispatch(registerUser_BEGIN())
+
+        const options = {
+            method: 'POST',
+            headers: { 'content-type': 'application/x-www-form-urlencoded' },
+            data: formData,
+            url: '/api/create/user'
+        }
+
+        return new Promise((resolve, reject) => {
+            axios(options)
+                .then(response => {
+                    dispatch(registerUser_SUCCESS())
+                    resolve(response)
+                }).catch(error => {
+                    dispatch(registerUser_FAILURE())
+                    reject(error)
+                });
+        })
     }
 }
 

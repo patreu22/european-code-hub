@@ -154,7 +154,25 @@ const userSlice = createSlice({
                 ...state,
                 isLoading: false
             }
-        }
+        },
+        registerUser_BEGIN: (state) => {
+            return {
+                ...state,
+                isLoading: true
+            }
+        },
+        registerUser_SUCCESS: (state) => {
+            return {
+                ...state,
+                isLoading: false
+            }
+        },
+        registerUser_FAILURE: (state) => {
+            return {
+                ...state,
+                isLoading: false
+            }
+        },
     }
 })
 
@@ -176,7 +194,10 @@ export const {
     fetchUserProjects_FAILURE,
     updateUserData_BEGIN,
     updateUserData_SUCCESS,
-    updateUserData_FAILURE
+    updateUserData_FAILURE,
+    registerUser_BEGIN,
+    registerUser_SUCCESS,
+    registerUser_FAILURE
 } = userSlice.actions
 
 export default userSlice;
