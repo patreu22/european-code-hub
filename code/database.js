@@ -185,7 +185,7 @@ function getSuggestionList(searchTerm) {
 }
 
 //Set one of the parameters and the stripData parameter
-function getUser({ token, mail, username, stripData = true }) {
+function getUser({ token, mail, username, activationToken, stripData = true }) {
     const User = models.USER_MODEL;
     var key = ''
     var value = ''
@@ -198,11 +198,17 @@ function getUser({ token, mail, username, stripData = true }) {
     } else if (token) {
         key = 'lastSessionToken'
         value = token
+    } else if (activationToken) {
+        key = "activationToken"
+        value = activationToken
     }
 
     var findUserRequest = User.findOne({ [key]: value });
     if (stripData) {
-        findUserRequest = findUserRequest.select("username mail organization profilePicture");
+        const select = activationToken
+            ? "username mail organization activationToken activated"
+            : "username mail organization profilePicture"
+        findUserRequest = findUserRequest.select(select);
     }
 
     return new Promise(function (resolve, reject) {
@@ -275,7 +281,8 @@ function updateProjectReadme(projectName, readmeText) {
 
 function saveUserToDB({ username, password, mail, organization, profileImagePath, lastSessionToken }) {
     const profileImageData = io.getProfileImageOrDefaultData(profileImagePath)
-    const activationToken = Math.floor((Math.random() * 1000) + 54)
+    //TODO: Generate hash instead of math.random
+    const activationToken = Math.floor((Math.random() * 100000) + 54)
     const newUserWithProfileImage = models.USER_MODEL({
         username,
         password,
@@ -318,6 +325,35 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
             }
         });
     });
+}
+
+function activateUser(activationToken) {
+    console.log(activationToken)
+    return new Promise(function (resolve, reject) {
+        getUser({ activationToken })
+            .then((user) => {
+                if (user) {
+                    if (user.activationToken === activationToken && !user.activated) {
+                        resolve(true)
+                        // user.activated = true
+                        // user.save(function (err) {
+                        //     if (err) {
+                        //         console.log(err)
+                        //         reject(err)
+                        //     } else {
+                        //         console.log(`Activated ${user.username}`)
+                        //         resolve(true)
+                        //     }
+                        // })
+                    } else {
+                        reject({ response: { code: 404 }, message: "User was not found" })
+                    }
+                } else {
+                    reject({ response: { code: 404 }, message: "User was not found" })
+                }
+            })
+            .catch(err => reject(err))
+    })
 }
 
 function saveProjectToDB(projectData) {
@@ -491,5 +527,6 @@ module.exports = {
     indexProjects,
     getSuggestionList,
     getSearchResults,
-    updateUser
+    updateUser,
+    activateUser
 }

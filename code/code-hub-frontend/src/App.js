@@ -14,7 +14,7 @@ import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
 import { connect } from 'react-redux'
 import { setVerificationCookieAndProfileImageAndUserNameInStore } from './actions/httpActions'
 import { getVerificationToken } from './helper/cookieHelper'
-import { HOME, ADD, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, PROFILE, ADD_VIA_GITHUB, ADD_VIA_JSON, ADD_MANUALLY } from './routes'
+import { HOME, ADD, VERIFY, CONTRIBUTE, SEARCH, LOGIN, REGISTER, USER, PROJECTS, PROFILE, ADD_VIA_GITHUB, ADD_VIA_JSON, ADD_MANUALLY } from './routes'
 import Home from './pages/Home';
 import Search from './pages/Search';
 import AddDefault from './pages/Add/AddDefault';
@@ -28,6 +28,7 @@ import Register from './pages/Register'
 import Contribute from './pages/Contribute'
 import Profile from './pages/Profile'
 import NotFound from './pages/NotFound'
+import Verify from './pages/Verify'
 
 const theme = createMuiTheme({
   palette: {
@@ -68,6 +69,7 @@ class App extends React.Component {
                 <Route path={`${PROFILE}/:username?`} component={Profile} />
                 <Route path={`${PROJECTS}/:projectname`} component={Project} />
                 <Route path={PROJECTS} component={Catalogue} />
+                <Route path={`${VERIFY}`} component={Verify} />
                 <Route component={NotFound} />
               </Switch>
             </LastLocationProvider>

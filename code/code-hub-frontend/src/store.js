@@ -6,6 +6,7 @@ import projectOverviewSlice from './slices/projectOverviewSlice'
 import currentProjectSlice from './slices/currentProjectSlice'
 import searchSlice from './slices/searchSlice'
 import userSlice from './slices/userSlice'
+import verifySlice from './slices/verifySlice'
 
 const store = configureStore({
     reducer: {
@@ -13,7 +14,8 @@ const store = configureStore({
         projectOverview: projectOverviewSlice.reducer,
         currentProject: currentProjectSlice.reducer,
         search: searchSlice.reducer,
-        user: userSlice.reducer
+        user: userSlice.reducer,
+        verify: verifySlice.reducer
     },
     middleware: [loggerMiddleware, ...getDefaultMiddleware()]
 })
