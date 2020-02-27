@@ -13,10 +13,10 @@ const smtpTransport = nodemailer.createTransport({
     }
 });
 
-function sendVerificationMail(mail, verificationToken) {
+function sendVerificationMail(verificationToken, mail) {
     return new Promise(function (resolve, reject) {
         console.log("# Sending verification mail!")
-        link = CURRENT_SERVING_WEBSITE + "/verify?id=" + verificationToken;
+        link = CURRENT_SERVING_WEBSITE + "/verify?id=" + verificationToken
         mailOptions = {
             to: mail,
             subject: "Please confirm your Email account",

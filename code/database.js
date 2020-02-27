@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const models = require('./models');
-const mail = require('./mail')
+const mail_package = require('./mail')
 const authentication = require('./authentication')
 const io = require('./io')
 
@@ -312,9 +312,9 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
             } else {
                 console.log(newUser);
                 console.log("Saved to DB");
-                mail.sendVerificationMail(activationToken, mail).then(() => {
-                    resolve(true)
-                })
+                mail_package.sendVerificationMail(activationToken, mail)
+                    .then(() => { resolve(true) })
+                    .catch((err) => reject(err))
             }
         });
     });
