@@ -24,7 +24,7 @@ class Register extends Component {
         return (
             <PageWrapper headlineTitle="Register" showBackButton={true}>
                 <div style={{ alignContent: 'center' }}>
-                    <ECHPaper type={echPaperType} title={echPaperTitle} onRegistrationDone={this._onRegistrationDoneHandler} />
+                    <ECHPaper maxWidth="40vw" type={echPaperType} title={echPaperTitle} onRegistrationDone={this._onRegistrationDoneHandler} />
                 </div>
             </PageWrapper>
         );

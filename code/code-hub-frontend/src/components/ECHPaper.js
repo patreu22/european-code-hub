@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Divider, FormHelperText, Paper } from '@material-ui/core'
-import { CheckCircleOutline as CheckCircleOutlineIcon } from '@material-ui/icons';
+import { MailOutline as MailOutlineIcon } from '@material-ui/icons';
 import PropTypes from 'prop-types'
 import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
@@ -12,7 +12,7 @@ import ImageUploader from 'react-images-upload';
 import { objectExists } from '../helper/objectHelper'
 import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
-import { LOGIN } from '../routes'
+import { LOGIN, HOME } from '../routes'
 import { setVerificationCookieAndProfileImageAndUserNameInStore, registerUser } from '../actions/httpActions'
 import ECHLoadingIndicator from './ECHLoadingIndicator';
 
@@ -49,7 +49,7 @@ class ECHPaper extends Component {
         this._performGitFetch = this._performGitFetch.bind(this)
         this._performRegistration = this._performRegistration.bind(this)
         this.onImageDrop = this.onImageDrop.bind(this);
-        this._countDown = this._countDown.bind(this);
+        // this._countDown = this._countDown.bind(this);
     }
 
     componentWillUnmount() {
@@ -171,10 +171,10 @@ class ECHPaper extends Component {
             </div>
         } else if (this.props.type === "registrationDone") {
             return <div>{this.props.title ? <Divider /> : null}
-                <CheckCircleOutlineIcon style={iconStyle} color={'primary'} />
+                <MailOutlineIcon style={iconStyle} color={'primary'} />
                 <div style={registrationDoneText}>You successfully created a new account.<br />
-                    Click <Link to="/" style={{ color: 'black' }}>here</Link> to be redirected instantly.<br /><br />
-                    Otherwise you will be sent back to the main page in {this.state.secondsLeft} second{this.state.secondsLeft === 1 ? "" : "s"} automatically.</div>
+                    Please check your mail account and verify your email account. After this you can login to your account and add new projects to the European Code Hub.<br /><br />
+                    Click <Link to={HOME} style={{ color: 'black' }}>here</Link> to go back to the home page.</div>
             </div >
         } else if (this.props.type === "addProjectViaGit") {
             return <div>
@@ -448,9 +448,9 @@ class ECHPaper extends Component {
         const validOrganization = isValidText(this.state.organization)
         if (validMail && validPassword && validUsername && validOrganization) {
             this.props.registerUser(this.state.username, this.state.password, this.state.mail, this.state.organization, this.state.profileImage)
-                .then((response) => {
+                .then(() => {
                     this.props.onRegistrationDone();
-                    this._startCountdown();
+                    // this._startCountdown();
                 })
                 .catch((error) => {
                     if (error.response.status === 400) {
@@ -502,22 +502,22 @@ class ECHPaper extends Component {
         }
     }
 
-    _startCountdown() {
-        if (this.timer === 0 && this.state.secondsLeft > 0) {
-            this.timer = setInterval(this._countDown, 1000);
-        }
-    }
+    // _startCountdown() {
+    //     if (this.timer === 0 && this.state.secondsLeft > 0) {
+    //         this.timer = setInterval(this._countDown, 1000);
+    //     }
+    // }
 
-    _countDown() {
-        let seconds = this.state.secondsLeft - 1;
-        this.setState({
-            secondsLeft: seconds,
-        });
+    // _countDown() {
+    //     let seconds = this.state.secondsLeft - 1;
+    //     this.setState({
+    //         secondsLeft: seconds,
+    //     });
 
-        if (seconds === 0) {
-            clearInterval(this.timer);
-        }
-    }
+    //     if (seconds === 0) {
+    //         clearInterval(this.timer);
+    //     }
+    // }
 
     _handleKeyDown(event) {
         if (event.key === 'Enter') {
