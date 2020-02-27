@@ -7,6 +7,8 @@ const USER_SCHEMA = new mongoose.Schema({
     organization: String,
     profilePicture: { data: Buffer, contentType: String },
     lastSessionToken: { type: String, default: '' },
+    activated: Boolean,
+    activationToken: String
 }, { collection: 'users' });
 
 //Status: "released" | "development" | "deprecated" | "archival"

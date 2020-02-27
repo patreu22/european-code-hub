@@ -16,6 +16,14 @@ Master thesis: Establishing Collaboration in the European Union through an Open 
 `ps aux | grep -v grep | grep mongod`
 
 
+## Create .env file in `code/` folder
+1. Add Gmail username and password to a .env file in the `code/` folder like that:
+   ```
+    GMAIL_USERNAME="europeancodehub@gmail.com"
+    GMAIL_PASSWORD="1234567890"
+   ```
+
+
 # Setup MongoDB for use:
 1. `mongo`
 2. `use user`

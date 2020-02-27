@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const models = require('./models');
+const mail = require('./mail')
 const authentication = require('./authentication')
 const io = require('./io')
 
@@ -274,20 +275,25 @@ function updateProjectReadme(projectName, readmeText) {
 
 function saveUserToDB({ username, password, mail, organization, profileImagePath, lastSessionToken }) {
     const profileImageData = io.getProfileImageOrDefaultData(profileImagePath)
+    const activationToken = Math.floor((Math.random() * 1000) + 54)
     const newUserWithProfileImage = models.USER_MODEL({
         username,
         password,
         mail,
         organization,
         profilePicture: { data: profileImageData, contentType: "image/png" },
-        lastSessionToken
+        lastSessionToken,
+        activationToken,
+        activated: false
     });
     const newUserWithoutProfileImage = models.USER_MODEL({
         username,
         password,
         mail,
         organization,
-        lastSessionToken
+        lastSessionToken,
+        activationToken,
+        activated: false
     });
 
     const userToCreate = profileImageData
@@ -306,7 +312,9 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
             } else {
                 console.log(newUser);
                 console.log("Saved to DB");
-                resolve(true)
+                mail.sendVerificationMail(activationToken, mail).then(() => {
+                    resolve(true)
+                })
             }
         });
     });
