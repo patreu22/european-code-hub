@@ -6,6 +6,7 @@ import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import ECHPaper from '../components/ECHPaper'
 import ECHCopyBox from '../components/ECHCopyBox'
 import ECHIconAndText from '../components/ECHIconAndText'
+import ECHButton from '../components/ECHButton'
 import NotFound from './NotFound'
 import { connect } from 'react-redux'
 import { getProjectByName } from '../actions/httpActions'
@@ -28,6 +29,16 @@ import { Divider } from '@material-ui/core';
 import { USER } from '../routes';
 
 class Project extends Component {
+
+    constructor(props) {
+        super(props)
+        this.state = {
+            editMode: false
+        }
+
+        this._onProjectUpdateClick = this._onProjectUpdateClick.bind(this)
+        this._onProjectUpdateCancelPressed = this._onProjectUpdateCancelPressed.bind(this)
+    }
 
     componentDidMount() {
         const projectName = this.props.match.params.projectname;
@@ -73,6 +84,7 @@ class Project extends Component {
                     {this._renderCodeBox()}
                 </div>
                 {this._renderReadme()}
+                {/* {this._renderButtonBar()} */}
             </div>
         } else return <div />
     }
@@ -99,6 +111,38 @@ class Project extends Component {
         </ECHPaper>
     }
 
+    _renderButtonBar() {
+        //TODO for later...
+        const currentUserIsCreator = this.props.currentProject.creatorName === this.props.username
+        if (currentUserIsCreator) {
+            if (this.state.editMode) {
+                return <div style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div style={{ display: 'inline-block', paddingRight: '20px' }}>
+                        <ECHButton onClick={this._onSaveProjectChangesPressed}>Save changes</ECHButton>
+                    </div>
+                    <ECHButton onClick={this._onProjectUpdateCancelPressed}>Cancel</ECHButton>
+                </div >
+            } else {
+                return <ECHButton onClick={this._onProjectUpdateClick}>Update project</ECHButton>
+            }
+        } else {
+            return null
+        }
+    }
+
+    _onProjectUpdateClick() {
+        this.setState({ editMode: true })
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
+
+    _onProjectUpdateCancelPressed() {
+        this.setState({ editMode: false })
+    }
+
+    _onSaveProjectChangesPressed() {
+        console.log("TODO: Submit to Backend")
+    }
+
     _getReadmeSourceUri(repoUrl) {
         const splittedUrl = repoUrl.split("github.com/")[1].split("/");
         const repoOwner = splittedUrl[0]
@@ -117,7 +161,7 @@ class Project extends Component {
                     text: project.organization,
                     tooltipText: "Organization"
                 })}
-                {this._renderIconAndText({
+                {project.license && this._renderIconAndText({
                     icon: <GavelIcon />,
                     text: project.license,
                     tooltipText: "License"
@@ -127,7 +171,7 @@ class Project extends Component {
                     text: project.programmingLanguages.join(', '),
                     tooltipText: "Used programming languages"
                 })}
-                {this._renderIconAndText({
+                {project.version && this._renderIconAndText({
                     icon: <DynamicFeedIcon />,
                     text: project.version,
                     tooltipText: "Version"
@@ -142,7 +186,7 @@ class Project extends Component {
                     text: project.date.lastModified,
                     tooltipText: "Last modified on"
                 })}
-                {this._renderStatusRow(project.status)}
+                {project.status && this._renderStatusRow(project.status)}
             </div>
         </ECHPaper >
     }
@@ -226,7 +270,8 @@ const mapStateToProps = state => {
     return {
         currentProject: state.currentProject.currentProject,
         isLoading: state.currentProject.isLoading,
-        error: state.currentProject.error
+        error: state.currentProject.error,
+        username: state.user.username
     }
 }
 
