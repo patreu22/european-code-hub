@@ -18,6 +18,7 @@ import {
     Group as GroupIcon,
     Person as PersonIcon,
     EmailOutlined as EmailIcon,
+    Edit as EditIcon
 } from '@material-ui/icons'
 import { getVerificationToken } from '../helper/cookieHelper'
 import ECHIconAndText from '../components/ECHIconAndText';
@@ -186,10 +187,14 @@ class Profile extends Component {
 
     getListRow(project, index) {
         return <ListItem key={index}>
-            <div>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
                 <a href={`${PROJECTS}/${project.projectName}`}>
                     {project.projectName}
                 </a>
+                <ECHIconAndText
+                    icon={<a href={`${PROJECTS}/${project.projectName}/edit`} ><EditIcon style={{ cursor: 'pointer' }} /></a>} //onClick={() => this._onProjectEditClick(project.projectName)} />}
+                    tooltipText="Edit project"
+                />
             </div>
         </ListItem>
     }

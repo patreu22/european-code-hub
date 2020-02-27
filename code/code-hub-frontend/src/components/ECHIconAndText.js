@@ -19,7 +19,7 @@ class ECHIconAndText extends Component {
             ? <a href={this.props.link}>{this.props.text}</a>
             : <span>{this.props.text}</span>
 
-        if (typeof this.props.text === 'undefined') { return null }
+        if (typeof this.props.text === 'undefined' && typeof this.props.icon === 'undefined') { return null }
 
         if (this.props.tooltipText) {
             return <div style={textLineStyle}>
