@@ -542,6 +542,12 @@ class ECHPaper extends Component {
                     organizationErrorMessage: 'Not a valid organization name.'
                 })
             }
+            if (!validName) {
+                this.setState({
+                    nameError: true,
+                    nameErrorMessage: 'Not a valid name.'
+                })
+            }
         }
     }
 
