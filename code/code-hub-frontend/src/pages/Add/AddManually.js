@@ -58,6 +58,8 @@ class AddManually extends Component {
                     this.setState({ repoUrlErrorMessage: "A project with this repo url already exists" })
                 }
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+            } else if (this.props.error.code === 503) {
+                this.setState({ repoUrlErrorMessage: "Couldn't reach the repo Url. Try again later." })
             }
         }
 
