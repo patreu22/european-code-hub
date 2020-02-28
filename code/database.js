@@ -334,7 +334,7 @@ function saveUserToDB({ username, password, name, mail, organization, profileIma
 
 function checkIfUserIsActivated({ mail }) {
     return new Promise(function (resolve) {
-        getUser({ mail })
+        getUser({ mail, stripData: false })
             .then(user => {
                 if (user) {
                     resolve(user.activated)
