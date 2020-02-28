@@ -2,10 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const defaultState = {
     isLoading: false,
-    error: {
-        code: null,
-        message: null
-    },
+    error: {},
     activated: false
 }
 

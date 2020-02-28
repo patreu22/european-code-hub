@@ -165,7 +165,7 @@ class Activate extends Component {
 
         var message = ""
         if (errorCode === 404) {
-            message = "The verification code you provided is not valid."
+            message = "The verification code you provided is not valid or was already used to activate the account."
         } else if (errorCode === 401) {
             message = "This verification code was already used and the account is activated. Your account is setup and you can login."
         }
