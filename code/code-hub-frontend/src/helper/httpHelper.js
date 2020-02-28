@@ -27,19 +27,6 @@ export function updateUser(token, fieldsToUpdate) {
     })
 }
 
-export function requestLoginToken(mail, password) {
-    return new Promise((resolve, reject) => {
-        axios.post('/api/create/token', {
-            mail: mail,
-            password: password,
-        }).then(response => {
-            resolve(response.data)
-        }).catch(err => {
-            reject(err)
-        })
-    });
-}
-
 export function getSearchSuggestion(searchTerm) {
     const options = {
         method: 'GET',

@@ -20,6 +20,7 @@ import {
     getSearchResults_FAILURE
 } from '../slices/searchSlice'
 import {
+    fetchProfilePictureAndUsername_BEGIN,
     fetchProfilePictureAndUsername_SUCCESS,
     fetchProfilePictureAndUsername_FAILURE,
     fetchUserData_BEGIN,
@@ -35,7 +36,10 @@ import {
     fetchUserProjects_FAILURE,
     registerUser_BEGIN,
     registerUser_SUCCESS,
-    registerUser_FAILURE
+    registerUser_FAILURE,
+    fetchUserToken_BEGIN,
+    fetchUserToken_SUCCESS,
+    fetchUserToken_FAILURE
 } from '../slices/userSlice'
 import {
     activate_BEGIN,
@@ -43,7 +47,7 @@ import {
     activate_FAILURE
 } from '../slices/activateSlice'
 import store from '../store'
-import { removeVerificationToken } from '../helper/cookieHelper'
+import { setVerificationToken, removeVerificationToken } from '../helper/cookieHelper'
 
 
 export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
@@ -193,6 +197,29 @@ export function getUserByToken(token) {
     }
 }
 
+export function requestLoginToken(mail, password) {
+    return function (dispatch) {
+        const options = {
+            method: 'POST',
+            url: '/api/create/token',
+            data: {
+                mail: mail,
+                password: password,
+            }
+        }
+        dispatch(fetchUserToken_BEGIN())
+        axios(options)
+            .then(response => {
+                const token = response.data
+                setVerificationToken(token);
+                dispatch(fetchUserToken_SUCCESS())
+                dispatch(setVerificationCookieAndProfileImageAndUserNameInStore(token))
+            })
+            .catch(error => dispatch(fetchUserToken_FAILURE({ errorCode: error.response.status, errorMessage: error.response.data.msg })))
+    }
+
+}
+
 export function registerUser(username, password, mail, name, organization, profileImageFile) {
     return function (dispatch) {
         var formData = new FormData();
@@ -252,6 +279,7 @@ export function setVerificationCookieAndProfileImageAndUserNameInStore(token) {
         }
 
         dispatch(setVerificationCookie({ cookie: token }))
+        dispatch(fetchProfilePictureAndUsername_BEGIN())
 
         axios(options)
             .then(response => {
