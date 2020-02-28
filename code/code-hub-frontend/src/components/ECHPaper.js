@@ -496,7 +496,7 @@ class ECHPaper extends Component {
                     // this._startCountdown();
                 })
                 .catch((error) => {
-                    if (error.response.status === 400) {
+                    if (error.response.status === 400 || error.response.status === 500) {
                         if (error.response.data.errorType === "mailExists") {
                             this.setState({
                                 mailError: true,

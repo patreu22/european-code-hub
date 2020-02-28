@@ -129,15 +129,13 @@ app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, 
                                 }
                             }).catch(err => {
                                 console.log(err)
-                                res.sendStatus(500)
+                                res.status(500).send({ errorType: "unexpected" })
                             });
                         } else {
                             return res.status(400).send({ errorType: "usernameExists" });
                         }
                     })
             } else {
-                //400: Bad Request
-                //TODO: Handle to show error message
                 return res.status(400).send({ errorType: "mailExists" });
             }
         });
