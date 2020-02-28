@@ -22,7 +22,11 @@ Master thesis: Establishing Collaboration in the European Union through an Open 
     GMAIL_USERNAME="europeancodehub@gmail.com"
     GMAIL_PASSWORD="1234567890"
    ```
-
+2. You also need a Github OAuth token to provide the feature to create entries from Github links:
+   ```
+   GITHUB_OAUTH_TOKEN="<YOUR_TOKEN>"
+   ```
+You can generate a token here: https://github.com/settings/developers
 
 # Setup MongoDB for use:
 1. `mongo`

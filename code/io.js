@@ -2,6 +2,7 @@ const fs = require('fs');
 const request = require('request');
 const readline = require('readline');
 const multer = require('multer');
+const git = require('./git')
 
 function getUploadMiddleware() {
     var storage = multer.diskStorage({
@@ -73,7 +74,7 @@ function _requestReadme(resolve, reject, repoLink, readmeFileName) {
 }
 
 function _getWriteStream(resolve, reject, repoLink) {
-    const repoName = _getRepoName(repoLink)
+    const repoName = git.getRepoName(repoLink)
     const tempFileName = `temp/${repoName}-readme${Date.now()}`
     const writeStream = fs.createWriteStream(tempFileName)
 
@@ -113,12 +114,6 @@ function _getReadmeUrl(repoUrl, readmeFileName = "README.md") {
         const url = "https://raw.githubusercontent.com/" + repoOwner + "/" + repoName + "/master/" + readmeFileName
         return url.replace(".git/master/README.md", "/master/README.md")
     } else return ""
-}
-
-function _getRepoName(repoUrl) {
-    const splittedUrl = repoUrl.split("github.com/")[1].split("/");
-    const repoName = splittedUrl[1]
-    return repoName || ""
 }
 
 module.exports = {
