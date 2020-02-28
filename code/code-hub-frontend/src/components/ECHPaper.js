@@ -38,7 +38,6 @@ class ECHPaper extends Component {
             organizationErrorMessage: "",
             formError: false,
             formErrorText: "",
-            redirect: false,
             gitUrl: "",
             gitUrlError: false,
             gitUrlErrorMessage: "",
@@ -49,12 +48,8 @@ class ECHPaper extends Component {
         this._performGitFetch = this._performGitFetch.bind(this)
         this._performRegistration = this._performRegistration.bind(this)
         this.onImageDrop = this.onImageDrop.bind(this);
-        // this._countDown = this._countDown.bind(this);
     }
 
-    componentWillUnmount() {
-        // clearInterval(this.timer);
-    }
 
     componentDidUpdate(prevProps) {
         if (this.props.type === "login" && this.state.loginHeight === 0) {
@@ -62,12 +57,6 @@ class ECHPaper extends Component {
                 const height = document.getElementById("loginContainer").clientHeight;
                 this.setState({ loginHeight: height })
             }
-        }
-
-        if (!prevProps.cookie && this.props.cookie) {
-            this.setState({
-                redirect: true,
-            })
         }
 
         if (!objectExists(prevProps.error) && objectExists(this.props.error)) {
@@ -106,17 +95,12 @@ class ECHPaper extends Component {
             alignSelf: 'stretch',
         }
 
-        if (this.state.secondsLeft > 0 && !this.state.redirect) {
-            return (
-                <Paper style={catalogueBoxStyle} border={1}>
-                    {this.props.title ? <h3>{this.props.title}</h3> : null}
-                    {this._renderContentField()}
-                </Paper>
-            );
-        } else {
-            const path = this.props.routeToRedirect ? this.props.routeToRedirect : '/'
-            return <Redirect to={path} />
-        }
+        return (
+            <Paper style={catalogueBoxStyle} border={1}>
+                {this.props.title ? <h3>{this.props.title}</h3> : null}
+                {this._renderContentField()}
+            </Paper>
+        );
     }
 
     _renderContentField() {
@@ -493,7 +477,6 @@ class ECHPaper extends Component {
             this.props.registerUser(this.state.username, this.state.password, this.state.mail, this.state.name, this.state.organization, this.state.profileImage)
                 .then(() => {
                     this.props.onRegistrationDone();
-                    // this._startCountdown();
                 })
                 .catch((error) => {
                     if (error.response.status === 400 || error.response.status === 500) {
@@ -550,23 +533,6 @@ class ECHPaper extends Component {
             }
         }
     }
-
-    // _startCountdown() {
-    //     if (this.timer === 0 && this.state.secondsLeft > 0) {
-    //         this.timer = setInterval(this._countDown, 1000);
-    //     }
-    // }
-
-    // _countDown() {
-    //     let seconds = this.state.secondsLeft - 1;
-    //     this.setState({
-    //         secondsLeft: seconds,
-    //     });
-
-    //     if (seconds === 0) {
-    //         clearInterval(this.timer);
-    //     }
-    // }
 
     _handleKeyDown(event) {
         if (event.key === 'Enter') {

@@ -2,18 +2,16 @@ import React, { Component } from 'react';
 import '../../css/Home.css';
 import PageWrapper from '../../components/PageWrapper';
 import { Box } from '@material-ui/core'
-import ECHLoadingIndicator from '../../components/ECHLoadingIndicator'
 import ECHPaper from '../../components/ECHPaper'
 
 import { ADD_VIA_GITHUB, ADD_VIA_JSON, ADD_MANUALLY } from '../../routes'
-import { connect } from 'react-redux'
 
 
 class AddDefault extends Component {
     render() {
         return (
             <PageWrapper headlineTitle="Add a new project to the catalogue" showBackButton={true}>
-                {this.props.isLoading ? <ECHLoadingIndicator /> : this._renderContent()}
+                {this._renderContent()}
             </PageWrapper>
         );
     }
@@ -40,12 +38,4 @@ class AddDefault extends Component {
     }
 }
 
-const mapStateToProps = state => {
-    return {
-        isLoading: state.createProject.isLoading
-    }
-}
-
-const mapDispatchToProps = {}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddDefault);
+export default AddDefault;
