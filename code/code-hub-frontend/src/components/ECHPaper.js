@@ -6,14 +6,12 @@ import { Link, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { incrementSteps } from '../slices/createProjectSlice'
 import { isValidEmail, isValidPassword, isValidUrl, isValidText } from '../helper/validationHelper'
-import { requestLoginToken } from '../helper/httpHelper'
-import { setVerificationToken } from '../helper/cookieHelper'
 import ImageUploader from 'react-images-upload';
 import { objectExists } from '../helper/objectHelper'
 import ECHButton from './ECHButton'
 import ECHTextfield from './ECHTextfield'
 import { LOGIN, HOME } from '../routes'
-import { setVerificationCookieAndProfileImageAndUserNameInStore, registerUser } from '../actions/httpActions'
+import { setVerificationCookieAndProfileImageAndUserNameInStore, registerUser, requestLoginToken } from '../actions/httpActions'
 import ECHLoadingIndicator from './ECHLoadingIndicator';
 
 class ECHPaper extends Component {
@@ -44,7 +42,6 @@ class ECHPaper extends Component {
             gitUrl: "",
             gitUrlError: false,
             gitUrlErrorMessage: "",
-            loginLoading: false,
             loginHeight: 0
         };
         this.timer = 0;
@@ -63,6 +60,26 @@ class ECHPaper extends Component {
         if (this.props.type === "login") {
             const height = document.getElementById("loginContainer").clientHeight;
             this.setState({ loginHeight: height })
+        }
+    }
+
+    componentDidUpdate(prevProps) {
+        if (!prevProps.cookie && this.props.cookie) {
+            this.setState({
+                redirect: true,
+            })
+        }
+
+        if (!objectExists(prevProps.error) && objectExists(this.props.error)) {
+            if (this.props.error.code === 400) {
+                this.setState({
+                    formError: true,
+                    formErrorText: 'Credentials do not match.',
+                    loginLoading: false
+                })
+            } else {
+                console.log("Unknown error.")
+            }
         }
     }
 
@@ -131,7 +148,7 @@ class ECHPaper extends Component {
 
         const paragraphStyle = this.props.buttonTitle ? textWhenButtonVisible : textWhenButtonInvisible
         if (this.props.type === "login") {
-            if (this.state.loginLoading) {
+            if (this.props.isLoading) {
                 return <div style={{ height: this.state.loginHeight, display: 'flex', justifyContent: 'center' }}><ECHLoadingIndicator /></div>
             }
             return <div id="loginContainer">
@@ -143,7 +160,7 @@ class ECHPaper extends Component {
                     {this._renderSubmitButton()}
                 </form>
             </div>
-        } else if (this.props.type === "register" && !this.props.registrationIsLoading) {
+        } else if (this.props.type === "register" && !this.props.isLoading) {
             return <div>
                 {this.props.title ? <Divider /> : null}
                 <form style={formParagraphStyle}>
@@ -169,7 +186,7 @@ class ECHPaper extends Component {
                     {this._renderSubmitButton()}
                 </form>
             </div>
-        } else if (this.props.type === "register" && this.props.registrationIsLoading) {
+        } else if (this.props.type === "register" && this.props.isLoading) {
             return <div style={{ paddingBottom: '30px', display: 'flex', justifyContent: 'center' }}><ECHLoadingIndicator /></div>
         } else if (this.props.type === "registrationDone") {
             return <div>{this.props.title ? <Divider /> : null}
@@ -427,26 +444,7 @@ class ECHPaper extends Component {
         const validMail = isValidEmail(this.state.mail)
         const validPassword = isValidPassword(this.state.password)
         if (validMail && validPassword) {
-            this.setState({ loginLoading: true })
-            requestLoginToken(this.state.mail, this.state.password)
-                .then((token) => {
-                    setVerificationToken(token);
-                    this.setState({
-                        redirect: true,
-                        loginLoading: false
-                    })
-                    this.props.setVerificationCookieAndProfileImageAndUserNameInStore(token)
-                }).catch((error) => {
-                    if (error.response.status === 400) {
-                        this.setState({
-                            formError: true,
-                            formErrorText: 'Credentials do not match.',
-                            loginLoading: false
-                        })
-                    } else {
-                        console.log("Unknown error.")
-                    }
-                })
+            this.props.requestLoginToken(this.state.mail, this.state.password)
         } else {
             if (!validMail) {
                 this.setState({
@@ -587,10 +585,12 @@ const mapStateToProps = state => {
     return {
         projectData: state.createProject.projectData,
         step: state.createProject.step,
-        registrationIsLoading: state.user.isLoading
+        isLoading: state.user.isLoading,
+        cookie: state.user.cookie,
+        error: state.user.error
     }
 }
 
-const mapDispatchToProps = { incrementSteps, setVerificationCookieAndProfileImageAndUserNameInStore, registerUser }
+const mapDispatchToProps = { incrementSteps, setVerificationCookieAndProfileImageAndUserNameInStore, registerUser, requestLoginToken }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHPaper);

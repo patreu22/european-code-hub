@@ -235,7 +235,7 @@ app.post('/api/create/token', function (req, res) {
             database.updateSessionToken({ mail: authValues.mail, token: token })
             return res.status(200).send(token)
         } else {
-            return res.sendStatus(400);
+            return res.status(400).send({ msg: "Wrong credentials" });
         }
     })
 });

@@ -11,6 +11,7 @@ const defaultState = {
     cookie: '',
     profilePicture: '',
     username: '',
+    error: {},
     ...resetUserDataDefault
 }
 
@@ -25,18 +26,26 @@ const userSlice = createSlice({
                 cookie: payload.cookie
             }
         },
+        fetchProfilePictureAndUsername_BEGIN: (state) => {
+            return {
+                ...state,
+                isLoading: true
+            }
+        },
         fetchProfilePictureAndUsername_SUCCESS: (state, action) => {
             const payload = action.payload
             return {
                 ...state,
                 profilePicture: payload.profilePicture,
-                username: payload.username
+                username: payload.username,
+                isLoading: false
             }
         },
         fetchProfilePictureAndUsername_FAILURE: (state, action) => {
             const payload = action.payload
             return {
                 ...state,
+                isLoading: false,
                 error: {
                     code: payload.errorCode,
                     message: payload.errorMessage
@@ -70,6 +79,29 @@ const userSlice = createSlice({
                 ...state,
                 isLoading: false,
                 currentUserData: {},
+                error: {
+                    code: payload.errorCode,
+                    message: payload.errorMessage
+                }
+            }
+        },
+        fetchUserToken_BEGIN: (state) => {
+            return {
+                ...state,
+                isLoading: true
+            }
+        },
+        fetchUserToken_SUCCESS: (state) => {
+            return {
+                ...state,
+                isLoading: false
+            }
+        },
+        fetchUserToken_FAILURE: (state, action) => {
+            const payload = action.payload;
+            return {
+                ...state,
+                isLoading: false,
                 error: {
                     code: payload.errorCode,
                     message: payload.errorMessage
@@ -173,11 +205,18 @@ const userSlice = createSlice({
                 isLoading: false
             }
         },
+        resetError: (state) => {
+            return {
+                ...state,
+                error: {}
+            }
+        }
     }
 })
 
 export const {
     setVerificationCookie,
+    fetchProfilePictureAndUsername_BEGIN,
     fetchProfilePictureAndUsername_SUCCESS,
     fetchProfilePictureAndUsername_FAILURE,
     resetUserData,
@@ -197,7 +236,11 @@ export const {
     updateUserData_FAILURE,
     registerUser_BEGIN,
     registerUser_SUCCESS,
-    registerUser_FAILURE
+    registerUser_FAILURE,
+    fetchUserToken_BEGIN,
+    fetchUserToken_SUCCESS,
+    fetchUserToken_FAILURE,
+    resetError
 } = userSlice.actions
 
 export default userSlice;
