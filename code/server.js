@@ -28,10 +28,10 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
     const projectData = req.body.projectData;
     if (projectData) {
         if (projectData.projectName) {
-            database.projectExists({ projectName: projectData.projectName })
-                .then(projectExists => {
-                    if (projectExists) {
-                        return res.status(409).send({ errorType: "projectNameExists" })
+            database.projectExists({ projectName: projectData.projectName, repoUrl: projectData.repoUrl })
+                .then(response => {
+                    if (response.exists) {
+                        return res.status(response.code).send({ errorType: response.errorType })
                     } else {
                         database.saveProjectToDB(projectData)
                             .then(response => {
@@ -143,7 +143,7 @@ app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, 
 
 app.get('/api/get/project', function (req, res) {
     const projectName = req.query.projectName;
-    database.getProjectByName(projectName)
+    database.getProject({ projectName })
         .then(projects => res.status(200).send(projects))
         .catch((err) => { res.sendStatus(err.response.status) })
 });

@@ -111,7 +111,7 @@ export function sendNewProjectToBackend(projectData, token) {
 
         axios(options)
             .then(() => dispatch(sendProject_SUCCESS()))
-            .catch((err) => dispatch(sendProject_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+            .catch((err) => dispatch(sendProject_FAILURE({ errorCode: err.response.status, errorMessage: err.response.data.errorType })))
     }
 }
 

@@ -50,16 +50,18 @@ class AddManually extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const errorMessage = "A project with this name already exists"
-        if (this.props.error && this.state.showRemoteError && this.state.projectNameErrorMessage !== errorMessage) {
+        if (!objectExists(prevProps.error) && objectExists(this.props.error) && this.state.showRemoteError) {
             if (this.props.error.code === 409) {
-                this.setState({ projectNameErrorMessage: errorMessage })
+                if (this.props.error.message === "projectNameExists") {
+                    this.setState({ projectNameErrorMessage: "A project with this name already exists" })
+                } else if (this.props.error.message === "repoUrlExists") {
+                    this.setState({ repoUrlErrorMessage: "A project with this repo url already exists" })
+                }
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
             }
         }
 
-        if (!objectExists(prevProps.ownUserData) && objectExists(this.props.ownUserData)) {
-            console.log("TODO: FILL DATA INTO FIELD!")
+        if (objectExists(this.props.ownUserData) && !objectExists(this.props.projectData)) {
             this.fillFormWithOwnUserData()
         }
 
@@ -299,7 +301,6 @@ class AddManually extends Component {
 
     fillFormWithOwnUserData() {
         const data = this.props.ownUserData
-        //TODO: Organization and contact email
         var dataToAdd = {}
         if (data.mail) {
             this.props.updateProjectDataAttribute({ key: "contact.email", value: data.mail })

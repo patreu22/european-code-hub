@@ -23,14 +23,30 @@ function userExists({ mail, username }) {
     });
 }
 
-function projectExists({ projectName }) {
-    return new Promise(function (resolve) {
-        getProjectByName(projectName)
-            .then((project) => {
-                const projectFound = project ? true : false;
-                resolve(projectFound)
-            })
-            .catch(() => resolve(false))
+function projectExists({ projectName, repoUrl }) {
+    return new Promise(function (resolve, reject) {
+        console.log(projectName, repoUrl)
+        if (projectName) {
+            getProject({ projectName })
+                .then((project) => {
+                    if (project) {
+                        resolve({ code: 409, errorType: "projectNameExists", exists: true })
+                    }
+                })
+                .catch(() => {
+                    getProject({ repoUrl })
+                        .then((project) => {
+                            if (project) {
+                                resolve({ code: 409, errorType: "repoUrlExists", exists: true })
+                            } else {
+                                reject({ code: 404, message: "No repoUrl provided" })
+                            }
+                        })
+                        .catch(() => resolve({ exists: false }))
+                })
+        } else {
+            reject({ response: { status: 404 }, message: "No project name provided" })
+        }
     });
 }
 
@@ -105,14 +121,25 @@ function _getQueryObject(filters) {
     return query
 }
 
-function getProjectByName(projectName) {
+function getProject({ projectName, repoUrl }) {
     return new Promise(function (resolve, reject) {
-        models.PROJECT_MODEL.find({ projectName }, function (err, projects) {
+        var key = ''
+        var value = ''
+        if (projectName) {
+            key = 'projectName'
+            value = projectName
+        } else if (repoUrl) {
+            key = 'repoUrl'
+            value = repoUrl
+        }
+
+        models.PROJECT_MODEL.find({ [key]: value }, function (err, projects) {
             if (err) {
+                console.log(err)
                 reject(err)
             } else {
                 if (projects.length === 0) {
-                    reject({ response: { status: 404 }, message: `No project with name ${projectName}` })
+                    reject({ response: { status: 404 }, message: `No project with ${key} ${value}` })
                 } else {
                     resolve(projects[0])
                 }
@@ -536,7 +563,7 @@ module.exports = {
     connectToDb,
     updateSessionToken,
     getUser,
-    getProjectByName,
+    getProject,
     getProjectsOfUser,
     projectExists,
     updateProjectReadme,
