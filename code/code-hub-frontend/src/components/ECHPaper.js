@@ -56,14 +56,14 @@ class ECHPaper extends Component {
         // clearInterval(this.timer);
     }
 
-    componentDidMount() {
-        if (this.props.type === "login") {
-            const height = document.getElementById("loginContainer").clientHeight;
-            this.setState({ loginHeight: height })
-        }
-    }
-
     componentDidUpdate(prevProps) {
+        if (this.props.type === "login" && this.state.loginHeight === 0) {
+            if (document.getElementById("loginContainer")) {
+                const height = document.getElementById("loginContainer").clientHeight;
+                this.setState({ loginHeight: height })
+            }
+        }
+
         if (!prevProps.cookie && this.props.cookie) {
             this.setState({
                 redirect: true,

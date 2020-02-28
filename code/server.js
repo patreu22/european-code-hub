@@ -226,18 +226,17 @@ app.get('/api/get/user', function (req, res) {
 
 
 app.post('/api/create/token', function (req, res) {
-    const authValues = req.body;
-    const mail = authValues.mail
-    const password = authValues.password
+    const mail = req.body.mail
+    const password = req.body.password
 
-    database.userAndHashExistInDB({ mail: mail, password: password })
+    database.userAndHashExistInDB({ mail, password })
         .then(pairExists => {
             if (pairExists) {
-                database.checkIfUserIsActivated(mail)
+                database.checkIfUserIsActivated({ mail })
                     .then((isActivated) => {
                         if (isActivated) {
                             const token = authentication.generateWebtoken()
-                            database.updateSessionToken({ mail: authValues.mail, token: token })
+                            database.updateSessionToken({ mail, token })
                             return res.status(200).send(token)
                         } else {
                             return res.status(401).send({ msg: "Account not activated" });
