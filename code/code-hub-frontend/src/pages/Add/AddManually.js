@@ -267,12 +267,12 @@ class AddManually extends Component {
             this.setState({
                 [errorMessageName]: isValid ? "" : "Invalid text."
             })
-        } else if (validationType === 'url') {
+        } else if (validationType === "url") {
             const isValid = isValidUrl(event.target.value)
             this.setState({
                 [errorMessageName]: isValid ? "" : "Invalid URL."
             })
-        } else if (validationType === 'email') {
+        } else if (validationType === "email") {
             const isValid = isValidEmail(event.target.value)
             this.setState({
                 [errorMessageName]: isValid ? "" : "Invalid Email."
@@ -338,10 +338,11 @@ class AddManually extends Component {
         if (!this.props.projectData.organization) {
             this.setState({ organizationErrorMessage: "Invalid organization" })
         }
-        if (isValidUrl(this.props.projectData.repoUrl)) {
+        if (!isValidUrl(this.props.projectData.repoUrl)) {
             this.setState({ repoUrlErrorMessage: "Invalid URL" })
         }
-        if (isValidEmail(this.props.projectData.contact.mail)) {
+
+        if (!isValidEmail(this.props.projectData.contact.email)) {
             this.setState({ contactEmailErrorMessage: "Invalid contact mail" })
         }
 
