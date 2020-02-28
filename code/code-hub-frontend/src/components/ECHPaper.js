@@ -56,7 +56,7 @@ class ECHPaper extends Component {
     }
 
     componentWillUnmount() {
-        clearInterval(this.timer);
+        // clearInterval(this.timer);
     }
 
     componentDidMount() {
@@ -170,9 +170,7 @@ class ECHPaper extends Component {
                 </form>
             </div>
         } else if (this.props.type === "register" && this.props.registrationIsLoading) {
-            return <div style={{ display: 'flex', alignItems: 'center' }}>
-                <ECHLoadingIndicator />
-            </div>
+            return <div style={{ paddingBottom: '30px', display: 'flex', justifyContent: 'center' }}><ECHLoadingIndicator /></div>
         } else if (this.props.type === "registrationDone") {
             return <div>{this.props.title ? <Divider /> : null}
                 <MailOutlineIcon style={iconStyle} color={'primary'} />
@@ -219,6 +217,7 @@ class ECHPaper extends Component {
             onChange={(event) => this.onUsernameChanged(event)}
             onBlur={(event) => this.onUsernameFieldBlurred(event)}
             error={this.state.usernameError}
+            value={this.state.username}
             helperText={this.state.usernameErrorMessage}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
         />
@@ -232,6 +231,7 @@ class ECHPaper extends Component {
             onBlur={(event) => this.onNameChanged(event)}
             error={this.state.nameError}
             helperText={this.state.nameErrorMessage}
+            value={this.state.name}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
         />
     }
@@ -243,6 +243,7 @@ class ECHPaper extends Component {
             onChange={(event) => this.onOrganizationChanged(event)}
             onBlur={(event) => this.onOrganizationFieldBlurred(event)}
             error={this.state.organizationError}
+            value={this.state.organization}
             helperText={this.state.organizationErrorMessage}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
         />
@@ -256,6 +257,7 @@ class ECHPaper extends Component {
             onBlur={(event) => this.onMailFieldBlurred(event)}
             error={this.state.mailError}
             helperText={this.state.mailErrorMessage}
+            value={this.state.mail}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
         />
     }
@@ -267,6 +269,7 @@ class ECHPaper extends Component {
             onChange={(event) => this.onUrlChanged(event)}
             onBlur={(event) => this.onUrlFieldBlurred(event)}
             error={this.state.gitUrlError}
+            value={this.state.gitUrl}
             helperText={this.state.gitUrlErrorMessage}
         />
     }
@@ -279,6 +282,7 @@ class ECHPaper extends Component {
             error={this.state.passwordError}
             helperText={this.state.passwordErrorMessage}
             autoComplete="current-password"
+            value={this.state.password}
             onChange={(event) => this.onPasswordChanged(event)}
             onBlur={(event) => this.onPasswordFieldBlurred(event)}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
@@ -433,7 +437,6 @@ class ECHPaper extends Component {
                     })
                     this.props.setVerificationCookieAndProfileImageAndUserNameInStore(token)
                 }).catch((error) => {
-                    console.log(error)
                     if (error.response.status === 400) {
                         this.setState({
                             formError: true,
