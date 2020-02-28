@@ -7,7 +7,10 @@ import {
 import {
     sendProject_BEGIN,
     sendProject_SUCCESS,
-    sendProject_FAILURE
+    sendProject_FAILURE,
+    fetchProjectFromGitRepo_BEGIN,
+    fetchProjectFromGitRepo_SUCCESS,
+    fetchProjectFromGitRepo_FAILURE,
 } from '../slices/createProjectSlice'
 import {
     fetchProjectByName_BEGIN,
@@ -112,6 +115,29 @@ export function sendNewProjectToBackend(projectData, token) {
         axios(options)
             .then(() => dispatch(sendProject_SUCCESS()))
             .catch((err) => dispatch(sendProject_FAILURE({ errorCode: err.response.status, errorMessage: err.response.data.errorType })))
+    }
+}
+
+export function getInfoFromGitRepo(url) {
+    return function (dispatch) {
+        const options = {
+            method: 'GET',
+            url: '/api/get/project/git',
+            params: { url }
+        }
+
+        dispatch(fetchProjectFromGitRepo_BEGIN())
+
+        axios(options)
+            .then(response => {
+                console.log(response)
+                dispatch(fetchProjectFromGitRepo_SUCCESS())
+            })
+            .catch(err => {
+                console.log(err)
+                dispatch(fetchProjectFromGitRepo_FAILURE())
+            })
+
     }
 }
 

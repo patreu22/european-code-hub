@@ -97,6 +97,30 @@ const createProjectSlice = createSlice({
                 }
             }
         },
+        fetchProjectFromGitRepo_BEGIN: (state) => {
+            return {
+                ...state,
+                isLoading: true
+            }
+        },
+        fetchProjectFromGitRepo_SUCCESS: (state) => {
+            return {
+                //TODO: Dispatch all received infos to projectData
+                ...state,
+                isLoading: false
+            }
+        },
+        fetchProjectFromGitRepo_FAILURE: (state, action) => {
+            const payload = action.payload;
+            return {
+                ...state,
+                isLoading: false,
+                error: {
+                    code: payload.errorCode,
+                    message: payload.errorMessage
+                }
+            }
+        },
         resetError: (state) => {
             return {
                 ...state,
@@ -119,6 +143,9 @@ export const {
     sendProject_BEGIN,
     sendProject_SUCCESS,
     sendProject_FAILURE,
+    fetchProjectFromGitRepo_BEGIN,
+    fetchProjectFromGitRepo_SUCCESS,
+    fetchProjectFromGitRepo_FAILURE,
     resetToDefaultState,
     resetError
 } = createProjectSlice.actions

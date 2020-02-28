@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const authentication = require('./authentication')
 const database = require('./database')
 const io = require('./io')
+const git = require('./git')
 
 const MONGOOSE_DB_URL = 'mongodb://localhost:27017/code-hub';
 
@@ -22,6 +23,17 @@ app.get('/', function (req, res) {
 app.get('/ping', function (req, res) {
     database.indexProjects();
     return res.send('pong');
+});
+
+app.get('/api/get/project/git', function (req, res) {
+    const url = req.query.url;
+    git.fetchGitData(url)
+        .then((projectData) => {
+            return res.status(200).send(projectData);
+        })
+        .catch(err => {
+            return res.status(404).send(err)
+        })
 });
 
 app.post('/api/create/project', authentication.isAuthorized, function (req, res) {

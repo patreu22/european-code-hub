@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { Divider, FormHelperText, Paper } from '@material-ui/core'
 import { MailOutline as MailOutlineIcon } from '@material-ui/icons';
 import PropTypes from 'prop-types'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { incrementSteps } from '../slices/createProjectSlice'
-import { isValidEmail, isValidPassword, isValidUrl, isValidText } from '../helper/validationHelper'
+import { isValidEmail, isValidPassword, isValidText } from '../helper/validationHelper'
 import ImageUploader from 'react-images-upload';
 import { objectExists } from '../helper/objectHelper'
 import ECHButton from './ECHButton'
@@ -38,14 +38,10 @@ class ECHPaper extends Component {
             organizationErrorMessage: "",
             formError: false,
             formErrorText: "",
-            gitUrl: "",
-            gitUrlError: false,
-            gitUrlErrorMessage: "",
             loginHeight: 0
         };
         this.timer = 0;
         this._performLogin = this._performLogin.bind(this)
-        this._performGitFetch = this._performGitFetch.bind(this)
         this._performRegistration = this._performRegistration.bind(this)
         this.onImageDrop = this.onImageDrop.bind(this);
     }
@@ -186,14 +182,6 @@ class ECHPaper extends Component {
                     Please check your mail account and verify your email account. After this you can login to your account and add new projects to the European Code Hub.<br /><br />
                     Click <Link to={HOME} style={{ color: 'black' }}>here</Link> to go back to the home page.</div>
             </div >
-        } else if (this.props.type === "addProjectViaGit") {
-            return <div>
-                {this.props.title ? <Divider /> : null}
-                <form style={formParagraphStyle}>
-                    {this._renderUrlField()}
-                    {this._renderSubmitButton()}
-                </form>
-            </div>
         } else {
             const children = objectExists(this.props.children)
                 ? this.props.children.type
@@ -270,18 +258,6 @@ class ECHPaper extends Component {
         />
     }
 
-    _renderUrlField() {
-        return <ECHTextfield
-            label="URL"
-            required={true}
-            onChange={(event) => this.onUrlChanged(event)}
-            onBlur={(event) => this.onUrlFieldBlurred(event)}
-            error={this.state.gitUrlError}
-            value={this.state.gitUrl}
-            helperText={this.state.gitUrlErrorMessage}
-        />
-    }
-
     _renderPasswordField() {
         return <ECHTextfield
             label="Password"
@@ -313,10 +289,6 @@ class ECHPaper extends Component {
             return <div style={{ width: '100%' }}>
                 <ECHButton width="80%" onClick={this._performRegistration}>Register</ECHButton>
                 <div style={registerTextStyle}>You already have an account?  <Link to={LOGIN} style={{ color: 'black' }}>Login</Link> directly.</div>
-            </div>
-        } else if (this.props.type === 'addProjectViaGit') {
-            return <div style={{ width: '100%' }}>
-                <ECHButton width="80%" onClick={this._performGitFetch}>Next step</ECHButton>
             </div>
         }
     }
@@ -361,16 +333,6 @@ class ECHPaper extends Component {
         })
     }
 
-    onUrlChanged(event) {
-        this.setState({
-            gitUrl: event.target.value,
-            gitUrlError: false,
-            gitUrlErrorMessage: "",
-            formError: false,
-            formErrorText: ''
-        })
-    }
-
     onMailFieldBlurred(event) {
         const isValid = isValidEmail(event.target.value)
         console.log(`Is ${event.target.value} valid mail? - ${isValid}`);
@@ -401,15 +363,6 @@ class ECHPaper extends Component {
         this.setState({
             organizationError: !isValid,
             organizationErrorMessage: isValid ? "" : "Invalid organization."
-        })
-    }
-
-    onUrlFieldBlurred(event) {
-        const isValid = isValidUrl(event.target.value)
-        console.log(`Is ${event.target.value} valid Url? - ${isValid}`);
-        this.setState({
-            gitUrlError: !isValid,
-            gitUrlErrorMessage: isValid ? "" : "Invalid URL"
         })
     }
 
@@ -449,20 +402,6 @@ class ECHPaper extends Component {
                     passwordErrorMessage: 'Not a valid password.'
                 })
             }
-        }
-    }
-
-
-    //TODO: Git fetch
-    _performGitFetch() {
-        const validUrl = isValidUrl(this.state.gitUrl)
-        if (!validUrl) {
-            this.setState({
-                gitUrlError: true,
-                gitUrlErrorMessage: 'Not a valid URL.',
-            })
-        } else {
-            console.log("Todo: Git fetch")
         }
     }
 
