@@ -70,7 +70,7 @@ class AddManually extends Component {
             if (this.props.isLoading) {
                 return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
                     <div>
-                        <ECHPaper width={"40vw"} title="Information dialogue">
+                        <ECHPaper width={"40vw"} title="Loading...">
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 <ECHLoadingIndicator />
                             </div>
