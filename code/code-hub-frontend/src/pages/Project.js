@@ -233,6 +233,12 @@ class Project extends Component {
 
     _renderContactBox() {
         const contactExists = objectExists(this.props.currentProject.contact)
+        const contactNameExists = contactExists
+            ? (this.props.currentProject.contact.name ? true : false)
+            : false
+        const contactMailExists = contactExists
+            ? (this.props.currentProject.contact.email ? true : false)
+            : false
         const createItemObject = this.props.currentProject.creatorName === "scraped-by-robo" || this.props.currentProject.creatorName === "generated"
             ? this.props.currentProject.creatorName && this._renderIconAndText({
                 icon: <CreateIcon />,
@@ -248,12 +254,12 @@ class Project extends Component {
 
         return (contactExists || this.props.currentProject.creatorName) && <ECHPaper title="Contact details">
             <div>
-                {contactExists && this._renderIconAndText({
+                {contactNameExists && this._renderIconAndText({
                     icon: <PersonIcon />,
                     text: this.props.currentProject.contact.name,
                     tooltipText: "Contact name"
                 })}
-                {contactExists && this._renderIconAndText({
+                {contactMailExists && this._renderIconAndText({
                     icon: <EmailIcon />,
                     text: this.props.currentProject.contact.email,
                     link: `mailto:${this.props.currentProject.contact.email}`,
