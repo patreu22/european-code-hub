@@ -332,6 +332,20 @@ function saveUserToDB({ username, password, name, mail, organization, profileIma
     });
 }
 
+function checkIfUserIsActivated({ mail }) {
+    return new Promise(function (resolve) {
+        getUser({ mail })
+            .then(user => {
+                if (user) {
+                    resolve(user.activated)
+                } else {
+                    resolve(false)
+                }
+            })
+            .catch(() => resolve(false))
+    })
+}
+
 function activateUser(activationToken) {
     return new Promise(function (resolve, reject) {
         getUser({ activationToken })
@@ -531,5 +545,6 @@ module.exports = {
     getSuggestionList,
     getSearchResults,
     updateUser,
-    activateUser
+    activateUser,
+    checkIfUserIsActivated
 }

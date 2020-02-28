@@ -71,10 +71,17 @@ class ECHPaper extends Component {
         }
 
         if (!objectExists(prevProps.error) && objectExists(this.props.error)) {
-            if (this.props.error.code === 400) {
+            const code = this.props.error.code
+            if (code === 400) {
                 this.setState({
                     formError: true,
                     formErrorText: 'Credentials do not match.',
+                    loginLoading: false
+                })
+            } else if (code === 401) {
+                this.setState({
+                    formError: true,
+                    formErrorText: 'Please activate your account via the link in the verification mail first.',
                     loginLoading: false
                 })
             } else {

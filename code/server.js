@@ -229,15 +229,26 @@ app.get('/api/get/user', function (req, res) {
 
 app.post('/api/create/token', function (req, res) {
     const authValues = req.body;
-    database.userAndHashExistInDB({ mail: authValues.mail, password: authValues.password }).then(pairExists => {
-        if (pairExists) {
-            const token = authentication.generateWebtoken()
-            database.updateSessionToken({ mail: authValues.mail, token: token })
-            return res.status(200).send(token)
-        } else {
-            return res.status(400).send({ msg: "Wrong credentials" });
-        }
-    })
+    const mail = authValues.mail
+    const password = authValues.password
+
+    database.userAndHashExistInDB({ mail: mail, password: password })
+        .then(pairExists => {
+            if (pairExists) {
+                database.checkIfUserIsActivated(mail)
+                    .then((isActivated) => {
+                        if (isActivated) {
+                            const token = authentication.generateWebtoken()
+                            database.updateSessionToken({ mail: authValues.mail, token: token })
+                            return res.status(200).send(token)
+                        } else {
+                            return res.status(401).send({ msg: "Account not activated" });
+                        }
+                    })
+            } else {
+                return res.status(400).send({ msg: "Wrong credentials" });
+            }
+        })
 });
 
 app.listen(process.env.PORT || 5000, function () {
