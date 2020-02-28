@@ -10,12 +10,12 @@ import ECHTextfield from '../../components/ECHTextfield'
 import ECHMultipleSelect from '../../components/ECHMultipleSelect'
 import ECHLoadingIndicator from '../../components/ECHLoadingIndicator'
 import { objectExists } from '../../helper/objectHelper'
-import { isValidText, isValidUrl } from '../../helper/validationHelper'
+import { isValidText, isValidUrl, isValidEmail } from '../../helper/validationHelper'
 import { Redirect } from 'react-router-dom'
 import { PROJECTS, LOGIN } from '../../routes'
 
 import { updateProjectDataAttribute, resetError, resetToDefaultState } from '../../slices/createProjectSlice'
-import { sendNewProjectToBackend } from '../../actions/httpActions'
+import { sendNewProjectToBackend, getUserByToken } from '../../actions/httpActions'
 
 class AddManually extends Component {
 
@@ -45,7 +45,11 @@ class AddManually extends Component {
         this.props.resetToDefaultState()
     }
 
-    componentDidUpdate() {
+    componentDidMount() {
+        this.props.getUserByToken(this.props.cookie)
+    }
+
+    componentDidUpdate(prevProps) {
         const errorMessage = "A project with this name already exists"
         if (this.props.error && this.state.showRemoteError && this.state.projectNameErrorMessage !== errorMessage) {
             if (this.props.error.code === 409) {
@@ -53,6 +57,12 @@ class AddManually extends Component {
                 window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
             }
         }
+
+        if (!objectExists(prevProps.ownUserData) && objectExists(this.props.ownUserData)) {
+            console.log("TODO: FILL DATA INTO FIELD!")
+            this.fillFormWithOwnUserData()
+        }
+
     }
 
     render() {
@@ -128,7 +138,7 @@ class AddManually extends Component {
                 value: this.props.projectData.organization,
                 errorMessageName: "organizationErrorMessage",
                 errorMessage: this.state.organizationErrorMessage,
-                validationType: "text",
+                // validationType: "text",
             })}
             {this._renderField({
                 label: "Repository URL",
@@ -145,7 +155,7 @@ class AddManually extends Component {
                 value: this.props.projectData.version,
                 errorMessageName: "versionErrorMessage",
                 errorMessage: this.state.versionErrorMessage,
-                validationType: "text",
+                // validationType: "text",
             })}
             <ECHMultipleSelect
                 title="Status"
@@ -161,15 +171,16 @@ class AddManually extends Component {
                 value: contactName,
                 errorMessageName: "contactNameErrorMessage",
                 errorMessage: this.state.contactNameErrorMessage,
-                validationType: "text",
+                // validationType: "text",
             })}
             {this._renderField({
                 label: "Contact email",
                 jsonKey: "contact.email",
+                required: true,
                 value: contactMail,
                 errorMessageName: "contactEmailErrorMessage",
                 errorMessage: this.state.contactEmailErrorMessage,
-                validationType: "text",
+                validationType: "email",
             })}
             {this._renderDatepicker({
                 label: "Date of project creation",
@@ -192,7 +203,7 @@ class AddManually extends Component {
                 value: this.props.projectData.programmingLanguages,
                 errorMessageName: "programmingLanguagesErrorMessage",
                 errorMessage: this.state.programmingLanguagesErrorMessage,
-                validationType: "text",
+                // validationType: "text",
             })}
             {/*TODO: Multiselect Dropdown*/}
             {this._renderField({
@@ -201,7 +212,7 @@ class AddManually extends Component {
                 value: this.props.projectData.license,
                 errorMessageName: "licenseErrorMessage",
                 errorMessage: this.state.licenseErrorMessage,
-                validationType: "text",
+                // validationType: "text",
             })}
             {this._renderSubmitButton()}
         </form>
@@ -259,6 +270,11 @@ class AddManually extends Component {
             this.setState({
                 [errorMessageName]: isValid ? "" : "Invalid URL."
             })
+        } else if (validationType === 'email') {
+            const isValid = isValidEmail(event.target.value)
+            this.setState({
+                [errorMessageName]: isValid ? "" : "Invalid Email."
+            })
         }
     }
 
@@ -279,6 +295,19 @@ class AddManually extends Component {
         } else {
             this.props.updateProjectDataAttribute({ key: jsonKey, value: "" })
         }
+    }
+
+    fillFormWithOwnUserData() {
+        const data = this.props.ownUserData
+        //TODO: Organization and contact email
+        var dataToAdd = {}
+        if (data.mail) {
+            this.props.updateProjectDataAttribute({ key: "contact.email", value: data.mail })
+        }
+        if (data.organization) {
+            this.props.updateProjectDataAttribute({ key: "organization", value: data.organization })
+        }
+        console.log(dataToAdd)
     }
 
     performManuallyHandling() {
@@ -305,8 +334,11 @@ class AddManually extends Component {
         if (!this.props.projectData.organization) {
             this.setState({ organizationErrorMessage: "Invalid organization" })
         }
-        if (!this.props.projectData.repoUrl) {
+        if (isValidUrl(this.props.projectData.repoUrl)) {
             this.setState({ repoUrlErrorMessage: "Invalid URL" })
+        }
+        if (isValidEmail(this.props.projectData.contact.mail)) {
+            this.setState({ contactEmailErrorMessage: "Invalid contact mail" })
         }
 
         this.setState(newState)
@@ -333,10 +365,11 @@ const mapStateToProps = state => {
         error: state.createProject.error,
         successfullySubmitted: state.createProject.successfullySubmitted,
         isLoading: state.createProject.isLoading,
-        cookie: state.user.cookie
+        cookie: state.user.cookie,
+        ownUserData: state.user.ownUserData
     }
 }
 
-const mapDispatchToProps = { updateProjectDataAttribute, sendNewProjectToBackend, resetError, resetToDefaultState }
+const mapDispatchToProps = { updateProjectDataAttribute, sendNewProjectToBackend, resetError, resetToDefaultState, getUserByToken }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddManually);
