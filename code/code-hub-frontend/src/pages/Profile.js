@@ -1,7 +1,7 @@
 import React, { Component, } from 'react';
 import { Avatar, ListItem, List } from '@material-ui/core'
 import PageWrapper from '../components/PageWrapper'
-import { getUserByName, getUserByToken } from '../actions/httpActions'
+import { getUserByUsername, getUserByToken } from '../actions/httpActions'
 import { withRouter, Redirect } from "react-router";
 import ImageUploader from 'react-images-upload';
 import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
@@ -18,7 +18,8 @@ import {
     Group as GroupIcon,
     Person as PersonIcon,
     EmailOutlined as EmailIcon,
-    Edit as EditIcon
+    // Edit as EditIcon,
+    PersonOutline as PersonOutlineIcon
 } from '@material-ui/icons'
 import { getVerificationToken } from '../helper/cookieHelper'
 import ECHIconAndText from '../components/ECHIconAndText';
@@ -37,6 +38,10 @@ class Profile extends Component {
             mailError: false,
             mailErrorMessage: '',
             mailDefaultSet: false,
+            nameChange: '',
+            nameError: false,
+            nameErrorMessage: '',
+            nameDefaultSet: false,
             organizationChange: '',
             organizationError: false,
             organizationErrorMessage: '',
@@ -56,7 +61,7 @@ class Profile extends Component {
     componentDidMount() {
         const username = this.props.match.params.username;
         if (username) {
-            this.props.getUserByName(username)
+            this.props.getUserByUsername(username)
             this.props.getUserProjectsByName(username)
             this.setState({ checkedForUserProjects: true })
         } else {
@@ -82,7 +87,11 @@ class Profile extends Component {
             this.setState({ mailChange: this.props.ownUserData.mail, mailDefaultSet: true })
         }
 
-        if (this.props.ownUserData && !this.state.organizationChange && !this.state.organizationDefaultSet) {
+        if (ownUserDataExists && !this.state.nameChange && !this.state.nameDefaultSet) {
+            this.setState({ nameChange: this.props.ownUserData.name, nameDefaultSet: true })
+        }
+
+        if (ownUserDataExists && !this.state.organizationChange && !this.state.organizationDefaultSet) {
             if (this.props.ownUserData.organization) {
                 this.setState({ organizationChange: this.props.ownUserData.organization, organizationDefaultSet: true })
             }
@@ -191,10 +200,10 @@ class Profile extends Component {
                 <a href={`${PROJECTS}/${project.projectName}`}>
                     {project.projectName}
                 </a>
-                <ECHIconAndText
+                {/* <ECHIconAndText
                     icon={<a href={`${PROJECTS}/${project.projectName}/edit`} ><EditIcon style={{ cursor: 'pointer' }} /></a>} //onClick={() => this._onProjectEditClick(project.projectName)} />}
                     tooltipText="Edit project"
-                />
+                /> */}
             </div>
         </ListItem>
     }
@@ -246,6 +255,9 @@ class Profile extends Component {
             if (this.state.mailChange !== this.props.ownUserData.mail) {
                 fieldsToUpdate["mail"] = this.state.mailChange
             }
+            if (this.state.nameChange !== this.props.ownUserData.name) {
+                fieldsToUpdate["name"] = this.state.nameChange
+            }
             if (this.state.organizationChange !== this.props.ownUserData.organization) {
                 fieldsToUpdate["organization"] = this.state.organizationChange
             }
@@ -281,7 +293,11 @@ class Profile extends Component {
             organizationChange: '',
             organizationError: false,
             organizationErrorMessage: '',
-            organizationDefaultSet: false
+            organizationDefaultSet: false,
+            nameChange: '',
+            nameError: false,
+            nameErrorMessage: '',
+            nameDefaultSet: false,
         })
     }
 
@@ -298,6 +314,17 @@ class Profile extends Component {
                         text={currentData.username}
                         tooltipText="Username"
                     />
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                        <div style={{ alignSelf: 'center', display: 'inline-block', paddingRight: '5px' }}><PersonOutlineIcon /></div>
+                        <ECHTextfield
+                            label="Full name"
+                            onChange={(event) => this.onNameChanged(event)}
+                            onBlur={(event) => this.onNameFieldBlurred(event)}
+                            error={this.state.nameError}
+                            helperText={this.state.nameErrorMessage}
+                            value={this.state.nameChange}
+                        />
+                    </div>
                     <div style={{ display: 'flex', flexDirection: 'row' }}>
                         <div style={{ alignSelf: 'center', display: 'inline-block', paddingRight: '5px' }}><EmailIcon /></div>
                         <ECHTextfield
@@ -343,6 +370,11 @@ class Profile extends Component {
                         tooltipText="Username"
                     />
                     <ECHIconAndText
+                        icon={<PersonOutlineIcon />}
+                        text={currentData.name}
+                        tooltipText="Full name"
+                    />
+                    <ECHIconAndText
                         icon={<EmailIcon />}
                         text={currentData.mail}
                         link={`mailto:${currentData.mail}`}
@@ -372,11 +404,27 @@ class Profile extends Component {
         })
     }
 
+    onNameChanged(event) {
+        this.setState({
+            nameChange: event.target.value,
+            nameError: false,
+            nameErrorMessage: "",
+        })
+    }
+
     onMailFieldBlurred(event) {
         const isValid = isValidEmail(event.target.value)
         this.setState({
             mailError: !isValid,
             mailErrorMessage: isValid ? "" : "Invalid Email address"
+        })
+    }
+
+    onNameFieldBlurred(event) {
+        const isValid = isValidText(event.target.value)
+        this.setState({
+            nameError: !isValid,
+            nameErrorMessage: isValid ? "" : "Invalid name"
         })
     }
 
@@ -412,7 +460,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     setVerificationCookieAndProfileImageAndUserNameInStore,
-    getUserByName,
+    getUserByUsername,
     getUserByToken,
     resetUserData,
     updateUserData_BEGIN,

@@ -126,7 +126,7 @@ export function getProjectByName(projectName) {
     }
 }
 
-export function getUserByName(username) {
+export function getUserByUsername(username) {
     return function (dispatch) {
         const options = {
             method: 'GET',
@@ -193,12 +193,13 @@ export function getUserByToken(token) {
     }
 }
 
-export function registerUser(username, password, mail, organization, profileImageFile) {
+export function registerUser(username, password, mail, name, organization, profileImageFile) {
     return function (dispatch) {
         var formData = new FormData();
         formData.append("profileImageFile", profileImageFile);
         formData.append("username", username);
         formData.append("password", password);
+        formData.append("name", name);
         formData.append("mail", mail);
         formData.append("organization", organization);
 

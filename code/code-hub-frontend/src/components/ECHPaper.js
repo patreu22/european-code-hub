@@ -24,6 +24,7 @@ class ECHPaper extends Component {
             mail: '',
             password: '',
             username: '',
+            name: '',
             organization: '',
             profileImage: null,
             secondsLeft: 10,
@@ -31,6 +32,8 @@ class ECHPaper extends Component {
             mailErrorMessage: "",
             passwordError: false,
             passwordErrorMessage: "",
+            nameError: false,
+            nameErrorMessage: "",
             usernameError: false,
             usernameErrorMessage: "",
             organizationError: false,
@@ -146,6 +149,7 @@ class ECHPaper extends Component {
                 <form style={formParagraphStyle}>
                     {this._renderUserNameField()}
                     {this._renderEmailField()}
+                    {this._renderNameField()}
                     {this._renderPasswordField()}
                     {this._renderOrganizationField()}
                     <div style={dropzoneWrapperStyle}>
@@ -216,6 +220,18 @@ class ECHPaper extends Component {
             onBlur={(event) => this.onUsernameFieldBlurred(event)}
             error={this.state.usernameError}
             helperText={this.state.usernameErrorMessage}
+            onKeyDown={(e) => this._handleKeyDown(e, this.props)}
+        />
+    }
+
+    _renderNameField() {
+        return <ECHTextfield
+            label="Full name"
+            required={true}
+            onChange={(event) => this.onNameChanged(event)}
+            onBlur={(event) => this.onNameChanged(event)}
+            error={this.state.nameError}
+            helperText={this.state.nameErrorMessage}
             onKeyDown={(e) => this._handleKeyDown(e, this.props)}
         />
     }
@@ -313,6 +329,16 @@ class ECHPaper extends Component {
         })
     }
 
+    onNameChanged(event) {
+        this.setState({
+            name: event.target.value,
+            nameError: false,
+            nameErrorMessage: "",
+            formError: false,
+            formErrorText: ''
+        })
+    }
+
     onOrganizationChanged(event) {
         this.setState({
             organization: event.target.value,
@@ -347,6 +373,14 @@ class ECHPaper extends Component {
         this.setState({
             usernameError: !isValid,
             usernameErrorMessage: isValid ? "" : "Invalid username."
+        })
+    }
+
+    onNameFieldBlurred(event) {
+        const isValid = isValidText(event.target.value)
+        this.setState({
+            nameError: !isValid,
+            nameErrorMessage: isValid ? "" : "Invalid name."
         })
     }
 
@@ -443,11 +477,12 @@ class ECHPaper extends Component {
     _performRegistration() {
         //TODO: Data validation, Email check and long password check
         const validMail = isValidEmail(this.state.mail)
+        const validName = isValidText(this.state.name)
         const validPassword = isValidPassword(this.state.password)
         const validUsername = isValidText(this.state.username)
         const validOrganization = isValidText(this.state.organization)
-        if (validMail && validPassword && validUsername && validOrganization) {
-            this.props.registerUser(this.state.username, this.state.password, this.state.mail, this.state.organization, this.state.profileImage)
+        if (validMail && validPassword && validUsername && validOrganization && validName) {
+            this.props.registerUser(this.state.username, this.state.password, this.state.mail, this.state.name, this.state.organization, this.state.profileImage)
                 .then(() => {
                     this.props.onRegistrationDone();
                     // this._startCountdown();

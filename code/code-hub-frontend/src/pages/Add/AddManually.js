@@ -304,6 +304,9 @@ class AddManually extends Component {
         if (data.mail) {
             this.props.updateProjectDataAttribute({ key: "contact.email", value: data.mail })
         }
+        if (data.name) {
+            this.props.updateProjectDataAttribute({ key: "contact.name", value: data.name })
+        }
         if (data.organization) {
             this.props.updateProjectDataAttribute({ key: "organization", value: data.organization })
         }

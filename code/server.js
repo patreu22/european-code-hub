@@ -87,10 +87,10 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
 app.put('/api/update/user', [authentication.isAuthorized, uploadMiddleware.single('profileImageFile')], function (req, res) {
     const authHeader = req.headers.authorization
     const mailChange = req.body.mail
+    const nameChange = req.body.name
     const organizationChange = req.body.organization
     const profileImagePath = req.file ? req.file.path : null;
-    console.log("- Incoming update -")
-    database.updateUser(authHeader, { mailChange, organizationChange, profileImagePath })
+    database.updateUser(authHeader, { mailChange, organizationChange, nameChange, profileImagePath })
         .then((saved) => {
             if (saved) {
                 res.sendStatus(200)
@@ -116,6 +116,7 @@ app.post('/api/create/user', uploadMiddleware.single('profileImageFile'), (req, 
                             const hash = authentication.getPasswordHash(user.password)
                             database.saveUserToDB({
                                 username: user.username,
+                                name: user.name,
                                 password: hash,
                                 mail: user.mail,
                                 organization: user.organization,

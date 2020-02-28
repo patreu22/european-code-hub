@@ -243,13 +243,13 @@ class Project extends Component {
             ? this.props.currentProject.creatorName && this._renderIconAndText({
                 icon: <CreateIcon />,
                 text: this.props.currentProject.creatorName,
-                tooltipText: "Created by"
+                tooltipText: "Entry created by"
             })
             : this.props.currentProject.creatorName && this._renderIconAndText({
                 icon: <CreateIcon />,
                 text: this.props.currentProject.creatorName,
                 link: `${USER}/${this.props.currentProject.creatorName}`,
-                tooltipText: "Created by"
+                tooltipText: "Entry created by"
             })
 
         return (contactExists || this.props.currentProject.creatorName) && <ECHPaper title="Contact details">

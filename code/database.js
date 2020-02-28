@@ -206,8 +206,8 @@ function getUser({ token, mail, username, activationToken, stripData = true }) {
     var findUserRequest = User.findOne({ [key]: value });
     if (stripData) {
         const select = activationToken
-            ? "username mail organization activationToken activated"
-            : "username mail organization profilePicture"
+            ? "username mail name organization activationToken activated"
+            : "username mail name organization profilePicture"
         findUserRequest = findUserRequest.select(select);
     }
 
@@ -225,9 +225,9 @@ function getUser({ token, mail, username, activationToken, stripData = true }) {
     });
 }
 
-function updateUser(token, { mailChange, organizationChange, profileImagePath }) {
+function updateUser(token, { mailChange, organizationChange, nameChange, profileImagePath }) {
     return new Promise((resolve, reject) => {
-        if (!mailChange && !organizationChange && !profileImagePath) {
+        if (!mailChange && !organizationChange && !nameChange && !profileImagePath) {
             resolve(true)
         } else {
             getUser({ token }).then((user) => {
@@ -236,6 +236,9 @@ function updateUser(token, { mailChange, organizationChange, profileImagePath })
                 }
                 if (organizationChange) {
                     user.organization = organizationChange
+                }
+                if (nameChange) {
+                    user.name = nameChange
                 }
                 if (profileImagePath) {
                     const profileImageData = io.getProfileImageOrDefaultData(profileImagePath)
@@ -279,13 +282,14 @@ function updateProjectReadme(projectName, readmeText) {
 }
 
 
-function saveUserToDB({ username, password, mail, organization, profileImagePath, lastSessionToken }) {
+function saveUserToDB({ username, password, name, mail, organization, profileImagePath, lastSessionToken }) {
     const profileImageData = io.getProfileImageOrDefaultData(profileImagePath)
     //TODO: Generate hash instead of math.random
     const activationToken = Math.floor((Math.random() * 100000) + 54)
     const newUserWithProfileImage = models.USER_MODEL({
         username,
         password,
+        name,
         mail,
         organization,
         profilePicture: { data: profileImageData, contentType: "image/png" },
@@ -296,6 +300,7 @@ function saveUserToDB({ username, password, mail, organization, profileImagePath
     const newUserWithoutProfileImage = models.USER_MODEL({
         username,
         password,
+        name,
         mail,
         organization,
         lastSessionToken,
