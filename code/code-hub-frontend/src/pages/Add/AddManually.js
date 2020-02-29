@@ -35,6 +35,7 @@ class AddManually extends Component {
             dateLastModifiedErrorMessage: '',
             programmingLanguagesErrorMessage: '',
             licenseErrorMessage: '',
+            filledFormWithUserData: false
         }
 
         this.statusChanged = this.statusChanged.bind(this)
@@ -63,34 +64,36 @@ class AddManually extends Component {
             }
         }
 
-        if (objectExists(this.props.ownUserData) && !objectExists(this.props.projectData)) {
+        if (objectExists(this.props.ownUserData) && !this.state.filledFormWithUserData) {
             this.fillFormWithOwnUserData()
+            this.setState({ filledFormWithUserData: true })
         }
 
     }
 
     render() {
         if (this.props.cookie) {
+            var content = <div />
             if (this.props.isLoading) {
-                return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
-                    <div>
-                        <ECHPaper width={"40vw"} title="Loading...">
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                                <ECHLoadingIndicator />
-                            </div>
-                        </ECHPaper>
-                    </div>
-                </PageWrapper >
+                content = <div>
+                    <ECHPaper width={"40vw"} title="Loading...">
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                            <ECHLoadingIndicator />
+                        </div>
+                    </ECHPaper>
+                </div>
             }
             if (this.props.successfullySubmitted) {
                 return <Redirect to={`${PROJECTS}/${this.props.projectData.projectName}`} />
             } else {
-                return <PageWrapper headlineTitle={"Add project manually"} showBackButton={true}>
-                    <div>
-                        <ECHPaper width={"40vw"} title="Information dialogue">{this._renderContentField()}</ECHPaper>
-                    </div>
-                </PageWrapper >
+                content = <div>
+                    <ECHPaper width={"40vw"} title="Information dialogue">{this._renderContentField()}</ECHPaper>
+                </div>
             }
+
+            return <PageWrapper headlineTitle={"Add project"} showBackButton={true}>
+                {content}
+            </PageWrapper>
         } else {
             return <Redirect to={LOGIN} />
         }
@@ -378,7 +381,7 @@ class AddManually extends Component {
     }
 
     _renderSubmitButton = () => {
-        const buttonTitle = objectExists(this.props.projectData) ? "Submit" : "Next step"
+        const buttonTitle = objectExists(this.props.projectData) ? "Add project" : "Next step"
         return <div style={{ width: '100%' }}>
             <ECHButton width="80%" onClick={this.performManuallyHandling}>{buttonTitle}</ECHButton>
         </div>
