@@ -103,11 +103,12 @@ const createProjectSlice = createSlice({
                 isLoading: true
             }
         },
-        fetchProjectFromGitRepo_SUCCESS: (state) => {
+        fetchProjectFromGitRepo_SUCCESS: (state, action) => {
+            const payload = action.payload;
             return {
-                //TODO: Dispatch all received infos to projectData
                 ...state,
-                isLoading: false
+                isLoading: false,
+                projectData: payload.projectData
             }
         },
         fetchProjectFromGitRepo_FAILURE: (state, action) => {

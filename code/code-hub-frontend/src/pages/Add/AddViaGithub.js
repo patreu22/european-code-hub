@@ -7,9 +7,11 @@ import ECHLoadingIndicator from '../../components/ECHLoadingIndicator'
 import ECHTextfield from '../../components/ECHTextfield'
 import ECHButton from '../../components/ECHButton'
 import { Redirect } from 'react-router-dom'
-import { LOGIN } from '../../routes'
+import { LOGIN, ADD_MANUALLY } from '../../routes'
 import { isValidUrl } from '../../helper/validationHelper'
 import { getInfoFromGitRepo } from '../../actions/httpActions'
+import { objectExists } from '../../helper/objectHelper'
+import { resetError } from '../../slices/createProjectSlice'
 
 class AddViaGithub extends Component {
 
@@ -22,6 +24,7 @@ class AddViaGithub extends Component {
             gitHeight: 0
         }
         this._performGitFetch = this._performGitFetch.bind(this)
+        this._handleKeyDown = this._handleKeyDown.bind(this)
     }
 
     componentDidMount() {
@@ -30,6 +33,15 @@ class AddViaGithub extends Component {
                 const height = document.getElementById("gitContainer").clientHeight;
                 this.setState({ gitHeight: height })
             }
+        }
+    }
+
+    componentDidUpdate() {
+        if (objectExists(this.props.error) && !this.state.gitUrlError) {
+            this.setState({
+                gitUrlError: true,
+                gitUrlErrorMessage: 'Not a valid or accessible git repository.',
+            })
         }
     }
 
@@ -53,20 +65,24 @@ class AddViaGithub extends Component {
                 <ECHLoadingIndicator />
             </div>
         } else {
-            const formParagraphStyle = {
-                textAlign: 'center',
-                padding: '2vH 1vw 2vH 1vw',
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
+            if (objectExists(this.props.projectData)) {
+                return <Redirect to={ADD_MANUALLY} />
+            } else {
+                const formParagraphStyle = {
+                    textAlign: 'center',
+                    padding: '2vH 1vw 2vH 1vw',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }
+                return <div id="gitContainer">
+                    {this.props.title ? <Divider /> : null}
+                    <form style={formParagraphStyle}>
+                        {this._renderUrlField()}
+                        {this._renderSubmitButton()}
+                    </form>
+                </div >
             }
-            return <div id="gitContainer">
-                {this.props.title ? <Divider /> : null}
-                <form style={formParagraphStyle}>
-                    {this._renderUrlField()}
-                    {this._renderSubmitButton()}
-                </form>
-            </div >
         }
     }
 
@@ -85,10 +101,18 @@ class AddViaGithub extends Component {
             error={this.state.gitUrlError}
             value={this.state.gitUrl}
             helperText={this.state.gitUrlErrorMessage}
+            onKeyDown={this._handleKeyDown}
         />
     }
 
+    _handleKeyDown(event) {
+        if (event.key === 'Enter') {
+            this._performGitFetch();
+        }
+    }
+
     onUrlChanged(event) {
+        this.props.resetError()
         this.setState({
             gitUrl: event.target.value,
             gitUrlError: false,
@@ -104,7 +128,6 @@ class AddViaGithub extends Component {
         })
     }
 
-    //TODO: Git fetch
     _performGitFetch() {
         const validUrl = isValidUrl(this.state.gitUrl)
         if (validUrl) {
@@ -121,10 +144,12 @@ class AddViaGithub extends Component {
 const mapStateToProps = state => {
     return {
         cookie: state.user.cookie,
-        isLoading: state.createProject.isLoading
+        isLoading: state.createProject.isLoading,
+        projectData: state.createProject.projectData,
+        error: state.createProject.error
     }
 }
 
-const mapDispatchToProps = { getInfoFromGitRepo }
+const mapDispatchToProps = { getInfoFromGitRepo, resetError }
 
 export default connect(mapStateToProps, mapDispatchToProps)(AddViaGithub);

@@ -130,12 +130,12 @@ export function getInfoFromGitRepo(url) {
 
         axios(options)
             .then(response => {
-                console.log(response)
-                dispatch(fetchProjectFromGitRepo_SUCCESS())
+                const projectData = response.data
+                dispatch(fetchProjectFromGitRepo_SUCCESS({ projectData }))
             })
             .catch(err => {
-                console.log(err)
-                dispatch(fetchProjectFromGitRepo_FAILURE())
+                console.log(err.response)
+                dispatch(fetchProjectFromGitRepo_FAILURE({ errorCode: err.response.status, errorMessage: err.response.data.message }))
             })
 
     }

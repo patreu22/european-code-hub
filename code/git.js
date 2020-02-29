@@ -1,5 +1,6 @@
 const axios = require('axios')
 const dotenv = require('dotenv')
+const moment = require('moment')
 
 const API_BASE = "https://api.github.com"
 const API_REPOS_ENDPOINT = API_BASE + "/repos"
@@ -22,21 +23,26 @@ function fetchGitData(url) {
             axios(options)
                 .then((response) => {
                     const data = response.data
+                    if (data.name) {
+                        dataToReturn.projectName = data.name
+                    }
                     if (data.created_at) {
-                        dataToReturn.created = data.created_at
+                        const formattedDate = moment(data.created_at).format("DD-MM-YYYY")
+                        dataToReturn.dateCreated = formattedDate
                     }
                     if (data.updated_at) {
-                        dataToReturn.lastModified = data.created_at
+                        const formattedDate = moment(data.updated_at).format("DD-MM-YYYY")
+                        dataToReturn.dateLastModified = formattedDate
                     }
                     if (data.html_url) {
                         dataToReturn.repoUrl = data.html_url
                     }
                     if (data.language) {
-                        dataToReturn.languages = [data.language]
+                        dataToReturn.programmingLanguages = [data.language]
                     }
                     if (data.license) {
                         if (data.license.name) {
-                            dataToReturn.projectName = data.name
+                            dataToReturn.license = data.license.name
                         }
                     }
 
@@ -59,7 +65,7 @@ function fetchGitData(url) {
 }
 
 function getLatestVersion(repoOwner, repoName) {
-    return new Promise(function (resolve, reject) {
+    return new Promise(function (resolve) {
         const options = {
             method: 'GET',
             url: getTagsEndpoint(repoOwner, repoName),

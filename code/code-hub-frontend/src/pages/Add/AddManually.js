@@ -251,11 +251,19 @@ class AddManually extends Component {
     _renderField({ label, jsonKey, required, value, errorMessageName, errorMessage, validationType }) {
         const showError = errorMessage ? true : false
         var makeMultiline = jsonKey === "projectDescription";
+
+        var onChangeHandler = () => { }
+        if (jsonKey === "programmingLanguages") {
+            onChangeHandler = (event) => this.onTextfieldWithArrayChanged(jsonKey, event)
+        } else {
+            onChangeHandler = (event) => this.onTextfieldChanged(jsonKey, event)
+        }
+
         return <ECHTextfield
             label={label}
             required={required || false}
             value={value || ""}
-            onChange={(event) => this.onTextfieldChanged(jsonKey, event)}
+            onChange={(event) => onChangeHandler(event)}
             onBlur={(event) => this.onTextfieldBlurred(errorMessageName, validationType, event)}
             error={showError}
             multiline={makeMultiline}
@@ -280,6 +288,12 @@ class AddManually extends Component {
                 [errorMessageName]: isValid ? "" : "Invalid Email."
             })
         }
+    }
+
+    onTextfieldWithArrayChanged(jsonKey, event) {
+        const input = event.target.value
+        const splittedInput = input.split(",")
+        this.props.updateProjectDataAttribute({ key: jsonKey, value: splittedInput })
     }
 
     onTextfieldChanged(jsonKey, event) {
@@ -331,20 +345,25 @@ class AddManually extends Component {
 
     allRequiredFieldsAvailable() {
         var newState = {}
-        if (!this.props.projectData.projectName) {
+        const data = this.props.projectData
+        if (!data.projectName) {
             newState["projectNameErrorMessage"] = "Invalid project name"
         }
-        if (!this.props.projectData.projectDescription) {
+        if (!data.projectDescription) {
             newState["projectDescriptionErrorMessage"] = "Invalid project description"
         }
-        if (!this.props.projectData.organization) {
+        if (!data.organization) {
             this.setState({ organizationErrorMessage: "Invalid organization" })
         }
-        if (!isValidUrl(this.props.projectData.repoUrl)) {
+        if (!isValidUrl(data.repoUrl)) {
             this.setState({ repoUrlErrorMessage: "Invalid URL" })
         }
 
-        if (!isValidEmail(this.props.projectData.contact.email)) {
+        if (data.contact) {
+            if (!isValidEmail(this.props.projectData.contact.email)) {
+                this.setState({ contactEmailErrorMessage: "Invalid contact mail" })
+            }
+        } else {
             this.setState({ contactEmailErrorMessage: "Invalid contact mail" })
         }
 

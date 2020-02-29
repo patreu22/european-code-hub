@@ -32,7 +32,8 @@ app.get('/api/get/project/git', function (req, res) {
             return res.status(200).send(projectData);
         })
         .catch(err => {
-            return res.status(404).send(err)
+            console.log(err)
+            return res.status(404).send({ message: "No accessible repo." })
         })
 });
 
