@@ -62,7 +62,7 @@ class App extends React.Component {
                 <Route path={ADD_MANUALLY} component={AddManually} />
                 <Route path={ADD} component={AddDefault} />
                 <Route path={CONTRIBUTE} component={Contribute} />
-                <Route path={`${SEARCH}/:searchterm?`} component={Search} />
+                <Route path={SEARCH} component={Search} />
                 <Route path={LOGIN} component={Login} />
                 <Route path={REGISTER} component={Register} />
                 <Route path={`${USER}/:username?`} component={Profile} />

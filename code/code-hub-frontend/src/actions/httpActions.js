@@ -78,7 +78,7 @@ export function getSearchResults(searchTerm, currentPage, shouldConcatResults) {
     return function (dispatch) {
         const itemsPerLoad = 20
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
-        dispatch(getSearchResults_BEGIN())
+
         const options = {
             method: 'GET',
             url: '/api/get/searchResults',
@@ -88,6 +88,8 @@ export function getSearchResults(searchTerm, currentPage, shouldConcatResults) {
                 itemsPerLoad
             }
         }
+
+        dispatch(getSearchResults_BEGIN())
 
         axios(options)
             .then(response => dispatch(getSearchResults_SUCCESS({ projects: response.data, shouldConcatResults, itemsPerLoad })))

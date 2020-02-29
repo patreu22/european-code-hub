@@ -11,7 +11,7 @@ import { connect } from 'react-redux'
 import { activateUser } from '../actions/httpActions'
 import { objectExists } from '../helper/objectHelper'
 import { resetToDefaultState } from '../slices/activateSlice'
-const qs = require('qs');
+import * as qs from 'qs'
 
 class Activate extends Component {
 

@@ -6,6 +6,7 @@ import ECHInfiniteList from '../components/ECHInfiniteList';
 import { connect } from 'react-redux'
 import { getSearchResults } from '../actions/httpActions'
 import { resetToDefaultState } from '../slices/searchSlice'
+import * as qs from 'qs'
 
 class Search extends Component {
 
@@ -16,7 +17,8 @@ class Search extends Component {
     }
 
     componentDidMount() {
-        const searchTerm = this.props.match.params.searchterm;
+        const parsedQuery = qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+        const searchTerm = parsedQuery.searchterm
         if (searchTerm) {
             this.props.getSearchResults(searchTerm, 1, false)
         }

@@ -6,6 +6,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import { Link } from 'react-router-dom';
 import { withRouter } from 'react-router';
 import { getSearchSuggestion } from '../helper/httpHelper'
+import { SEARCH, SEARCHTERM_QUERY } from '../routes'
 
 const useStyles = makeStyles(theme => ({
     search: {
@@ -75,12 +76,12 @@ function ECHSearchbar(props) {
                     setSearchInput(event.target.value)
                 } else {
                     //Everything set, go to search page
-                    props.history.push(`/search/${searchInput}`);
+                    props.history.push(`${SEARCH}${SEARCHTERM_QUERY}${searchInput}`);
                 }
             } else {
                 //Plain text, no suggestions
                 setSearchInput(event.target.value)
-                props.history.push(`/search/${searchInput}`);
+                props.history.push(`${SEARCH}${SEARCHTERM_QUERY}${searchInput}`);
             }
         }
     }
@@ -88,7 +89,7 @@ function ECHSearchbar(props) {
     return (
         <div className={classes.fullComponent}>
             <div className={classes.search}>
-                <Link to={`/search/${searchInput}`} className={_getClassName(searchInput, classes)}>
+                <Link to={`${SEARCH}${SEARCHTERM_QUERY}${searchInput}`} className={_getClassName(searchInput, classes)}>
                     <div className={classes.searchIcon}>
                         <SearchIcon />
                         <Divider orientation="vertical" className={classes.divider} />
