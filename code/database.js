@@ -624,6 +624,5 @@ module.exports = {
     getSearchResults,
     updateUser,
     activateUser,
-    checkIfUserIsActivated,
-    dropWordsCollection
+    checkIfUserIsActivated
 }
