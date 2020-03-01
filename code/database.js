@@ -457,11 +457,15 @@ function mapProjects() {
     var document = this;
 
     // You need to expand this according to your needs
-    var stopwords = ["the", "this", "and", "or", "/"];
+    var stopwords = ["the", "this", "and", "or", "/", ""];
 
     const isValidUrl = (url) => {
         const regEx = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
         return regEx.test(url)
+    }
+
+    const escapeRegExp = (stringToGoIntoTheRegex) => {
+        return stringToGoIntoTheRegex.replace(/[-\/\\^$*+?.,()|[\]{}]/g, '\\$&');
     }
 
     for (var prop in document) {
@@ -470,23 +474,42 @@ function mapProjects() {
             continue
         }
 
-
         (document[prop]).split(" ").forEach(
             function (word) {
-                // You might want to adjust this to your needs
+                var cleaned = word
+                const symbolsToRemove = [
+                    " ", ";", "(", ")", "#",
+                    "\'", "=", "\`", "\'", "*",
+                    ">", "<", "!", "\"", "\n",
+                    "[", "]", ","
+                ]
 
-                var cleaned = word.replace(" ", "")
-                cleaned = cleaned.replace(/]\[;,()#'=`*><!"]/g, " ")
-                cleaned = cleaned.replace(/\n/g, "")
-                cleaned = cleaned.replace("[", "")
-                cleaned = cleaned.replace("]", "")
+                symbolsToRemove.forEach(symbol => {
+                    if (symbol === "\n") {
+                        cleaned = cleaned.replace(/\r?\n|\r/g, "")
+                    } else {
+                        const regex = RegExp(escapeRegExp(symbol))
+                        cleaned = cleaned.replace(regex, "")
+                    }
+                })
+
                 cleaned = cleaned.toLowerCase()
 
                 if (isValidUrl(cleaned) || cleaned.startsWith("http://")) {
                     return
                 }
 
-                cleaned = cleaned.replace(/.:?\//g, " ")
+                const potentialUrlSymbols = [".", ":", "?", "/"]
+                potentialUrlSymbols.forEach(symbol => {
+                    if (symbol === ".") {
+                        //Only remove at the end of the word to not break any domains etc.
+                        cleaned = cleaned.replace(/(.*)? \./, "")
+                    }
+                    else {
+                        const regex = RegExp(escapeRegExp(symbol))
+                        cleaned = cleaned.replace(regex, "")
+                    }
+                })
 
                 if (stopwords.indexOf(cleaned) > -1 || !(isNaN(parseInt(cleaned))) || !(isNaN(parseFloat(cleaned)))) {
                     return
@@ -499,20 +522,16 @@ function mapProjects() {
 }
 
 function reduceProjects(k, v) {
-    // Kind of ugly, but works.
-    // Improvements more than welcome!
     var values = { 'documents': [] };
     v.forEach(
         function (vs) {
             //Keep it idempotent
             if (vs.constructor === ({}).constructor) {
-                if (k === "software") {
-                    vs.documents.forEach(function (doc) {
-                        if (values.documents.indexOf(doc) === -1) {
-                            values.documents.push(doc)
-                        }
-                    })
-                }
+                // vs.documents.forEach(function (doc) {
+                //     if (values.documents.indexOf(doc) === -1) {
+                //         values.documents.push(doc)
+                //     }
+                // })
             } else {
                 if (values.documents.indexOf(vs) === -1) {
                     values.documents.push(vs)
@@ -605,5 +624,6 @@ module.exports = {
     getSearchResults,
     updateUser,
     activateUser,
-    checkIfUserIsActivated
+    checkIfUserIsActivated,
+    dropWordsCollection
 }

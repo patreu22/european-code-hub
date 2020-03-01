@@ -52,16 +52,20 @@ function ECHSearchbar(props) {
     const [suggestions, setSuggestions] = useState([]);
     const [searchSuggestionsOpened, setSearchSuggestionsOpened] = useState(false);
 
-    const _handleInputChange = (event) => {
-        const input = event.target.value
+    const _handleInputChange = (value) => {
+        const input = value
         setSearchInput(input)
-        if (input.length > 2) {
-            setSearchSuggestionsOpened(true)
-            getSearchSuggestion(input)
-                .then((suggestions) => {
-                    setSuggestions(suggestions)
-                    console.log(suggestions)
-                })
+        if (input) {
+            if (input.length > 2) {
+                setSearchSuggestionsOpened(true)
+                getSearchSuggestion(input)
+                    .then((suggestions) => {
+                        setSuggestions(suggestions)
+                        console.log(suggestions)
+                    })
+            } else {
+                setSearchSuggestionsOpened(false)
+            }
         } else {
             setSearchSuggestionsOpened(false)
         }
@@ -103,14 +107,17 @@ function ECHSearchbar(props) {
                     disableOpenOnFocus
                     value={searchInput}
                     forcePopupIcon={false}
-                    onChange={() => setSearchSuggestionsOpened(false)}
+                    onChange={(_, value) => {
+                        _handleInputChange(value)
+                        setSearchSuggestionsOpened(false)
+                    }}
                     noOptionsText={"No suggestions..."}
                     options={suggestions}
                     renderInput={(params) => <TextField
                         {...params}
                         placeholder="What are you looking for..?"
                         onKeyDown={(e) => _handleKeyDown(e, props)}
-                        onChange={_handleInputChange}
+                        onChange={(event) => _handleInputChange(event.target.value)}
                         className={classes.inputInput}
                     />
                     }
