@@ -33,7 +33,6 @@ class Catalogue extends Component {
         </PageWrapper >
     }
 
-    //TODO: Loading Hänger!
     loadFunc = (page) => this.props.getFilteredProjects(this.props.currentFilters, page, true)
 
 }

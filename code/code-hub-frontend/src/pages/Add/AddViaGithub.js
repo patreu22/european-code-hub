@@ -18,7 +18,7 @@ class AddViaGithub extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            gitUrl: 'https://github.com/rexxars/react-markdown',
+            gitUrl: '',
             gitUrlError: false,
             gitUrlErrorMessage: '',
             gitHeight: 0

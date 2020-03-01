@@ -1,27 +1,18 @@
 import React, { Component, } from 'react';
 import PageWrapper from '../components/PageWrapper';
 import ECHSearchHero from '../components/ECHSearchHero';
-import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import ECHInfiniteList from '../components/ECHInfiniteList';
 import { connect } from 'react-redux'
 import { getSearchResults } from '../actions/httpActions'
 import { resetToDefaultState } from '../slices/searchSlice'
-import * as qs from 'qs'
+import qs from 'qs';
 
 class Search extends Component {
 
     constructor(props) {
         super(props)
-        this._renderContent = this._renderContent.bind(this)
         this.loadFunc = this.loadFunc.bind(this)
-    }
-
-    componentDidMount() {
-        const parsedQuery = qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
-        const searchTerm = parsedQuery.searchterm
-        if (searchTerm) {
-            this.props.getSearchResults(searchTerm, 1, false)
-        }
+        this.getSearchTerm = this.getSearchTerm.bind(this)
     }
 
     componentWillUnmount() {
@@ -29,32 +20,31 @@ class Search extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        const previousSearchTerm = prevProps.match.params.searchterm;
-        const currentSearchTerm = this.props.match.params.searchterm;
+        const previousQuery = qs.parse(prevProps.location.search, { ignoreQueryPrefix: true })
+        const previousSearchTerm = previousQuery.query
+        const currentSearchTerm = this.getSearchTerm()
         if (previousSearchTerm !== currentSearchTerm) {
             this.props.getSearchResults(currentSearchTerm, 1, false)
         }
     }
 
-    render() {
-        const searchTerm = this.props.match.params.searchterm;
-        const content = this.props.isLoading
-            ? <ECHLoadingIndicator />
-            : this._renderContent(searchTerm)
-        return (
-            <PageWrapper headlineTitle="Search" showBackButton={true} >
-                <ECHSearchHero type="catalogue" initialValue={searchTerm || ''} />
-                {content}
-            </PageWrapper>
-        );
+    getSearchTerm() {
+        const parsedQuery = qs.parse(this.props.location.search, { ignoreQueryPrefix: true })
+        return parsedQuery.query
     }
 
-    _renderContent = (searchTerm) => {
-        return <ECHInfiniteList
-            projects={this.props.projects}
-            hasMore={this.props.moreChunkToLoad}
-            loadMore={(page) => this.loadFunc(page, searchTerm)}
-        />
+    render() {
+        console.log("### RENDER RENDER RENDER ###")
+        const searchTerm = this.getSearchTerm()
+        //TODO: Loading indicator
+        return <PageWrapper headlineTitle="Search" showBackButton={true} >
+            <ECHSearchHero type="catalogue" initialValue={searchTerm || ''} />
+            <ECHInfiniteList
+                projects={this.props.projects}
+                hasMore={this.props.moreChunkToLoad}
+                loadMore={(page) => this.loadFunc(page, searchTerm)}
+            />
+        </PageWrapper>
     }
 
     loadFunc = (page, searchTerm) => this.props.getSearchResults(searchTerm, page, true)

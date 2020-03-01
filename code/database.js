@@ -178,8 +178,8 @@ function getSearchResults(searchTerm) {
                 } else {
                     if (docs[0]) {
                         const documentsToFetch = docs[0].value.documents || []
-                        const documentFetchPromises = documentsToFetch.map((documentKey) => {
-                            const result = models.PROJECT_MODEL.findById(documentKey)
+                        const documentFetchPromises = documentsToFetch.map((attribute) => {
+                            const result = models.PROJECT_MODEL.findById(attribute)
                                 .then(project => project)
                                 .catch(err => reject(err))
                             return result
@@ -457,7 +457,12 @@ function mapProjects() {
     var document = this;
 
     // You need to expand this according to your needs
-    var stopwords = ["the", "this", "and", "or", "#", "\`", "\""];
+    var stopwords = ["the", "this", "and", "or", "/"];
+
+    const isValidUrl = (url) => {
+        const regEx = /^(?:(?:(?:https?|ftp):)?\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,})))(?::\d{2,5})?(?:[/?#]\S*)?$/i;
+        return regEx.test(url)
+    }
 
     for (var prop in document) {
         // We are only interested in strings and explicitly not in _id
@@ -465,21 +470,29 @@ function mapProjects() {
             continue
         }
 
+
         (document[prop]).split(" ").forEach(
             function (word) {
                 // You might want to adjust this to your needs
-                var cleaned = word.replace(/[;,.]/g, "")
 
-                if (
-                    // We neither want stopwords...
-                    stopwords.indexOf(cleaned) > -1 ||
-                    // ...nor string which would evaluate to numbers
-                    !(isNaN(parseInt(cleaned))) ||
-                    !(isNaN(parseFloat(cleaned)))
-                ) {
+                var cleaned = word.replace(" ", "")
+                cleaned = cleaned.replace(/]\[;,()#'=`*><!"]/g, " ")
+                cleaned = cleaned.replace(/\n/g, "")
+                cleaned = cleaned.replace("[", "")
+                cleaned = cleaned.replace("]", "")
+                cleaned = cleaned.toLowerCase()
+
+                if (isValidUrl(cleaned) || cleaned.startsWith("http://")) {
                     return
                 }
-                emit(cleaned, document._id)
+
+                cleaned = cleaned.replace(/.:?\//g, " ")
+
+                if (stopwords.indexOf(cleaned) > -1 || !(isNaN(parseInt(cleaned))) || !(isNaN(parseFloat(cleaned)))) {
+                    return
+                } else {
+                    emit(cleaned, document._id)
+                }
             }
         )
     }
@@ -491,10 +504,20 @@ function reduceProjects(k, v) {
     var values = { 'documents': [] };
     v.forEach(
         function (vs) {
-            if (values.documents.indexOf(vs) > -1) {
-                return
+            //Keep it idempotent
+            if (vs.constructor === ({}).constructor) {
+                if (k === "software") {
+                    vs.documents.forEach(function (doc) {
+                        if (values.documents.indexOf(doc) === -1) {
+                            values.documents.push(doc)
+                        }
+                    })
+                }
+            } else {
+                if (values.documents.indexOf(vs) === -1) {
+                    values.documents.push(vs)
+                }
             }
-            values.documents.push(vs)
         }
     )
     return values
@@ -542,14 +565,23 @@ function finalizeProjects(key, reducedValue) {
 
 
 function indexProjects() {
-    db.collection("projects").mapReduce(
-        mapProjects,
-        reduceProjects,
-        {
-            finalize: finalizeProjects,
-            out: "words"
-        }
-    )
+    var o = {}
+    o.map = mapProjects
+    o.reduce = reduceProjects
+    o.finalize = finalizeProjects
+    o.out = "words"
+
+    models.PROJECT_MODEL.mapReduce(
+        o,
+        function (err, results) {
+            if (err) {
+                console.log(err)
+                throw err
+            };
+            if (results) {
+                console.log(results)
+            }
+        });
 }
 
 
