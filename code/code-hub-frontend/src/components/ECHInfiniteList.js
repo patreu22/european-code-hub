@@ -32,6 +32,19 @@ class ECHInfiniteList extends Component {
         width: '100%'
     }} />
 
+    getIllustration() {
+        const text = this.props.loadMore
+            ? "Start your search to find amazing."
+            : "Alter your search to find amazing projects."
+
+        return <div>
+            <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >
+                {this.illustration}
+            </div>
+            <div style={{ textAlign: 'center' }}>{text}</div>
+        </div>
+    }
+
     renderProjectList = () => {
         const flexContainer = {
             display: 'flex',
@@ -43,13 +56,8 @@ class ECHInfiniteList extends Component {
             justifyContent: 'flex-start'
         };
 
-        if (this.props.projects.length === 0 && !this.props.loadMore) {
-            return <div>
-                <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >
-                    {this.illustration}
-                </div>
-                <div style={{ textAlign: 'center' }}>Alter your search to find amazing projects.</div>
-            </div>
+        if (this.props.projects.length === 0) {
+            return this.getIllustration()
         } else {
             const projects = this.props.projects.map((project, index) => (
                 <ProjectListItem project={project} index={index} key={index}></ProjectListItem>
