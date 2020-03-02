@@ -197,7 +197,7 @@ function getSearchResults(searchTerm) {
 }
 
 function getSuggestionList(searchTerm) {
-    const regex = new RegExp("^" + searchTerm)
+    const regex = new RegExp(".*" + searchTerm + ".*")
     return new Promise(function (resolve, reject) {
         models.WORDS_SCHEMA
             .find({ _id: regex }, function (err, docs) {
@@ -481,7 +481,7 @@ function mapProjects() {
                     " ", ";", "(", ")", "#",
                     "\'", "=", "\`", "\'", "*",
                     ">", "<", "!", "\"", "\n",
-                    "[", "]", ","
+                    "[", "]", ",", "´"
                 ]
 
                 symbolsToRemove.forEach(symbol => {
@@ -502,8 +502,8 @@ function mapProjects() {
                 const potentialUrlSymbols = [".", ":", "?", "/"]
                 potentialUrlSymbols.forEach(symbol => {
                     if (symbol === ".") {
-                        //Only remove at the end of the word to not break any domains etc.
-                        cleaned = cleaned.replace(/(.*)? \./, "")
+                        //Only remove at the end of the word to not break any domains abbrevs. etc.
+                        cleaned = cleaned.replace(/\.+$/, "")
                     }
                     else {
                         const regex = RegExp(escapeRegExp(symbol))
@@ -511,7 +511,12 @@ function mapProjects() {
                     }
                 })
 
-                if (stopwords.indexOf(cleaned) > -1 || !(isNaN(parseInt(cleaned))) || !(isNaN(parseFloat(cleaned)))) {
+                if (
+                    stopwords.indexOf(cleaned) > -1 ||
+                    !(isNaN(parseInt(cleaned))) ||
+                    !(isNaN(parseFloat(cleaned))) ||
+                    cleaned.length <= 1
+                ) {
                     return
                 } else {
                     emit(cleaned, document._id)
