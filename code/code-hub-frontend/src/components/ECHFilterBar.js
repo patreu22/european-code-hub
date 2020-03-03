@@ -39,7 +39,8 @@ class ECHFilterBar extends Component {
         return <div style={filterStyle}>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <ECHMultipleSelect
-                    title="Status"
+                    title="Project status"
+                    displayResetOption={true}
                     multiple={true}
                     options={["Archival", "Released", "Development", "Deprecated"]}
                     value={this.props.currentFilters.status}
@@ -48,6 +49,7 @@ class ECHFilterBar extends Component {
                 />
                 <ECHMultipleSelect
                     title="License"
+                    displayResetOption={true}
                     multiple={true}
                     options={["Creative Commons Zero v1.0 Universal", "BSD-3-Clause", "NOASSERTION"]}
                     value={this.props.currentFilters.license}
@@ -56,6 +58,7 @@ class ECHFilterBar extends Component {
                 />
                 <ECHMultipleSelect
                     title="Organization"
+                    displayResetOption={true}
                     multiple={true}
                     options={["Internal Revenue Service(IRS)", "Bureau of the Fiscal Service(BFS)", "18F"]}
                     value={this.props.currentFilters.organization}
@@ -64,6 +67,7 @@ class ECHFilterBar extends Component {
                 />
                 <ECHMultipleSelect
                     title="Programming languages"
+                    displayResetOption={true}
                     multiple={true}
                     options={["Python", "Javascript"]}
                     value={this.props.currentFilters.programmingLanguages}
@@ -78,7 +82,8 @@ class ECHFilterBar extends Component {
     }
 
     _onFilterChanged(event, filterKey, filterProp) {
-        if (event.target.value === filterProp || event.target.value.length === 0) {
+        const filterValue = event.target.value
+        if (filterValue.includes("Reset filter") || filterValue === filterProp || filterValue.length === 0) {
             this.props.removeFilter({ filterKey })
         } else {
             this.props.addFilter({

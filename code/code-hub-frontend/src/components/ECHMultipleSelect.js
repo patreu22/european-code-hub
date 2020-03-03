@@ -1,5 +1,5 @@
 import React, { Component, } from 'react';
-import { Select, InputLabel, MenuItem, Checkbox, ListItemText, Input, FormControl } from '@material-ui/core'
+import { Select, InputLabel, MenuItem, Checkbox, ListItemText, Divider, Input, FormControl } from '@material-ui/core'
 
 class ECHMultipleSelect extends Component {
     render() {
@@ -39,6 +39,8 @@ class ECHMultipleSelect extends Component {
         const formControlStyle = this.props.useInFilterBar
             ? filterBarFormControlStyle
             : regularFormControlStyle
+        const selectOptions = this._getOptions()
+        console.log("Select options: " + selectOptions)
         return <FormControl style={{ ...formControlStyle, ...this.props.style }}>
             <InputLabel style={inputLabelStyle} id="select-label">{this.props.title}</InputLabel>
             <Select
@@ -54,14 +56,33 @@ class ECHMultipleSelect extends Component {
                 }
                 MenuProps={MenuProps}
             >
-                {(this.props.options || []).map(option => {
-                    return <MenuItem key={option} value={option} style={{ whiteSpace: 'normal' }}>
-                        <Checkbox color="primary" checked={this.itemIsChecked(option)} />
-                        <ListItemText primary={option} />
-                    </MenuItem>
-                })}
+                {selectOptions.map(option => this._getMenuElement(option))}
             </Select>
         </FormControl>
+    }
+
+    _getMenuElement(option) {
+        if (option === "Reset filter") {
+            return <MenuItem key={option} value={option} style={{ whiteSpace: 'normal', width: '100%' }}>
+                <div style={{ width: "100%" }}>
+                    <Divider style={{ width: '100%' }} />
+                    <ListItemText inset primary={option} style={{ paddingTop: "5px" }} />
+                </div>
+            </MenuItem>
+        } else {
+            return <MenuItem key={option} value={option} style={{ whiteSpace: 'normal' }}>
+                <Checkbox color="primary" checked={this.itemIsChecked(option)} />
+                <ListItemText primary={option} />
+            </MenuItem>
+        }
+    }
+
+    _getOptions() {
+        var optionsToDisplay = this.props.options || []
+        if (this.props.displayResetOption) {
+            optionsToDisplay.push("Reset filter")
+        }
+        return optionsToDisplay
     }
 
     itemIsChecked = (option) => (this.props.value || []).indexOf(option) > -1
