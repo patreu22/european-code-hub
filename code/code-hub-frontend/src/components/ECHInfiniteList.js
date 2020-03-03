@@ -11,20 +11,18 @@ class ECHInfiniteList extends Component {
             paddingBottom: '50px'
         }
 
+        //Type: search || catalogue
         return <InfiniteScroll
             pageStart={1}
             loadMore={this.props.loadMore}
+            type={this.props.type}
             hasMore={this.props.hasMore}
             style={infiniteScrollStyle}
-            initialLoad={false}
-            loader={<div style={{ paddingTop: '10px', paddingBottom: '10px', textAlign: 'center' }} className="loader" key={0}><ECHLoadingIndicator /></div>}
+            initialLoad={true}
+            loader={this.getLoader()}
         >
             {this.renderProjectList()}
         </InfiniteScroll>
-    }
-
-    componentDidMount() {
-        this.props.loadMore(1)
     }
 
     illustration = <img src={NoDataIllustration} alt="No data" style={{
@@ -32,17 +30,32 @@ class ECHInfiniteList extends Component {
         width: '100%'
     }} />
 
-    getIllustration() {
-        const text = this.props.loadMore
-            ? "Start your search to find amazing."
-            : "Alter your search to find amazing projects."
-
-        return <div>
-            <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >
-                {this.illustration}
+    getLoader() {
+        if (this.props.type === "search" && this.props.projects.length === 0) {
+            return <div key={0} />
+        } else {
+            return <div style={{ paddingTop: '10px', paddingBottom: '10px', textAlign: 'center' }} className="loader" key={0}>
+                <ECHLoadingIndicator />
             </div>
-            <div style={{ textAlign: 'center' }}>{text}</div>
-        </div>
+        }
+    }
+
+    getIllustration() {
+        if (this.props.type === "catalogue") {
+            return <div />
+        } else if (this.props.type === "search") {
+            console.log("Has more? " + this.props.hasMore)
+            const text = this.props.hasMore || typeof this.props.hasMore
+                ? "Start your search to find amazing projects."
+                : "No results found: Alter your search to find amazing projects."
+
+            return <div>
+                <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >
+                    {this.illustration}
+                </div>
+                <div style={{ textAlign: 'center' }}>{text}</div>
+            </div >
+        }
     }
 
     renderProjectList = () => {

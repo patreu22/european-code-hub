@@ -80,12 +80,16 @@ function ECHSearchbar(props) {
                     setSearchInput(event.target.value)
                 } else {
                     //Everything set, go to search page
-                    props.history.push(`${SEARCH}${SEARCHTERM_QUERY}${searchInput}`);
+                    if (searchInput) {
+                        props.history.push(`${SEARCH}${SEARCHTERM_QUERY}${searchInput}`);
+                    }
                 }
             } else {
                 //Plain text, no suggestions
                 setSearchInput(event.target.value)
-                props.history.push(`${SEARCH}${SEARCHTERM_QUERY}${searchInput}`);
+                if (searchInput) {
+                    props.history.push(`${SEARCH}${SEARCHTERM_QUERY}${searchInput}`);
+                }
             }
         }
     }

@@ -43,17 +43,23 @@ class Search extends Component {
                 projects={this.props.projects}
                 hasMore={this.props.moreChunkToLoad}
                 loadMore={(page) => this.loadFunc(page, searchTerm)}
+                type="search"
             />
         </PageWrapper>
     }
 
-    loadFunc = (page, searchTerm) => this.props.getSearchResults(searchTerm, page, true)
+    loadFunc = (page, searchTerm) => {
+        if (searchTerm) {
+            this.props.getSearchResults(searchTerm, page, true)
+        }
+    }
 }
 
 const mapStateToProps = state => {
     return {
         projects: state.search.projects,
-        isLoading: state.search.isLoading
+        isLoading: state.search.isLoading,
+        moreChunkToLoad: state.search.moreChunkToLoad
     }
 }
 

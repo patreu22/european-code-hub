@@ -29,6 +29,7 @@ class Catalogue extends Component {
                 projects={this.props.projects}
                 hasMore={this.props.moreChunkToLoad}
                 loadMore={this.loadFunc}
+                type="catalogue"
             />
         </PageWrapper >
     }
