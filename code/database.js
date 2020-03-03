@@ -98,14 +98,14 @@ function getAllProjects() {
     })
 }
 
-function getProjectChunk(filters, resultsToSkip, itemsPerLoad) {
+function getProjectChunk(filters, resultsToSkip, itemsPerLoad, sortBy) {
     const query = _getQueryObject(filters)
     return new Promise(function (resolve, reject) {
         models.PROJECT_MODEL.find(query)
+            .sort(sortBy)
             .skip(resultsToSkip)
             .limit(itemsPerLoad)
             .collation({ locale: "en" })
-            .sort("projectName")
             .then((results) => resolve(results))
             .catch((err) => reject(err))
     })

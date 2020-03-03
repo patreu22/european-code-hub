@@ -15,8 +15,8 @@ class ECHFilterBar extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.currentFilters !== this.props.currentFilters) {
-            this.props.getFilteredProjects(this.props.currentFilters, 1, false)
+        if (prevProps.currentFilters !== this.props.currentFilters || prevProps.sortBy !== this.props.sortBy) {
+            this.props.getFilteredProjects(this.props.currentFilters, 1, false, this.props.sortBy)
         }
     }
 

@@ -173,6 +173,7 @@ app.get('/api/get/projects/', function (req, res) {
     const itemsPerLoad = req.query.itemsPerLoad;
     const username = req.query.username;
     const filters = req.query.filters;
+    const sortBy = req.query.sortBy || "projectName"
     if (username) {
         database.getProjectsOfUser(username)
             .then(projects => res.status(200).send(projects))
@@ -181,7 +182,7 @@ app.get('/api/get/projects/', function (req, res) {
                 res.sendStatus(400)
             })
     } else {
-        database.getProjectChunk(JSON.parse(filters || '{}'), parseInt(resultsToSkip), parseInt(itemsPerLoad))
+        database.getProjectChunk(JSON.parse(filters || '{}'), parseInt(resultsToSkip), parseInt(itemsPerLoad), sortBy)
             .then(projects => res.status(200).send(projects))
             .catch((err) => {
                 console.log(err)

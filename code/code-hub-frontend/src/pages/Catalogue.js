@@ -29,7 +29,7 @@ class Catalogue extends Component {
         </PageWrapper >
     }
 
-    loadFunc = (page) => this.props.getFilteredProjects(this.props.currentFilters, page, true)
+    loadFunc = (page) => this.props.getFilteredProjects(this.props.currentFilters, page, true, this.props.sortBy)
 
 }
 
@@ -37,7 +37,8 @@ const mapStateToProps = state => {
     return {
         projects: state.projectOverview.projects,
         moreChunkToLoad: state.projectOverview.moreChunkToLoad,
-        currentFilters: state.projectOverview.currentFilters
+        currentFilters: state.projectOverview.currentFilters,
+        sortBy: state.projectOverview.sortBy
     }
 }
 

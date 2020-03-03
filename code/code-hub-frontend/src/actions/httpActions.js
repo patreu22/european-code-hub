@@ -53,7 +53,7 @@ import store from '../store'
 import { setVerificationToken, removeVerificationToken } from '../helper/cookieHelper'
 
 
-export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
+export function getFilteredProjects(filters, currentPage, shouldConcatResults, sortBy) {
     return function (dispatch) {
         const itemsPerLoad = 80
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
@@ -64,7 +64,8 @@ export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
             params: {
                 filters,
                 resultsToSkip,
-                itemsPerLoad
+                itemsPerLoad,
+                sortBy
             }
         }
         //TODO: Handle error
