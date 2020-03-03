@@ -4,10 +4,15 @@ import ECHMultipleSelect from './ECHMultipleSelect'
 import ECHIconButton from './ECHIconButton'
 import { connect } from 'react-redux'
 import { getFilteredProjects } from '../actions/httpActions'
-import { addFilter, removeFilter, resetFilters } from '../slices/projectOverviewSlice'
+import { addFilter, removeFilter, resetFilters, setSortBy } from '../slices/projectOverviewSlice'
 import { DeleteSweep as DeleteSweepIcon } from '@material-ui/icons/';
 
 class ECHFilterBar extends Component {
+
+    constructor(props) {
+        super(props)
+        this._onSortByChanged = this._onSortByChanged.bind(this)
+    }
 
     componentDidUpdate(prevProps) {
         if (prevProps.currentFilters !== this.props.currentFilters) {
@@ -20,7 +25,7 @@ class ECHFilterBar extends Component {
             width: '100vw',
             backgroundColor: '#1675E0',
             textAlign: 'center',
-            padding: '20px 0 20px 0',
+            padding: '5px 0 5px 0',
             marginBottom: '20px',
             color: 'white'
         }
@@ -74,9 +79,24 @@ class ECHFilterBar extends Component {
                     onChange={(event) => this._onFilterChanged(event, "programmingLanguages", this.props.currentFilters.programmingLanguages)}
                     style={{ paddingRight: '50px' }}
                 />
+                <ECHMultipleSelect
+                    title="Sort by"
+                    multiple={false}
+                    width={"120px"}
+                    options={["projectName", "organization"]}
+                    sortField={true}
+                    value={this.props.sortBy}
+                    onChange={this._onSortByChanged}
+                    style={{ paddingRight: '50px' }}
+                />
                 <ECHIconButton tooltipText="Reset all filters" icon={<DeleteSweepIcon />} onClick={() => { this.props.resetFilters() }} />
             </div>
         </div >
+    }
+
+    _onSortByChanged(event) {
+        const sortBy = event.target.value
+        this.props.setSortBy({ sortBy })
     }
 
     _onFilterChanged(event, filterKey, filterProp) {
@@ -98,9 +118,10 @@ const mapStateToProps = state => {
     return {
         projects: state.projectOverview.projects,
         currentFilters: state.projectOverview.currentFilters,
+        sortBy: state.projectOverview.sortBy
     }
 }
 
-const mapDispatchToProps = { getFilteredProjects, addFilter, removeFilter, resetFilters }
+const mapDispatchToProps = { getFilteredProjects, addFilter, removeFilter, resetFilters, setSortBy }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHFilterBar);

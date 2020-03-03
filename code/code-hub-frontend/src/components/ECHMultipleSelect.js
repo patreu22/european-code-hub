@@ -40,15 +40,21 @@ class ECHMultipleSelect extends Component {
             ? filterBarFormControlStyle
             : regularFormControlStyle
         const selectOptions = this._getOptions()
-        console.log("Select options: " + selectOptions)
+        const value = this.props.sortField
+            ? ([this.props.value] ?? []).map((value) => this.getSortByMap()[value])
+            : (this.props.value ?? [])
+        const optionsToDisplay = this.props.sortField
+            ? (selectOptions ?? []).map((value) => this.getSortByMap()[value])
+            : selectOptions
+
         return <FormControl style={{ ...formControlStyle, ...this.props.style }}>
             <InputLabel style={inputLabelStyle} id="select-label">{this.props.title}</InputLabel>
             <Select
                 style={selectFieldStyle}
                 labelId="select-label"
                 multiple={isMultiple}
-                value={this.props.value ?? []}
-                onChange={this.props.onChange}
+                value={value}
+                onChange={this.onChange}
                 input={<Input />}
                 renderValue={isMultiple
                     ? (selected) => selected.join(', ')
@@ -56,9 +62,20 @@ class ECHMultipleSelect extends Component {
                 }
                 MenuProps={MenuProps}
             >
-                {selectOptions.map(option => this._getMenuElement(option))}
+                {optionsToDisplay.map(option => this._getMenuElement(option))}
             </Select>
         </FormControl>
+    }
+
+    onChange = (event) => {
+        if (this.props.sortField) {
+            const value = event.target.value
+            const readableValue = this.getReversedSortMap()[value][0]
+            const artificialEvent = { target: { value: readableValue } }
+            this.props.onChange(artificialEvent)
+        } else {
+            this.props.onChange(event)
+        }
     }
 
     _getMenuElement(option) {
@@ -85,7 +102,28 @@ class ECHMultipleSelect extends Component {
         return optionsToDisplay
     }
 
-    itemIsChecked = (option) => (this.props.value || []).indexOf(option) > -1
+    getSortByMap = () => {
+        return {
+            "projectName": "Project name",
+            "organization": "Organization"
+        }
+    }
+
+    getReversedSortMap = () => {
+        return this.reverseMapping(this.getSortByMap())
+    }
+
+    reverseMapping = o => Object.keys(o).reduce((r, k) =>
+        Object.assign(r, { [o[k]]: (r[o[k]] || []).concat(k) }), {})
+
+    itemIsChecked = (option) => {
+        if (this.props.sortField) {
+            const sortKey = this.getReversedSortMap()[option]
+            return (this.props.value || []).indexOf(sortKey) > -1
+        } else {
+            return (this.props.value || []).indexOf(option) > -1
+        }
+    }
 }
 
 export default ECHMultipleSelect;

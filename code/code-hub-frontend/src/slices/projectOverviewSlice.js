@@ -9,6 +9,7 @@ const defaultState = {
     },
     currentFilters: {},
     moreChunkToLoad: true,
+    sortBy: "projectName"
 }
 
 const projectOverviewSlice = createSlice({
@@ -70,7 +71,14 @@ const projectOverviewSlice = createSlice({
                 }
             }
         },
-        resetToDefaultState: (state) => {
+        setSortBy: (state, action) => {
+            const payload = action.payload;
+            return {
+                ...state,
+                sortBy: payload.sortBy
+            }
+        },
+        resetToDefaultState: () => {
             return defaultState
         }
     }
@@ -83,7 +91,8 @@ export const {
     addFilter,
     removeFilter,
     resetFilters,
-    resetToDefaultState
+    resetToDefaultState,
+    setSortBy
 } = projectOverviewSlice.actions
 
 export default projectOverviewSlice;
