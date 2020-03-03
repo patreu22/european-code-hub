@@ -63,7 +63,7 @@ class ECHFilterBar extends Component {
                     style={{ paddingRight: '50px' }}
                 />
                 <span>
-                    <ECHIconButton tooltipText="Reset filters" icon={<DeleteSweepIcon />} onClick={this.props.resetFilters} />
+                    <ECHIconButton tooltipText="Reset filters" icon={<DeleteSweepIcon />} onClick={() => { this.props.resetFilters() }} />
                 </span>
             </div>
         </div >

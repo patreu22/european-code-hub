@@ -18,7 +18,7 @@ class ECHInfiniteList extends Component {
             type={this.props.type}
             hasMore={this.props.hasMore}
             style={infiniteScrollStyle}
-            initialLoad={true}
+            initialLoad={false}
             loader={this.getLoader()}
         >
             {this.renderProjectList()}
@@ -29,6 +29,10 @@ class ECHInfiniteList extends Component {
         height: '100%',
         width: '100%'
     }} />
+
+    componentDidMount() {
+        this.props.loadMore(1)
+    }
 
     getLoader() {
         if (this.props.type === "search" && this.props.projects.length === 0) {
