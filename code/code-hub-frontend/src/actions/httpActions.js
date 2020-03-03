@@ -76,7 +76,7 @@ export function getFilteredProjects(filters, currentPage, shouldConcatResults) {
 
 export function getSearchResults(searchTerm, currentPage, shouldConcatResults) {
     return function (dispatch) {
-        const itemsPerLoad = 20
+        const itemsPerLoad = 80
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
 
         const options = {

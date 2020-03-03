@@ -1,7 +1,6 @@
 import '../css/Home.css';
 import React, { Component } from 'react';
 import PageWrapper from '../components/PageWrapper';
-import ECHLoadingIndicator from '../components/ECHLoadingIndicator'
 import ECHInfiniteList from '../components/ECHInfiniteList';
 import ECHFilterBar from '../components/ECHFilterBar'
 
@@ -16,10 +15,6 @@ class Catalogue extends Component {
     constructor(props) {
         super(props)
         this.loadFunc = this.loadFunc.bind(this)
-    }
-
-    componentWillUnmount() {
-        this.props.resetToDefaultState()
     }
 
     render() {
@@ -42,6 +37,7 @@ const mapStateToProps = state => {
     return {
         projects: state.projectOverview.projects,
         moreChunkToLoad: state.projectOverview.moreChunkToLoad,
+        currentFilters: state.projectOverview.currentFilters
     }
 }
 

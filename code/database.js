@@ -116,7 +116,11 @@ function _getQueryObject(filters) {
     for (let [key, value] of Object.entries(filters)) {
         console.log(`${key}`);
         console.log(value)
-        query = { ...query, [key]: value }
+        if (value.constructor === ([]).constructor) {
+            query = { ...query, [key]: { "$in": value } }
+        } else {
+            query = { ...query, [key]: value }
+        }
     }
     return query
 }
