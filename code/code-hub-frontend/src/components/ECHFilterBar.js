@@ -74,9 +74,7 @@ class ECHFilterBar extends Component {
                     onChange={(event) => this._onFilterChanged(event, "programmingLanguages", this.props.currentFilters.programmingLanguages)}
                     style={{ paddingRight: '50px' }}
                 />
-                <span>
-                    <ECHIconButton tooltipText="Reset filters" icon={<DeleteSweepIcon />} onClick={() => { this.props.resetFilters() }} />
-                </span>
+                <ECHIconButton tooltipText="Reset all filters" icon={<DeleteSweepIcon />} onClick={() => { this.props.resetFilters() }} />
             </div>
         </div >
     }
