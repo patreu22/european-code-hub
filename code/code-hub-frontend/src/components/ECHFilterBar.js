@@ -47,7 +47,7 @@ class ECHFilterBar extends Component {
                     title="Project status"
                     displayResetOption={true}
                     multiple={true}
-                    options={["Archival", "Released", "Development", "Deprecated"]}
+                    options={["Archival", "Released", "Development", "Production", "Deprecated"]}
                     value={this.props.currentFilters.status}
                     onChange={(event) => this._onFilterChanged(event, "status", this.props.currentFilters.status)}
                     style={{ paddingRight: '50px' }}
@@ -56,7 +56,7 @@ class ECHFilterBar extends Component {
                     title="License"
                     displayResetOption={true}
                     multiple={true}
-                    options={["Creative Commons Zero v1.0 Universal", "BSD-3-Clause", "NOASSERTION"]}
+                    options={["Apache-2.0", "Creative Commons Zero v1.0 Universal", "BSD-3-Clause", "NOASSERTION"]}
                     value={this.props.currentFilters.license}
                     onChange={(event) => this._onFilterChanged(event, "license", this.props.currentFilters.license)}
                     style={{ paddingRight: '50px' }}
