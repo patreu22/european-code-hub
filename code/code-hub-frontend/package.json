@@ -29,6 +29,7 @@
     "react-router-last-location": "^2.0.1",
     "react-scripts": "^3.3.0",
     "react-sticky-el": "^1.1.0",
+    "react-truncate": "^2.4.0",
     "typeface-roboto": "^0.0.75"
   },
   "scripts": {

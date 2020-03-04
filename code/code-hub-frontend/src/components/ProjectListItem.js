@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { ListItem, Divider, Paper } from '@material-ui/core'
 import { Link } from 'react-router-dom';
-
+import Truncate from 'react-truncate';
 
 class ProjectListItem extends Component {
 
@@ -34,7 +34,7 @@ class ProjectListItem extends Component {
                     }}>
                         <div><Link to={`/projects/${project.projectName}`} style={{ wordWrap: 'break-word' }}>{project.projectName}</Link></div>
                         <Divider style={{ backgroundColor: 'black', marginTop: '5px', marginBottom: '5px' }} />
-                        <div style={{ wordWrap: 'break-word' }}>{this._getDescription(project.projectDescription)}</div>
+                        <Truncate lines={5}>{this._getDescription(project.projectDescription)}</Truncate>
                     </span>
                     {/* </Box> */}
                 </Paper>
