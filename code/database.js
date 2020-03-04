@@ -202,7 +202,7 @@ function getSearchResults(searchTerm) {
                             .then(projects => resolve({ projects, totalResultsLength: projects.length }))
                             .catch(err => reject(err))
                     } else {
-                        resolve([])
+                        resolve({ projects: [], totalResultsLength: 0 })
                     }
 
                 }
