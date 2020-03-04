@@ -17,6 +17,10 @@ class Catalogue extends Component {
         this.loadFunc = this.loadFunc.bind(this)
     }
 
+    componentWillUnmount() {
+        this.props.resetToDefaultState()
+    }
+
     render() {
         return < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
             <ECHFilterBar />

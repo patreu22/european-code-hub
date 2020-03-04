@@ -55,7 +55,7 @@ import { setVerificationToken, removeVerificationToken } from '../helper/cookieH
 
 export function getFilteredProjects(filters, currentPage, shouldConcatResults, sortBy) {
     return function (dispatch) {
-        const itemsPerLoad = 80
+        const itemsPerLoad = 30
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
         dispatch(loadFilteredData_BEGIN())
         const options = {
@@ -77,7 +77,7 @@ export function getFilteredProjects(filters, currentPage, shouldConcatResults, s
 
 export function getSearchResults(searchTerm, currentPage, shouldConcatResults) {
     return function (dispatch) {
-        const itemsPerLoad = 80
+        const itemsPerLoad = 30
         const resultsToSkip = (currentPage - 1) * itemsPerLoad
 
         const options = {
