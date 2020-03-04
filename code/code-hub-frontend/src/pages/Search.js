@@ -34,7 +34,6 @@ class Search extends Component {
     }
 
     render() {
-        console.log("### RENDER RENDER RENDER ###")
         const searchTerm = this.getSearchTerm()
         //TODO: Loading indicator
         return <PageWrapper headlineTitle="Search" showBackButton={true} >
@@ -50,7 +49,7 @@ class Search extends Component {
     }
 
     loadFunc = (page, searchTerm) => {
-        if (searchTerm) {
+        if (searchTerm && this.props.moreChunkToLoad) {
             this.props.getSearchResults(searchTerm, page, true)
         }
     }

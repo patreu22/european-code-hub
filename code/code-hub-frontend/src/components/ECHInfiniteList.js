@@ -52,7 +52,6 @@ class ECHInfiniteList extends Component {
             const text = this.props.hasMore || typeof this.props.hasMore
                 ? "Start your search to find amazing projects."
                 : "No results found: Alter your search to find amazing projects."
-
             return <div>
                 <div style={{ height: '40vh', marginTop: '30px', marginBottom: '7vh' }} >
                     {this.illustration}
