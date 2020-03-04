@@ -39,6 +39,7 @@ class Search extends Component {
         //TODO: Loading indicator
         return <PageWrapper headlineTitle="Search" showBackButton={true} >
             <ECHSearchHero type="catalogue" initialValue={searchTerm || ''} />
+            {this.props.totalResultsLength >= 0 && <div style={{ width: "80%", textAlign: 'left' }}>Total results: {this.props.totalResultsLength}</div>}
             <ECHInfiniteList
                 projects={this.props.projects}
                 hasMore={this.props.moreChunkToLoad}
@@ -59,7 +60,8 @@ const mapStateToProps = state => {
     return {
         projects: state.search.projects,
         isLoading: state.search.isLoading,
-        moreChunkToLoad: state.search.moreChunkToLoad
+        moreChunkToLoad: state.search.moreChunkToLoad,
+        totalResultsLength: state.search.totalResultsLength,
     }
 }
 

@@ -98,10 +98,21 @@ function getAllProjects() {
     })
 }
 
+function getTotalResultsLength(filters) {
+    const query = _getQueryObject(filters)
+    return new Promise(function (resolve, reject) {
+        models.PROJECT_MODEL
+            .find(query)
+            .then((results) => resolve(results.length))
+            .catch((err) => reject(err))
+    })
+}
+
 function getProjectChunk(filters, resultsToSkip, itemsPerLoad, sortBy) {
     const query = _getQueryObject(filters)
     return new Promise(function (resolve, reject) {
-        models.PROJECT_MODEL.find(query)
+        models.PROJECT_MODEL
+            .find(query)
             .sort(sortBy)
             .skip(resultsToSkip)
             .limit(itemsPerLoad)
@@ -173,7 +184,6 @@ function updateSessionToken({ mail, token }) {
 }
 
 function getSearchResults(searchTerm) {
-    //TODO: Fix the ^ --> Means only the exact word, should be something like contains or similar...
     return new Promise(function (resolve, reject) {
         models.WORDS_SCHEMA
             .find({ _id: searchTerm }, function (err, docs) {
@@ -189,7 +199,7 @@ function getSearchResults(searchTerm) {
                             return result
                         })
                         Promise.all(documentFetchPromises)
-                            .then(projects => resolve(projects))
+                            .then(projects => resolve({ projects, totalResultsLength: projects.length }))
                             .catch(err => reject(err))
                     } else {
                         resolve([])
@@ -633,5 +643,6 @@ module.exports = {
     getSearchResults,
     updateUser,
     activateUser,
-    checkIfUserIsActivated
+    checkIfUserIsActivated,
+    getTotalResultsLength
 }

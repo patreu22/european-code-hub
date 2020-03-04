@@ -118,7 +118,7 @@ const mapStateToProps = state => {
     return {
         projects: state.projectOverview.projects,
         currentFilters: state.projectOverview.currentFilters,
-        sortBy: state.projectOverview.sortBy
+        sortBy: state.projectOverview.sortBy,
     }
 }
 

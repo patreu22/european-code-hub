@@ -183,7 +183,16 @@ app.get('/api/get/projects/', function (req, res) {
             })
     } else {
         database.getProjectChunk(JSON.parse(filters || '{}'), parseInt(resultsToSkip), parseInt(itemsPerLoad), sortBy)
-            .then(projects => res.status(200).send(projects))
+            .then(projects => {
+                database.getTotalResultsLength(JSON.parse(filters || '{}'))
+                    .then((resultLength) => {
+                        res.status(200).send({ projects, totalResultsLength: resultLength })
+                    })
+                    .catch((err) => {
+                        console.log(err)
+                        res.sendStatus(400)
+                    })
+            })
             .catch((err) => {
                 console.log(err)
                 res.sendStatus(400)

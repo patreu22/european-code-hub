@@ -8,6 +8,7 @@ const defaultState = {
         message: null
     },
     moreChunkToLoad: true,
+    totalResultsLength: -1,
 }
 
 const searchSlice = createSlice({
@@ -24,11 +25,13 @@ const searchSlice = createSlice({
             const payload = action.payload;
             const moreToLoad = !(payload.projects.length < payload.itemsPerLoad)
             const shouldConcat = payload.shouldConcatResults || false
+            const totalResultsLength = payload.totalResultsLength
             const updated = {
                 ...state,
                 projects: shouldConcat ? state.projects.concat(payload.projects) : payload.projects,
                 isLoading: false,
-                moreChunkToLoad: moreToLoad
+                moreChunkToLoad: moreToLoad,
+                totalResultsLength: totalResultsLength
             }
             return updated
         },

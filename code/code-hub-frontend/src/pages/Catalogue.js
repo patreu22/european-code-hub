@@ -20,6 +20,7 @@ class Catalogue extends Component {
     render() {
         return < PageWrapper headlineTitle="Complete project catalogue" showBackButton={true}>
             <ECHFilterBar />
+            {this.props.totalResultsLength >= 0 && <div style={{ width: "80%", textAlign: 'left' }}>Total results: {this.props.totalResultsLength}</div>}
             <ECHInfiniteList
                 projects={this.props.projects}
                 hasMore={this.props.moreChunkToLoad}
@@ -38,7 +39,8 @@ const mapStateToProps = state => {
         projects: state.projectOverview.projects,
         moreChunkToLoad: state.projectOverview.moreChunkToLoad,
         currentFilters: state.projectOverview.currentFilters,
-        sortBy: state.projectOverview.sortBy
+        totalResultsLength: state.projectOverview.totalResultsLength,
+        sortBy: state.projectOverview.sortBy,
     }
 }
 
