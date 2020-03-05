@@ -387,25 +387,45 @@ function checkIfUserIsActivated({ mail }) {
     })
 }
 
-function getAllLicenses() {
+function getFilterOptionsFor(option) {
+    var model;
+    switch (option) {
+        case "status":
+            model = models.STATUS_INDEX
+            break
+        case "programmingLanguage":
+            model = models.PROGRAMMING_LANGUAGES_INDEX
+            break
+        case "license":
+            model = models.LICENSES_INDEX
+            break
+        case "organization":
+            model = models.ORGANIZATIONS_INDEX
+            break
+    }
     return new Promise(function (resolve, reject) {
-        models.LICENSES_INDEX
-            .find({}, { _id: 1 })
-            .then(results => {
-                const licenses = results.map(function (item) { return item._id; })
-                resolve(licenses)
-            })
-            .catch(err => reject(err))
+        if (model) {
+            model
+                .find({}, { _id: 1 })
+                .then(results => {
+                    const mappedResults = results.map(function (item) { return item._id; })
+                    resolve(mappedResults)
+                })
+                .catch(err => reject(err))
+        } else { reject({ response: { code: 404 }, message: "Requested model not found" }) }
     })
 }
 
 function getAllFilterOptions() {
     return new Promise(function (resolve, reject) {
-        const allPromises = [getAllLicenses()]
+        const allPromises = ["status", "license", "organization", "programmingLanguage"].map(option => getFilterOptionsFor(option))
         Promise.all(allPromises)
             .then(results => {
-                const licenseOptions = results[0]
-                resolve({ licenseOptions })
+                const statusOptions = results[0]
+                const licenseOptions = results[1]
+                const organizationOptions = results[2]
+                const programmingLanguagesOptions = results[3]
+                resolve({ statusOptions, licenseOptions, organizationOptions, programmingLanguagesOptions })
             })
     })
 }

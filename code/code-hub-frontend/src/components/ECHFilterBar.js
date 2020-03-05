@@ -51,7 +51,7 @@ class ECHFilterBar extends Component {
                     title="Project status"
                     displayResetOption={true}
                     multiple={true}
-                    options={["Archival", "Released", "Development", "Production", "Deprecated"]}
+                    options={this.props.statusOptions}
                     value={this.props.currentFilters.status}
                     onChange={(event) => this._onFilterChanged(event, "status", this.props.currentFilters.status)}
                     style={{ paddingRight: '50px' }}
@@ -69,7 +69,7 @@ class ECHFilterBar extends Component {
                     title="Organization"
                     displayResetOption={true}
                     multiple={true}
-                    options={["Internal Revenue Service(IRS)", "Bureau of the Fiscal Service(BFS)", "18F"]}
+                    options={this.props.organizationOptions}
                     value={this.props.currentFilters.organization}
                     onChange={(event) => this._onFilterChanged(event, "organization", this.props.currentFilters.organization)}
                     style={{ paddingRight: '50px' }}
@@ -78,7 +78,7 @@ class ECHFilterBar extends Component {
                     title="Programming languages"
                     displayResetOption={true}
                     multiple={true}
-                    options={["Python", "Javascript"]}
+                    options={this.props.programmingLanguagesOptions}
                     value={this.props.currentFilters.programmingLanguages}
                     onChange={(event) => this._onFilterChanged(event, "programmingLanguages", this.props.currentFilters.programmingLanguages)}
                     style={{ paddingRight: '50px' }}
@@ -106,7 +106,7 @@ class ECHFilterBar extends Component {
     _onFilterChanged(event, filterKey, filterProp) {
         const filterValue = event.target.value
         if (filterValue.includes("Reset filter") || filterValue === filterProp || filterValue.length === 0) {
-            if (filterValue.every(e => e === "Reset filter")) { } else {
+            if (filterValue.every(e => e === "Reset filter") && filterValue.length > 0) { console.log("True!") } else {
                 this.props.removeFilter({ filterKey })
             }
         } else {
@@ -126,7 +126,10 @@ const mapStateToProps = state => {
         projects: state.projectOverview.projects,
         currentFilters: state.projectOverview.currentFilters,
         sortBy: state.projectOverview.sortBy,
-        licenseOptions: state.filterOptions.licenseOptions
+        licenseOptions: state.filterOptions.licenseOptions,
+        statusOptions: state.filterOptions.statusOptions,
+        organizationOptions: state.filterOptions.organizationOptions,
+        programmingLanguagesOptions: state.filterOptions.programmingLanguagesOptions
     }
 }
 
