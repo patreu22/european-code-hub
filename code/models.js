@@ -35,15 +35,24 @@ const PROJECT_SCHEMA = new mongoose.Schema({
 }, { collection: 'projects' });
 
 
-const WORDS_SCHEMA = new mongoose.Schema({
+const PROJECTS_INDEX = new mongoose.Schema({
     _id: String,
     value: {
         documents: Array
     },
-}, { collection: 'words' });
+}, { collection: 'projectsIndex' });
+
+
+const LICENSES_INDEX = new mongoose.Schema({
+    _id: String,
+    value: {
+        documents: Array
+    },
+}, { collection: 'licensesIndex' });
 
 module.exports = {
     USER_MODEL: new mongoose.model('User', USER_SCHEMA),
     PROJECT_MODEL: new mongoose.model('Project', PROJECT_SCHEMA),
-    WORDS_SCHEMA: new mongoose.model('Words', WORDS_SCHEMA)
+    PROJECTS_INDEX: new mongoose.model('ProjectsIndex', PROJECTS_INDEX),
+    LICENSES_INDEX: new mongoose.model('LicensesIndex', LICENSES_INDEX)
 }

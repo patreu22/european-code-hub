@@ -95,8 +95,8 @@ class ECHMultipleSelect extends Component {
     }
 
     _getOptions() {
-        var optionsToDisplay = this.props.options || []
-        if (this.props.displayResetOption) {
+        var optionsToDisplay = this.props.options.slice()
+        if (this.props.displayResetOption && !optionsToDisplay.includes("Reset filter")) {
             optionsToDisplay.push("Reset filter")
         }
         return optionsToDisplay

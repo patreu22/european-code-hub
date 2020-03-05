@@ -5,6 +5,7 @@ const authentication = require('./authentication')
 const database = require('./database')
 const io = require('./io')
 const git = require('./git')
+const mapReduce = require('./mapReduceDB')
 
 const MONGOOSE_DB_URL = 'mongodb://localhost:27017/code-hub';
 
@@ -21,7 +22,9 @@ app.get('/', function (req, res) {
 });
 
 app.get('/ping', function (req, res) {
-    database.indexProjects();
+    //TODO: Add catch
+    database.getAllLicenses()
+        .then(licenses => console.log(licenses))
     return res.send('pong');
 });
 
@@ -59,17 +62,17 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
                                                     } else {
                                                         res.sendStatus(400);
                                                     }
-                                                    database.indexProjects();
+                                                    mapReduce.mapReduceProjects()
                                                 })
                                                 .catch((err) => {
-                                                    database.indexProjects();
+                                                    mapReduce.mapReduceProjects()
                                                     console.log(err)
                                                     res.status(err.code || 400).send(err.error || "Undefined Error")
                                                 })
                                         )
                                         .catch((err) => {
                                             console.log(err)
-                                            database.indexProjects();
+                                            mapReduce.mapReduceProjects()
                                             if (err.code === 404) {
                                                 //Means the Readme file was not found/provided, but project was saved anyway
                                                 res.sendStatus(200)
@@ -220,6 +223,13 @@ app.get('/api/get/searchResults', function (req, res) {
             res.sendStatus(400)
         })
 })
+
+app.get('/api/get/filteroptions', function (req, res) {
+    database.getAllFilterOptions()
+        .then(results => {
+            return res.status(200).send(results);
+        })
+});
 
 //Returns either user by username query or own data by auth token
 app.get('/api/get/user', function (req, res) {

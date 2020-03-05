@@ -3,7 +3,7 @@ import { Box } from '@material-ui/core'
 import ECHMultipleSelect from './ECHMultipleSelect'
 import ECHIconButton from './ECHIconButton'
 import { connect } from 'react-redux'
-import { getFilteredProjects } from '../actions/httpActions'
+import { getFilteredProjects, getFilterOptions } from '../actions/httpActions'
 import { addFilter, removeFilter, resetFilters, setSortBy } from '../slices/projectOverviewSlice'
 import { DeleteSweep as DeleteSweepIcon } from '@material-ui/icons/';
 
@@ -18,6 +18,10 @@ class ECHFilterBar extends Component {
         if (prevProps.currentFilters !== this.props.currentFilters || prevProps.sortBy !== this.props.sortBy) {
             this.props.getFilteredProjects(this.props.currentFilters, 1, false, this.props.sortBy)
         }
+    }
+
+    componentDidMount() {
+        this.props.getFilterOptions()
     }
 
     render() {
@@ -56,7 +60,7 @@ class ECHFilterBar extends Component {
                     title="License"
                     displayResetOption={true}
                     multiple={true}
-                    options={["Apache-2.0", "Creative Commons Zero v1.0 Universal", "BSD-3-Clause", "NOASSERTION"]}
+                    options={this.props.licenseOptions}
                     value={this.props.currentFilters.license}
                     onChange={(event) => this._onFilterChanged(event, "license", this.props.currentFilters.license)}
                     style={{ paddingRight: '50px' }}
@@ -102,7 +106,9 @@ class ECHFilterBar extends Component {
     _onFilterChanged(event, filterKey, filterProp) {
         const filterValue = event.target.value
         if (filterValue.includes("Reset filter") || filterValue === filterProp || filterValue.length === 0) {
-            this.props.removeFilter({ filterKey })
+            if (filterValue.every(e => e === "Reset filter")) { } else {
+                this.props.removeFilter({ filterKey })
+            }
         } else {
             this.props.addFilter({
                 filter: {
@@ -112,6 +118,7 @@ class ECHFilterBar extends Component {
             })
         }
     }
+
 }
 
 const mapStateToProps = state => {
@@ -119,9 +126,10 @@ const mapStateToProps = state => {
         projects: state.projectOverview.projects,
         currentFilters: state.projectOverview.currentFilters,
         sortBy: state.projectOverview.sortBy,
+        licenseOptions: state.filterOptions.licenseOptions
     }
 }
 
-const mapDispatchToProps = { getFilteredProjects, addFilter, removeFilter, resetFilters, setSortBy }
+const mapDispatchToProps = { getFilteredProjects, addFilter, removeFilter, resetFilters, setSortBy, getFilterOptions }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ECHFilterBar);

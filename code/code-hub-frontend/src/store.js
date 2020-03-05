@@ -7,6 +7,7 @@ import currentProjectSlice from './slices/currentProjectSlice'
 import searchSlice from './slices/searchSlice'
 import userSlice from './slices/userSlice'
 import activateSlice from './slices/activateSlice'
+import filterOptionsSlice from './slices/filterOptionsSlice'
 
 const store = configureStore({
     reducer: {
@@ -15,7 +16,8 @@ const store = configureStore({
         currentProject: currentProjectSlice.reducer,
         search: searchSlice.reducer,
         user: userSlice.reducer,
-        activate: activateSlice.reducer
+        activate: activateSlice.reducer,
+        filterOptions: filterOptionsSlice.reducer
     },
     middleware: [loggerMiddleware, ...getDefaultMiddleware()]
 })

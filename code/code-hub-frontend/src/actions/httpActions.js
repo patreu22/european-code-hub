@@ -45,6 +45,11 @@ import {
     fetchUserToken_FAILURE
 } from '../slices/userSlice'
 import {
+    fetchFilterOptions_BEGIN,
+    fetchFilterOptions_SUCCESS,
+    fetchFilterOptions_FAILURE
+} from '../slices/filterOptionsSlice'
+import {
     activate_BEGIN,
     activate_SUCCESS,
     activate_FAILURE
@@ -72,6 +77,31 @@ export function getFilteredProjects(filters, currentPage, shouldConcatResults, s
         axios(options)
             .then(response => dispatch(loadFilteredData_SUCCESS({ projects: response.data.projects, totalResultsLength: response.data.totalResultsLength, shouldConcatResults, itemsPerLoad })))
             .catch(err => dispatch(loadFilteredData_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
+    }
+}
+
+export function getFilterOptions() {
+    return function (dispatch) {
+        const options = {
+            method: 'GET',
+            url: '/api/get/filteroptions',
+            params: {
+                // filters,
+                // resultsToSkip,
+                // itemsPerLoad,
+                // sortBy
+            }
+        }
+
+        dispatch(fetchFilterOptions_BEGIN())
+        //TODO: Handle error
+        axios(options)
+            .then(response => {
+                const data = response.data
+                console.log(data)
+                dispatch(fetchFilterOptions_SUCCESS({ licenseOptions: data.licenseOptions, statusOptions: data.statusOptions, organizationOptions: data.organizationOptions, programmingLanguagesOptions: data.programmingLanguagesOptions }))
+            })
+            .catch(err => dispatch(fetchFilterOptions_FAILURE({ errorCode: err.response.status, errorMessage: err.message })))
     }
 }
 
