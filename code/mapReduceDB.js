@@ -253,11 +253,11 @@ function mapProjectStatus() {
 }
 
 function mapReduceEverything() {
-    mapReduceProjects()
     mapReduceLicenses()
     mapReduceProjectStatus()
     mapReduceOrganizations()
     mapReduceProgrammingLanguages()
+    mapReduceProjects()
 }
 
 module.exports = {
