@@ -7,18 +7,7 @@ function mapReduceProjects() {
     o.reduce = reduce
     o.finalize = finalize
     o.out = "projectsIndex"
-
-    models.PROJECT_MODEL.mapReduce(
-        o,
-        function (err, results) {
-            if (err) {
-                console.log(err)
-                throw err
-            };
-            if (results) {
-                console.log(results)
-            }
-        });
+    performMapReduce(o)
 }
 
 function mapProjects() {
@@ -162,7 +151,37 @@ function mapReduceLicenses() {
     o.reduce = reduce
     o.finalize = finalize
     o.out = "licensesIndex"
+    performMapReduce(o)
+}
 
+function mapReduceProjectStatus() {
+    var o = {}
+    o.map = mapProjectStatus
+    o.reduce = reduce
+    o.finalize = finalize
+    o.out = "statusIndex"
+    performMapReduce(o)
+}
+
+function mapReduceOrganizations() {
+    var o = {}
+    o.map = mapOrganizations
+    o.reduce = reduce
+    o.finalize = finalize
+    o.out = "organizationsIndex"
+    performMapReduce(o)
+}
+
+function mapReduceProgrammingLanguages() {
+    var o = {}
+    o.map = mapProgrammingLanguages
+    o.reduce = reduce
+    o.finalize = finalize
+    o.out = "programmingLanguagesIndex"
+    performMapReduce(o)
+}
+
+function performMapReduce(o) {
     models.PROJECT_MODEL.mapReduce(
         o,
         function (err, results) {
@@ -177,18 +196,53 @@ function mapReduceLicenses() {
 }
 
 function mapLicenses() {
-    // We need to save this in a local var as per scoping problems
     var document = this;
-
     for (var prop in document) {
-        // We are only interested in strings and explicitly not in _id
-        if (prop === "_id" || typeof document[prop] !== 'string') {
-            continue
-        }
-
-        if (prop === "license") {
+        if (prop === "programmingLanguages") {
             var cleaned = document[prop]
-            // cleaned = cleaned.toLowerCase()
+            if (cleaned.length <= 1) {
+                return
+            } else {
+                emit(cleaned, document._id)
+            }
+        }
+    }
+}
+
+function mapProgrammingLanguages() {
+    var document = this;
+    for (var prop in document) {
+        if (prop === "programmingLanguages") {
+            document[prop].forEach(
+                function (word) {
+                    var cleaned = word
+                    emit(cleaned, document._id)
+                }
+            )
+        }
+    }
+}
+
+function mapOrganizations() {
+    var document = this;
+    for (var prop in document) {
+        if (prop === "organization") {
+            var cleaned = document[prop]
+            if (cleaned.length <= 1) {
+                return
+            } else {
+                emit(cleaned, document._id)
+            }
+        }
+    }
+}
+
+
+function mapProjectStatus() {
+    var document = this;
+    for (var prop in document) {
+        if (prop === "status") {
+            var cleaned = document[prop]
             if (cleaned.length <= 1) {
                 return
             } else {
@@ -200,5 +254,8 @@ function mapLicenses() {
 
 module.exports = {
     mapReduceProjects,
-    mapReduceLicenses
+    mapReduceLicenses,
+    mapReduceProjectStatus,
+    mapReduceOrganizations,
+    mapReduceProgrammingLanguages
 }

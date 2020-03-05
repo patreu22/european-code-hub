@@ -50,9 +50,33 @@ const LICENSES_INDEX = new mongoose.Schema({
     },
 }, { collection: 'licensesIndex' });
 
+const STATUS_INDEX = new mongoose.Schema({
+    _id: String,
+    value: {
+        documents: Array
+    },
+}, { collection: 'statusIndex' });
+
+const ORGANIZATIONS_INDEX = new mongoose.Schema({
+    _id: String,
+    value: {
+        documents: Array
+    },
+}, { collection: 'organizationsIndex' });
+
+const PROGRAMMING_LANGUAGES_INDEX = new mongoose.Schema({
+    _id: String,
+    value: {
+        documents: Array
+    },
+}, { collection: 'programmingLanguagesIndex' });
+
 module.exports = {
     USER_MODEL: new mongoose.model('User', USER_SCHEMA),
     PROJECT_MODEL: new mongoose.model('Project', PROJECT_SCHEMA),
     PROJECTS_INDEX: new mongoose.model('ProjectsIndex', PROJECTS_INDEX),
-    LICENSES_INDEX: new mongoose.model('LicensesIndex', LICENSES_INDEX)
+    LICENSES_INDEX: new mongoose.model('LicensesIndex', LICENSES_INDEX),
+    STATUS_INDEX: new mongoose.model('StatusIndex', STATUS_INDEX),
+    ORGANIZATIONS_INDEX: new mongoose.model('OrganizationIndex', ORGANIZATIONS_INDEX),
+    PROGRAMMING_LANGUAGES_INDEX: new mongoose.model('ProgrammingLanguagesIndex', PROGRAMMING_LANGUAGES_INDEX)
 }

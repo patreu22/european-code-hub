@@ -23,8 +23,9 @@ app.get('/', function (req, res) {
 
 app.get('/ping', function (req, res) {
     //TODO: Add catch
-    database.getAllLicenses()
-        .then(licenses => console.log(licenses))
+    mapReduce.mapReduceProgrammingLanguages()
+    // database.getAllLicenses()
+    //     .then(licenses => console.log(licenses))
     return res.send('pong');
 });
 
