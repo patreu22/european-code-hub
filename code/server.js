@@ -63,17 +63,17 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
                                                     } else {
                                                         res.sendStatus(400);
                                                     }
-                                                    mapReduce.mapReduceProjects()
+                                                    mapReduce.mapReduceEverything()
                                                 })
                                                 .catch((err) => {
-                                                    mapReduce.mapReduceProjects()
+                                                    mapReduce.mapReduceEverything()
                                                     console.log(err)
                                                     res.status(err.code || 400).send(err.error || "Undefined Error")
                                                 })
                                         )
                                         .catch((err) => {
                                             console.log(err)
-                                            mapReduce.mapReduceProjects()
+                                            mapReduce.mapReduceEverything()
                                             if (err.code === 404) {
                                                 //Means the Readme file was not found/provided, but project was saved anyway
                                                 res.sendStatus(200)
