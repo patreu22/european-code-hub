@@ -1,14 +1,4 @@
-const mongoose = require('mongoose');
 const models = require('./models');
-
-function mapReduceProjects() {
-    var o = {}
-    o.map = mapProjects
-    o.reduce = reduce
-    o.finalize = finalize
-    o.out = "projectsIndex"
-    performMapReduce(o)
-}
 
 function mapProjects() {
     // We need to save this in a local var as per scoping problems
@@ -31,56 +21,57 @@ function mapProjects() {
         if (prop === "_id" || typeof document[prop] !== 'string') {
             continue
         }
+        if (prop === "projectDescription") {
+            (document[prop]).split(" ").forEach(
+                function (word) {
+                    var cleaned = word
+                    const symbolsToRemove = [
+                        " ", ";", "(", ")", "#",
+                        "\'", "=", "\`", "\'", "\*",
+                        ">", "<", "!", "\"", "\n",
+                        "[", "]", ",", "´"
+                    ]
 
-        (document[prop]).split(" ").forEach(
-            function (word) {
-                var cleaned = word
-                const symbolsToRemove = [
-                    " ", ";", "(", ")", "#",
-                    "\'", "=", "\`", "\'", "*",
-                    ">", "<", "!", "\"", "\n",
-                    "[", "]", ",", "´"
-                ]
+                    symbolsToRemove.forEach(symbol => {
+                        if (symbol === "\n") {
+                            cleaned = cleaned.replace(/\r?\n|\r/g, "")
+                        } else {
+                            const regex = RegExp(escapeRegExp(symbol), "g")
+                            cleaned = cleaned.replace(regex, "")
+                        }
+                    })
 
-                symbolsToRemove.forEach(symbol => {
-                    if (symbol === "\n") {
-                        cleaned = cleaned.replace(/\r?\n|\r/g, "")
+                    cleaned = cleaned.toLowerCase()
+
+                    if (isValidUrl(cleaned) || cleaned.startsWith("http://")) {
+                        return
+                    }
+
+                    const potentialUrlSymbols = [".", ":", "?", "/"]
+                    potentialUrlSymbols.forEach(symbol => {
+                        if (symbol === ".") {
+                            //Only remove at the end of the word to not break any domains abbrevs. etc.
+                            cleaned = cleaned.replace(/\.+$/, "")
+                        }
+                        else {
+                            const regex = RegExp(escapeRegExp(symbol))
+                            cleaned = cleaned.replace(regex, "")
+                        }
+                    })
+
+                    if (
+                        stopwords.indexOf(cleaned) > -1 ||
+                        !(isNaN(parseInt(cleaned))) ||
+                        !(isNaN(parseFloat(cleaned))) ||
+                        cleaned.length <= 1
+                    ) {
+                        return
                     } else {
-                        const regex = RegExp(escapeRegExp(symbol))
-                        cleaned = cleaned.replace(regex, "")
+                        emit(cleaned, document._id)
                     }
-                })
-
-                cleaned = cleaned.toLowerCase()
-
-                if (isValidUrl(cleaned) || cleaned.startsWith("http://")) {
-                    return
                 }
-
-                const potentialUrlSymbols = [".", ":", "?", "/"]
-                potentialUrlSymbols.forEach(symbol => {
-                    if (symbol === ".") {
-                        //Only remove at the end of the word to not break any domains abbrevs. etc.
-                        cleaned = cleaned.replace(/\.+$/, "")
-                    }
-                    else {
-                        const regex = RegExp(escapeRegExp(symbol))
-                        cleaned = cleaned.replace(regex, "")
-                    }
-                })
-
-                if (
-                    stopwords.indexOf(cleaned) > -1 ||
-                    !(isNaN(parseInt(cleaned))) ||
-                    !(isNaN(parseFloat(cleaned))) ||
-                    cleaned.length <= 1
-                ) {
-                    return
-                } else {
-                    emit(cleaned, document._id)
-                }
-            }
-        )
+            )
+        }
     }
 }
 
@@ -143,6 +134,15 @@ function finalize(key, reducedValue) {
     }
     // We have sanitized our data, now we can return it        
     return finalValue
+}
+
+function mapReduceProjects() {
+    var o = {}
+    o.map = mapProjects
+    o.reduce = reduce
+    o.finalize = finalize
+    o.out = "projectsIndex"
+    performMapReduce(o)
 }
 
 function mapReduceLicenses() {
