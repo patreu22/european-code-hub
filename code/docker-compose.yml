@@ -1,0 +1,29 @@
+version: "2"
+networks:
+    ech-network:
+        driver: bridge
+services:
+    ech-backend:
+        image: ech-backend:0.0.3
+        restart: always
+        ports:
+            - "5000:5000"
+            - "80:80"
+        volumes:
+            - ./:/backend
+            - ./:/backend/node_modules
+        depends_on:
+            - mongodb
+        networks:
+            - ech-network
+    mongodb:
+        image: mongo
+        restart: always
+        container_name: mongodb
+        volumes:
+            - ./data-node:/data/db
+        ports:
+            - 27017:27017
+        command: mongod --noauth
+        networks:
+            - ech-network

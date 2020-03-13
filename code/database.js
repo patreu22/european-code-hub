@@ -3,9 +3,29 @@ const models = require('./models');
 const mail_package = require('./mail')
 const authentication = require('./authentication')
 const io = require('./io')
-const mapReduce = require('./mapReduceDB')
+const dotenv = require('dotenv')
+
+dotenv.config()
+
+const MONGOOSE_DEV_URL = 'mongodb://localhost:27017/code-hub';
+const MONGOOSE_PRODUCTION_URL = 'mongodb://localhost:27017/code-hub';
 
 var db;
+
+function connectToDb() {
+    var db_url = ""
+    if (process.env.NODE_ENV === "production") {
+        console.log("-Production lane-")
+        db_url = MONGOOSE_PRODUCTION_URL
+    } else {
+        console.log("-Dev lane-")
+        db_url = MONGOOSE_DEV_URL
+    }
+    mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true });
+    db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'connection error:'));
+    db.once('open', () => console.log("Welcome to the fabulous MongoDB world!"));
+}
 
 function userExists({ mail, username }) {
     const queryObject = mail
@@ -49,15 +69,6 @@ function projectExists({ projectName, repoUrl }) {
         }
     });
 }
-
-
-function connectToDb(db_url) {
-    mongoose.connect(db_url, { useNewUrlParser: true, useUnifiedTopology: true });
-    db = mongoose.connection;
-    db.on('error', console.error.bind(console, 'connection error:'));
-    db.once('open', () => console.log("Welcome to the fabulous MongoDB world!"));
-}
-
 
 function userAndHashExistInDB({ mail, password }) {
     return new Promise(function (resolve, reject) {

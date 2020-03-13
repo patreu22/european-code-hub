@@ -7,15 +7,13 @@ const io = require('./io')
 const git = require('./git')
 const mapReduce = require('./mapReduceDB')
 
-const MONGOOSE_DB_URL = 'mongodb://localhost:27017/code-hub';
-
 const app = express();
 const uploadMiddleware = io.getUploadMiddleware();
 
 app.use(express.static(path.join(__dirname, 'code-hub-frontend/build')));
 app.use(bodyParser.json());
 
-database.connectToDb(MONGOOSE_DB_URL);
+database.connectToDb();
 
 app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname + 'code-hub-frontend/build/index.html'));

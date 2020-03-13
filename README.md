@@ -34,6 +34,11 @@ You can generate a token here: https://github.com/settings/developers
 3. `db.user.insert({ "username": "patrichinho", "mail" : "patrick.reuter@campus.tu-berlin.de", "password" : "1234567890", "position" : "student"})`
 
 
+## Docker Commands
+1. Build a new docker image for the server: `docker build -t ech-backend:1.0.0 .` (Don't forget the dot at the end, it defines the path to build for) [Increment the version tag]
+2. Build the container via docker-compose: `docker-compose build`
+
+
 <!-- # Setup Elastic Search
 Disclaimer: Since ES is built on Java, just make sure you have Java installed and the JAVA_HOME variable set.
 1. `brew tap elastic/tap`
