@@ -20,7 +20,13 @@ app.get('/', function (req, res) {
 });
 
 app.get('/ping', function (req, res) {
-    return res.send('pong');
+    console.log("-Received ping-")
+    getAllProjects()
+        .then((res) => console.log(res))
+        .catch((err) => {
+            console.log(err)
+            console.log("Didnt work out!")
+        })
 });
 
 app.get('/api/get/project/git', function (req, res) {
