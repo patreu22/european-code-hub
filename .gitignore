@@ -1,13 +1,12 @@
 .DS_Store
 written_part/latex_project/.texpadtmp/
-code/european-code-hub-frontend/node_modules/
-code/node_modules/
-code/scraper/node_modules/
-code/temp
-code/content-scraper/code.gov/.env
-code/.env
 
-frontend-delivery-server/node_modules
-frontend-delivery-server/code-hub-frontend/node_modules
+code/scraper/node_modules/
+code/scraper/code.gov/.env
+
+ech-backend/node_modules
+ech-backend/temp
+ech-backend/.env
+ech-frontend/code-hub-frontend/node_modules
 
 data-node/
