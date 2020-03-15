@@ -9,9 +9,6 @@ COPY . /ech-frontend
 # install dependencies
 RUN yarn install
 # Build the latest Frontend
-RUN pwd
-RUN ls
-RUN cd node_modules && ls
 RUN cd code-hub-frontend && yarn install && yarn build
 # Make port 80 available to the world outside this container
 # Run the app when the container launches
