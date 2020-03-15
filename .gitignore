@@ -1,7 +1,7 @@
 .DS_Store
 written_part/latex_project/.texpadtmp/
 
-code/scraper/node_modules/
+code/scraper/node_modules/*
 code/scraper/code.gov/.env
 
 ech-backend/node_modules
