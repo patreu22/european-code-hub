@@ -3,15 +3,29 @@ networks:
     ech-network:
         driver: bridge
 services:
+    ech-frontend:
+        image: ech-frontend:latest
+        restart: always
+        ports:
+            - "80:80"
+        volumes:
+            - ./ech-frontend:/ech-frontend
+            - /ech-frontend/node_modules
+            - /ech-frontend/code-hub-frontend
+        links:
+            - ech-backend
+        depends_on:
+            - ech-backend
+        networks:
+            - ech-network
     ech-backend:
-        image: ech-backend:0.0.3
+        image: ech-backend:latest
         restart: always
         ports:
             - "5000:5000"
-            - "80:80"
         volumes:
-            - ./:/backend
-            - ./:/backend/node_modules
+            - ./ech-backend:/ech-backend
+            - /ech-backend/node_modules
         depends_on:
             - mongodb
         networks:
