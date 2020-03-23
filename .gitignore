@@ -4,9 +4,9 @@ written_part/latex_project/.texpadtmp/
 code/scraper/node_modules/*
 code/scraper/code.gov/.env
 
-ech-backend/node_modules
-ech-backend/temp
-ech-backend/.env
-ech-frontend/code-hub-frontend/node_modules
+code/ech-backend/node_modules
+code/ech-backend/temp
+code/ech-backend/.env
+code/ech-frontend/code-hub-frontend/node_modules
 
 data-node/
