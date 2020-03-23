@@ -7,7 +7,7 @@ const BASE_URL = "https://api.code.gov/repos";
 const API_KEY = process.env.CODE_GOV_API_KEY;
 const NUMBER_OF_PROJECTS_TO_FETCH = 1000
 
-var DEFAULT_TARGET_URL = localhost
+// var DEFAULT_TARGET_URL = localhost
 
 var counter = 0
 
@@ -85,6 +85,7 @@ function registerProject({ projectData, targetUrl }) {
     }
     axios(options)
         .then(function (response) {
+            console.log("Finished registering.")
             // console.log(response);
         }).catch(function (error) {
             if (error.response) {
