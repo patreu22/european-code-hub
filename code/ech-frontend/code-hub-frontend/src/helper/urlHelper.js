@@ -1,5 +1,5 @@
-const DEV_ENDPOINT = "";
-const PROD_ENDPOINT = "http://localhost:5000";
+const DEV_ENDPOINT = "http://localhost:5000";
+const PROD_ENDPOINT = "http://ech-backend:5000";
 
 export function getEndpoint(endpoint) {
     if (process.env.NODE_ENV === "production") {

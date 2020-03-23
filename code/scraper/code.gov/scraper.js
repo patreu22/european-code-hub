@@ -7,12 +7,15 @@ const BASE_URL = "https://api.code.gov/repos";
 const API_KEY = process.env.CODE_GOV_API_KEY;
 const NUMBER_OF_PROJECTS_TO_FETCH = 1000
 
+var DEFAULT_TARGET_URL = localhost
+
+var counter = 0
 
 function main() {
-    scrapeCodeGov()
+    scrapeCodeGov(DEFAULT_TARGET_URL)
 }
 
-function scrapeCodeGov() {
+function scrapeCodeGov(targetUrl) {
     const options = {
         method: 'GET',
         url: BASE_URL,
@@ -26,7 +29,7 @@ function scrapeCodeGov() {
         .then((response) => {
             const repos = response.data.repos;
             repos.forEach(repo => {
-                registerProject({ projectData: transformRepoToProjectData(repo) })
+                registerProject({ projectData: transformRepoToProjectData(repo), targetUrl })
             });
         })
 }
@@ -68,11 +71,13 @@ function transformRepoToProjectData(repo) {
     return projectData
 }
 
-function registerProject({ projectData }) {
+function registerProject({ projectData, targetUrl }) {
+    counter += 1;
+    console.log(`Registering project #${counter}`)
     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE1ODE0MzU4MzF9.bORYCtlt1StA0qdK4zVr3G9_uVso3VWL5cnMDdkrysA"
     options = {
         method: 'POST',
-        url: 'http://localhost:5000/api/create/project',
+        url: `http://${targetUrl}:5000/api/create/project`,
         headers: {
             Authorization: token
         },
