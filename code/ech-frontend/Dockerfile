@@ -11,5 +11,6 @@ RUN yarn install
 # Build the latest Frontend
 RUN cd code-hub-frontend && yarn install && yarn build
 # Make port 80 available to the world outside this container
+EXPOSE 80
 # Run the app when the container launches
 CMD ["npm", "start"]

@@ -10,5 +10,6 @@ RUN yarn install
 COPY . /
 # Set ENV to production
 ENV NODE_ENV=production
+EXPOSE 5000
 # Run the app when the container launches
 CMD ["npm", "start"]

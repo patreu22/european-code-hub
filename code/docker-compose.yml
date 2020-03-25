@@ -3,11 +3,25 @@ networks:
     ech-network:
         driver: bridge
 services:
+    traefik:
+        image: "traefik:v2.1"
+        container_name: "traefik"
+        command:
+          #- "--log.level=DEBUG"
+          - "--api.insecure=true"
+          - "--providers.docker=true"
+          - "--providers.docker.exposedbydefault=false"
+          - "--entrypoints.web.address=:80"
+        ports:
+          - "80:80"
+          - "8080:8080"
+        volumes:
+          - "/var/run/docker.sock:/var/run/docker.sock:ro"
+        networks:
+          - ech-network
     ech-frontend:
         image: ech-frontend:latest
         restart: always
-        ports:
-            - "80:80"
         volumes:
             - ./ech-frontend:/ech-frontend
             - /ech-frontend/node_modules
@@ -16,18 +30,24 @@ services:
             - ech-backend
         depends_on:
             - ech-backend
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.ech-frontend.rule=Host(`ech-frontend.localhost`)"
+            - "traefik.http.routers.ech-frontend.entrypoints=web"
         networks:
             - ech-network
     ech-backend:
         image: ech-backend:latest
         restart: always
-        ports:
-            - "5000:5000"
         volumes:
             - ./ech-backend:/ech-backend
             - /ech-backend/node_modules
         depends_on:
             - mongodb
+        labels:
+            - "traefik.enable=true"
+            - "traefik.http.routers.ech-backend.rule=Host(`ech-backend.localhost`)"
+            - "traefik.port=5000"
         networks:
             - ech-network
     mongodb:
