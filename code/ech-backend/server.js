@@ -17,11 +17,7 @@ app.use(cors());
 
 database.connectToDb();
 
-// app.get('/', function (req, res) {
-//     res.sendFile(path.join(__dirname + 'code-hub-frontend/build/index.html'));
-// });
-
-app.get('/ping', function (req, res) {
+app.get('/api/ping', function (req, res) {
     console.log("-Received ping-")
     database.getAllProjects()
         .then((projects) => {
