@@ -1,0 +1,19 @@
+{
+    "family": "ech-family",
+    "containerDefinitions": [
+        {
+            "name": "ech-backend",
+            "image": "patreu22/ech-backend:latest",
+            "cpu": 256,
+            "memoryReservation": 128,
+            "portMappings": [
+                {
+                    "hostPort": 80,
+                    "containerPort": 5000,
+                    "protocol": "tcp"
+                }
+            ],
+            "essential": true
+        }
+    ]
+}

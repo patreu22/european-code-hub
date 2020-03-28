@@ -17,18 +17,25 @@ app.use(cors());
 
 database.connectToDb();
 
+console.log("Let's go!")
+
 app.get('/api/ping', function (req, res) {
     console.log("-Received ping-")
+    console.log("Ping V2.0")
     database.getAllProjects()
         .then((projects) => {
             console.log(projects)
-            res.status(200).send(projects)
+            return res.status(200).send(projects)
         })
         .catch((err) => {
             console.log(err)
-            console.log("Didnt work out!")
+            return res.status(555).send("Error")
         })
 });
+
+app.get('/healthcheck', function (req, res) {
+    return res.sendStatus(200)
+})
 
 app.get('/api/get/project/git', function (req, res) {
     const url = req.query.url;

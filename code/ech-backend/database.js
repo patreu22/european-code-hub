@@ -8,7 +8,7 @@ const dotenv = require('dotenv')
 dotenv.config()
 
 const MONGOOSE_DEV_URL = 'mongodb://localhost:27017/code-hub';
-const MONGOOSE_PRODUCTION_URL = 'mongodb://mongodb:27017/code-hub';
+const MONGOOSE_PRODUCTION_URL = process.env.MONGO_ATLAS_URL
 
 var db;
 
