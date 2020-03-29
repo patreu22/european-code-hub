@@ -37,6 +37,11 @@ app.get('/healthcheck', function (req, res) {
     return res.sendStatus(200)
 })
 
+app.post('/api/mapReduce', function (req, res) {
+    mapReduce.mapReduceEverything()
+    return res.sendStatus(200)
+})
+
 app.get('/api/get/project/git', function (req, res) {
     const url = req.query.url;
     git.fetchGitData(url)
