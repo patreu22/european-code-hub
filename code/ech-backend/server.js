@@ -21,7 +21,7 @@ console.log("Let's go!")
 
 app.get('/api/ping', function (req, res) {
     console.log("-Received ping-")
-    console.log("Ping V2.0")
+    console.log("Ping V5.0")
     database.getAllProjects()
         .then((projects) => {
             console.log(projects)
@@ -51,6 +51,8 @@ app.get('/api/get/project/git', function (req, res) {
 
 app.post('/api/create/project', authentication.isAuthorized, function (req, res) {
     const projectData = req.body.projectData;
+    const shouldMapReduce = false //req.body.shouldMapReduce || true
+    console.log("Should mapReduce? - " + shouldMapReduce)
     if (projectData) {
         if (projectData.projectName) {
             database.projectExists({ projectName: projectData.projectName, repoUrl: projectData.repoUrl })
@@ -71,17 +73,23 @@ app.post('/api/create/project', authentication.isAuthorized, function (req, res)
                                                     } else {
                                                         res.sendStatus(400);
                                                     }
-                                                    mapReduce.mapReduceEverything()
+                                                    if (shouldMapReduce) {
+                                                        mapReduce.mapReduceEverything()
+                                                    }
                                                 })
                                                 .catch((err) => {
-                                                    mapReduce.mapReduceEverything()
+                                                    if (shouldMapReduce) {
+                                                        mapReduce.mapReduceEverything()
+                                                    }
                                                     console.log(err)
                                                     res.status(err.code || 400).send(err.error || "Undefined Error")
                                                 })
                                         )
                                         .catch((err) => {
                                             console.log(err)
-                                            mapReduce.mapReduceEverything()
+                                            if (shouldMapReduce) {
+                                                mapReduce.mapReduceEverything()
+                                            }
                                             if (err.code === 404) {
                                                 //Means the Readme file was not found/provided, but project was saved anyway
                                                 res.sendStatus(200)
