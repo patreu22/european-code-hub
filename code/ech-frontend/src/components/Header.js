@@ -15,6 +15,7 @@ import { withRouter } from 'react-router';
 import { connect } from 'react-redux'
 import { USER, LOGIN, CONTRIBUTE } from '../routes'
 import { logoutUser } from '../actions/cookieActions'
+import MuiAlert from '@material-ui/lab/Alert';
 
 const useStyles = makeStyles(theme => ({
     grow: {
@@ -43,10 +44,14 @@ const useStyles = makeStyles(theme => ({
     },
 }));
 
+function Alert(props) {
+    return <MuiAlert elevation={5} variant="filled" {...props} />
+}
 
 function Header(props) {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [showWarning, setShowWarning] = React.useState(true);
 
     const isMenuOpen = Boolean(anchorEl);
 
@@ -69,6 +74,11 @@ function Header(props) {
         handleMenuClose();
         props.logoutUser()
     }
+
+    const handleWarningClose = () => {
+        setShowWarning(false)
+    }
+
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -148,6 +158,7 @@ function Header(props) {
 
     return <div className={classes.header}>
         <AppBar position="static">
+            {showWarning && <Alert onClose={handleWarningClose} severity="warning">++ First public test version ++ Data mirrored from Code.gov ++ Traffic not encrypted atm ++ Autosuggestions and Filters deactivated atm ++</Alert>}
             <Toolbar className={classes.headerToolbar}>
                 <Link className={classes.headerLink} to="/">
                     <img width={30} height={30} src={EuropeanLogo} alt="logo" />
