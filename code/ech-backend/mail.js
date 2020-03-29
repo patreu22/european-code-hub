@@ -1,10 +1,10 @@
 const nodemailer = require("nodemailer");
 const dotenv = require('dotenv')
 
+dotenv.config()
+
 const DEV_ENDPOINT = 'http://localhost:3000'
 const PRODUCTION_ENDPOINT = `http://${process.env.FRONTEND_URL || "localhost:3000"}`
-
-dotenv.config()
 
 const smtpTransport = nodemailer.createTransport({
     service: "Gmail",
