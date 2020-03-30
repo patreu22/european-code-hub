@@ -1,13 +1,17 @@
 .DS_Store
-written_part/
 
-code/scraper/node_modules/*
+# Backend
+ech-backend/node_modules
+ech-backend/temp
+ech-backend/.env
 
-code/ech-backend/node_modules
-code/ech-backend/temp
-code/ech-backend/.env
-code/ech-frontend/code-hub-frontend/node_modules
+# Frontend
+ech-frontend/code-hub-frontend/node_modules
 
+# Scraper data
+scraper/codegov/.env
+scraper/node_modules
+
+# Docker garbage
 data-node/
-code/scraper/codegov/.env
-code/ech-backend/server.log
+ech-backend/server.log
