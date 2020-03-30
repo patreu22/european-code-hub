@@ -158,7 +158,7 @@ function Header(props) {
 
     return <div className={classes.header}>
         <AppBar position="static">
-            {showWarning && <Alert onClose={handleWarningClose} severity="warning">++ First public test version ++ Data mirrored from Code.gov ++ Traffic not encrypted atm ++ Autosuggestions and Filters deactivated atm ++</Alert>}
+            {showWarning && <Alert onClose={handleWarningClose} severity="warning">++ First public test version ++ Data mirrored from Code.gov ++ Traffic not encrypted atm ++ Search disabled ++ Autosuggestions and Filters deactivated atm ++</Alert>}
             <Toolbar className={classes.headerToolbar}>
                 <Link className={classes.headerLink} to="/">
                     <img width={30} height={30} src={EuropeanLogo} alt="logo" />
