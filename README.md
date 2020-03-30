@@ -1,18 +1,26 @@
 # european-code-hub
-Master thesis: Establishing Collaboration in the European Union through an Open Source Code Platform
+Master thesis: "European Code Hub: Establishing Collaboration in the European Union through an Open Source Code Platform".
+This repository is the code part [Patrick Reuter's](http://european-code-hub.s3-website.us-east-1.amazonaws.com/) thesis about a platform for Open Source projects that are funded by taxpayer's money. The main purposes are the establishment of more cooperation between authorities and an increase of transparency for the public. The project is work in progress.
 
+## Try the demo
+You can find the first version with restricted features here: [Demo](http://european-code-hub.s3-website.us-east-1.amazonaws.com/)
 
-# Install and run MongoDB on Mac:
+<!-- #
+## Run on your own machine
+
+## Setup the Database
+
+### Install and run MongoDB on Mac:
 1. `brew tap mongodb/brew`
 2. `brew install mongodb-community@4.2`
 
-## Start MongoDB database:
+### Start MongoDB database:
 `brew services start mongodb-community`
 
-## Stop MongoDB database:
+### Stop MongoDB database:
 `brew services stop mongodb-community`
 
-## Verify MongoDB is running:
+### Verify MongoDB is running:
 `ps aux | grep -v grep | grep mongod`
 
 
@@ -37,6 +45,7 @@ You can generate a token here: https://github.com/settings/developers
 ## Docker Commands
 1. Build a new docker image for the server: `docker build -t ech-backend:1.0.0 .` (Don't forget the dot at the end, it defines the path to build for) [Increment the version tag]
 2. Build the container via docker-compose: `docker-compose build`
+-->
 
 
 <!-- # Setup Elastic Search
