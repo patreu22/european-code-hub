@@ -5,6 +5,9 @@ This repository is the code part [Patrick Reuter's](http://european-code-hub.s3-
 ## Try the demo
 You can find the first version with restricted features here: [Demo](http://european-code-hub.s3-website.us-east-1.amazonaws.com/)
 
+## Local setup
+Tbc...
+
 <!-- #
 ## Run on your own machine
 
