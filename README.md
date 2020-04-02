@@ -1,8 +1,12 @@
 # european-code-hub
 Master thesis: "European Code Hub: Establishing Collaboration in the European Union through an Open Source Code Platform".
-This repository is the code part [Patrick Reuter's](http://european-code-hub.s3-website.us-east-1.amazonaws.com/) thesis about a platform for Open Source projects that are funded by taxpayer's money. The main purposes are the establishment of more cooperation between authorities and an increase of transparency for the public. The project is work in progress.
+This repository is the code part of [Patrick Reuter](http://european-code-hub.s3-website.us-east-1.amazonaws.com/)'s thesis about a platform for Open Source projects that are funded by public money. The main purposes are the establishment of more cooperation between authorities, saving of public budget and an increase of transparency for the public. The project is work in progress.
 
 ## Try the demo
+
+![ech_screenshot_framed](https://user-images.githubusercontent.com/11362357/77956245-db3a8c00-72d1-11ea-94c1-3afc6258ad18.png)
+
+
 You can find the first version with restricted features here: [Demo](http://european-code-hub.s3-website.us-east-1.amazonaws.com/)
 
 ## Local setup
