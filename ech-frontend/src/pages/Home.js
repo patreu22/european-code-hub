@@ -52,7 +52,7 @@ class Home extends Component {
 
     _getAlert() {
         return <MuiAlert elevation={5} variant="filled" onClose={this.handleWarningClose} severity="warning">
-            ++ Update: 04/23/20 ++ Connection to Database temporarily disabled due to server change ++ First public test version ++ No responsive design yet ++ Data mirrored from Code.gov ++ Traffic not encrypted atm ++ Search and suggestions now enabled ++
+            ++ Update: 04/28/20 ++ Restored backend connection ++ First public test version ++ No responsive design yet ++ Data mirrored from Code.gov ++ Traffic not encrypted atm ++ Search and suggestions now enabled ++
         </MuiAlert>
     }
 
