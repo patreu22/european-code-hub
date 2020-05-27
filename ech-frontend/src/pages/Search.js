@@ -24,7 +24,8 @@ class Search extends Component {
         const previousSearchTerm = previousQuery.query
         const currentSearchTerm = this.getSearchTerm()
         if (previousSearchTerm !== currentSearchTerm) {
-            this.props.getSearchResults(currentSearchTerm, 1, false)
+            const lowerCasedSearchTerm = currentSearchTerm.toLowerCase()
+            this.props.getSearchResults(lowerCasedSearchTerm, 1, false)
         }
     }
 
